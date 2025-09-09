@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Components.h"
-#include "Object.h"
 
 InputManagerComponent::InputManagerComponent(Object* pObject)
 	:Component(pObject)

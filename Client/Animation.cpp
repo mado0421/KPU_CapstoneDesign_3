@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Animation.h"
 #include "Importer.h"
-#include "Object.h"
-#include "Mask.h"
 
 //==================================================================
 // Animation Manager

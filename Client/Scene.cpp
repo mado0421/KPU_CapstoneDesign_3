@@ -2,12 +2,9 @@
 #include "Scene.h"
 #include "Object.h"
 #include "PipelineStateObject.h"
-#include "Camera.h"
-#include "Framework.h"
 #include "Texture.h"
 #include "Light.h"
 #include "Importer.h"
-#include "Vertex.h"
 #include "Model.h"
 
 #include "Components.h"

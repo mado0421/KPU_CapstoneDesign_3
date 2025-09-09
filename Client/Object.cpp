@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "Object.h"
 #include "Mesh.h"
-#include "Model.h"
-#include "Material.h"
-#include "Animation.h"
-#include "Mask.h"
 #include "Components.h"
 
 Object::Object()
