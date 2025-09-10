@@ -6,16 +6,17 @@
 
 MeshRendererComponent::MeshRendererComponent(
 	Object* pObject,
-	ID3D12Device* pd3dDevice, 
+	ID3D12Device* pd3dDevice,
 	ID3D12GraphicsCommandList* pd3dCommandList,
-	D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, 
+	D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
 	D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
-	:Component(pObject)
+	: Component(pObject)
 {
 	UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-	m_pd3dCBResource = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL, ncbElementBytes,
-		D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+	m_pd3dCBResource = CreateBufferResource(pd3dDevice, pd3dCommandList, nullptr, ncbElementBytes,
+	                                        D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                        nullptr);
 
 	CreateConstantBufferView(pd3dDevice, d3dCbvCPUDescriptorStartHandle);
 	SetCBVGpuHandle(d3dCbvGPUDescriptorStartHandle);
@@ -51,14 +52,16 @@ void MeshRendererComponent::SetMaterialByName(const char* strMaterialName)
 	m_strMaterialName = strMaterialName;
 }
 
-void MeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDevice, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
+void MeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDevice,
+                                                     D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
 {
-	D3D12_GPU_VIRTUAL_ADDRESS		d3dGpuVirtualAddress;
+	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress;
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 	UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-	if (nullptr != m_pd3dCBResource) {
-		m_pd3dCBResource->Map(0, NULL, (void**)&m_pCBMappedWorldTransform);
+	if (nullptr != m_pd3dCBResource)
+	{
+		m_pd3dCBResource->Map(0, nullptr, (void**)&m_pCBMappedWorldTransform);
 		d3dGpuVirtualAddress = m_pd3dCBResource->GetGPUVirtualAddress();
 		d3dCBVDesc.SizeInBytes = ncbElementBytes;
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;
@@ -70,6 +73,6 @@ void MeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDevice, D
 
 void MeshRendererComponent::SetCBVGpuHandle(D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
 {
-	m_d3dCbvGPUDescriptorHandle			= d3dCbvGPUDescriptorStartHandle;
-	d3dCbvGPUDescriptorStartHandle.ptr	+= gnCbvSrvDescriptorIncrementSize;
+	m_d3dCbvGPUDescriptorHandle = d3dCbvGPUDescriptorStartHandle;
+	d3dCbvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
 }

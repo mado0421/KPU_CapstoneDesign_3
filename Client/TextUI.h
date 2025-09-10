@@ -6,9 +6,10 @@ class TextUIAmmoComponent : public Component
 public:
 	TextUIAmmoComponent() = delete;
 	TextUIAmmoComponent(Object* pObject, Object* pWeapon);
-	~TextUIAmmoComponent();
+	~TextUIAmmoComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
+
 private:
 	TextRendererComponent* m_pTRC;
 	WeaponControllerComponent* m_pWCC;
@@ -19,9 +20,10 @@ class TextUIScoreComponent : public Component
 public:
 	TextUIScoreComponent() = delete;
 	TextUIScoreComponent(Object* pObject);
-	~TextUIScoreComponent();
+	~TextUIScoreComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
+
 private:
 	TextRendererComponent* m_pTRC;
 };
@@ -31,9 +33,10 @@ class TextUIPlayerHPComponent : public Component
 public:
 	TextUIPlayerHPComponent() = delete;
 	TextUIPlayerHPComponent(Object* pObject, Object* pPlayer);
-	~TextUIPlayerHPComponent();
+	~TextUIPlayerHPComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
+
 private:
 	TextRendererComponent* m_pTRC;
 	Character* m_pPlayerCharacter;

@@ -6,16 +6,15 @@ class EnemyDownCounter : public Component
 public:
 	EnemyDownCounter() = delete;
 	EnemyDownCounter(Object* pObject);
-	~EnemyDownCounter();
+	~EnemyDownCounter() override;
 
 	void AddTarget(Object* pObject);
 	void SetTextRenderer(TextRendererComponent* pTRC);
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
 private:
 	vector<pair<Character*, bool>> m_vecTargetCharacter;
 	TextRendererComponent* m_pTRC = nullptr;
 	int m_count = 0;
 };
-

@@ -14,22 +14,25 @@ void ModelManager::AddModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D
 	vector<MESH_DATA> vecMeshData = meshDataImporter.Load(fileName);
 	Model model;
 
-	for (int i = 0; i < vecMeshData.size(); i++) {
-		Mesh* pMesh = new Mesh(pd3dDevice, pd3dCommandList, vecMeshData[i]);
+	for (int i = 0; i < vecMeshData.size(); i++)
+	{
+		auto pMesh = new Mesh(pd3dDevice, pd3dCommandList, vecMeshData[i]);
 		model.push_back(pMesh);
 	}
 
 	m_uomModel[fileName] = model;
 }
 
-void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice,
+                               ID3D12GraphicsCommandList* pd3dCommandList)
 {
 	MeshDataImporter meshDataImporter;
 	vector<MESH_DATA> vecMeshData = meshDataImporter.FBXLoad(fileName);
 	Model model;
 
-	for (int i = 0; i < vecMeshData.size(); i++) {
-		Mesh* pMesh = new Mesh(pd3dDevice, pd3dCommandList, vecMeshData[i]);
+	for (int i = 0; i < vecMeshData.size(); i++)
+	{
+		auto pMesh = new Mesh(pd3dDevice, pd3dCommandList, vecMeshData[i]);
 		model.push_back(pMesh);
 	}
 
@@ -38,6 +41,7 @@ void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice, I
 
 void ModelManager::Render(const char* modelName, ID3D12GraphicsCommandList* pd3dCommandList)
 {
-	assert(m_uomModel.count(modelName) && "modelName이 틀렸거나, 없는 model입니다\n");
-	for_each(m_uomModel[modelName].begin(), m_uomModel[modelName].end(), [&](Mesh* mesh) {mesh->Render(pd3dCommandList); });
+	assert(m_uomModel.contains(modelName) && "modelName이 틀렸거나, 없는 model입니다\n");
+	for_each(m_uomModel[modelName].begin(), m_uomModel[modelName].end(),
+	         [&](Mesh* mesh) { mesh->Render(pd3dCommandList); });
 }

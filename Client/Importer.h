@@ -6,57 +6,73 @@ using SHAPE = vector<Vertex>;
 
 class Object;
 class Material;
-class MESH_DATA {
+
+class MESH_DATA
+{
 public:
 	string name;
 	SHAPE shape;
 };
-struct VertexIdx {
+
+struct VertexIdx
+{
 	int vid, vtid, vnid;
 };
-struct OBJECT_DESC {
-	XMFLOAT3	position		= XMFLOAT3(0, 0, 0);
-	XMFLOAT3	rotation		= XMFLOAT3(0, 0, 0);
-	string		model			= "";
-	string		material		= "defaultMaterial";
-	bool		isMaterial = false;
-	bool		isAnimated = false;
+
+struct OBJECT_DESC
+{
+	XMFLOAT3 position = XMFLOAT3(0, 0, 0);
+	XMFLOAT3 rotation = XMFLOAT3(0, 0, 0);
+	string model = "";
+	string material = "defaultMaterial";
+	bool isMaterial = false;
+	bool isAnimated = false;
 };
 
 struct Keyframe;
 
-class IImporter {
+class IImporter
+{
 protected:
-	XMFLOAT3	GetFloat3(stringstream& ss);
-	XMFLOAT2	GetFloat2(stringstream& ss);
-	float		GetFloat(stringstream& ss);
-	bool		GetBool(stringstream& ss);
-	string		GetPath(stringstream& ss);
-	VertexIdx	GetIdx(stringstream& ss);
+	XMFLOAT3 GetFloat3(stringstream& ss);
+	XMFLOAT2 GetFloat2(stringstream& ss);
+	float GetFloat(stringstream& ss);
+	bool GetBool(stringstream& ss);
+	string GetPath(stringstream& ss);
+	VertexIdx GetIdx(stringstream& ss);
 
-	XMFLOAT4X4	GetMatrix(const float* fIn, int& offset);
-	Keyframe	GetKeyframe(const float* fIn, int& offset);
+	XMFLOAT4X4 GetMatrix(const float* fIn, int& offset);
+	Keyframe GetKeyframe(const float* fIn, int& offset);
 };
 
 
-class ObjectDataImporter : public IImporter {
+class ObjectDataImporter : public IImporter
+{
 public:
 	vector<OBJECT_DESC> Load(const char* filePath);
 };
-class LightDataImporter : public IImporter {
+
+class LightDataImporter : public IImporter
+{
 public:
 	vector<LIGHT_DESC> Load(const char* filePath);
 };
-class MeshDataImporter : public IImporter {
+
+class MeshDataImporter : public IImporter
+{
 public:
 	vector<MESH_DATA> Load(const char* filePath);
 	vector<MESH_DATA> FBXLoad(const char* filePath);
 };
-class MaterialDataImporter : public IImporter {
+
+class MaterialDataImporter : public IImporter
+{
 public:
 	void Load(const char* filePath);
 };
-class AssetListDataImporter : public IImporter {
+
+class AssetListDataImporter : public IImporter
+{
 public:
 	void Load(
 		ID3D12Device* pd3dDevice,
@@ -67,7 +83,8 @@ public:
 
 struct AnimClip;
 
-class AnimClipDataImporter : public IImporter {
+class AnimClipDataImporter : public IImporter
+{
 public:
 	AnimClip Load(const char* filePath);
 };

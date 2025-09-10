@@ -6,12 +6,12 @@ class DoorComponent : public Component
 public:
 	DoorComponent() = delete;
 	DoorComponent(Object* pObject, bool bOpen = false);
-	~DoorComponent();
+	~DoorComponent() override;
 
 	void Open();
 	void Close();
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
 private:
 	bool m_bOpen;
@@ -19,4 +19,3 @@ private:
 	XMFLOAT3 m_xmf3OrigPosition;
 	TransformComponent* l_transform;
 };
-

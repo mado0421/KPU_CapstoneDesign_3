@@ -5,17 +5,17 @@
 #include "Scene.h"
 
 WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pMuzzle, Object* pBullet)
-	:Component(pObject)
-	, m_pBullet(pBullet)
-	, m_pMuzzle(pMuzzle)
-	, m_fCooltime(0.5f)
-	, m_fCurrCooltime(0.0f)
-	, m_maxAmmo(10)
-	, m_curAmmo(m_maxAmmo)
-	, m_bReloading(false)
-	, m_fReloadProgress(0)
-	, cam(nullptr)
-	, camTransform(nullptr)
+	: Component(pObject)
+	  , m_maxAmmo(10)
+	  , m_curAmmo(m_maxAmmo)
+	  , m_bReloading(false)
+	  , m_fReloadProgress(0)
+	  , m_pBullet(pBullet)
+	  , m_pMuzzle(pMuzzle)
+	  , m_fCooltime(0.5f)
+	  , m_fCurrCooltime(0.0f)
+	  , camTransform(nullptr)
+	  , cam(nullptr)
 {
 	myTransform = m_pObject->FindComponent<TransformComponent>();
 	muzzleTransform = m_pMuzzle->FindComponent<TransformComponent>();
@@ -29,36 +29,44 @@ void WeaponControllerComponent::CheckCollision(Component* other)
 {
 	if (!m_bEnabled || !other->m_bEnabled) return;
 
-	if (m_fTryRaycast) {
+	if (m_fTryRaycast)
+	{
 		TransformComponent* muzzle = muzzleTransform;
 		XMFLOAT3 xmf3Origin, xmf3Direction;
 		XMVECTOR origin, direction;
 		float length = 0;
 
 
-		if (cam) {
+		if (cam)
+		{
 			xmf3Origin = camTransform->GetPosition(Space::world);
 			xmf3Direction = cam->GetLookVector();
 
 			origin = XMLoadFloat3(&xmf3Origin);
 			direction = XMLoadFloat3(&xmf3Direction);
 
-			BoxColliderComponent* otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
-			if (otherBoxCollider) {
+			auto otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
+			if (otherBoxCollider)
+			{
 				otherBoxCollider->m_box.Intersects(origin, direction, length);
-				if (0 < length) {
-					if (m_fMinLength > length) {
+				if (0 < length)
+				{
+					if (m_fMinLength > length)
+					{
 						m_fMinLength = length;
 						m_pCollided = otherBoxCollider;
 						XMStoreFloat3(&m_xmf3CollisionPoint, XMVectorAdd(origin, XMVectorScale(direction, length)));
 					}
 				}
 			}
-			SphereColliderComponent* otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
-			if (otherSphereCollider) {
+			auto otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
+			if (otherSphereCollider)
+			{
 				otherSphereCollider->m_sphere.Intersects(origin, direction, length);
-				if (0 < length) {
-					if (m_fMinLength > length) {
+				if (0 < length)
+				{
+					if (m_fMinLength > length)
+					{
 						m_fMinLength = length;
 						m_pCollided = otherSphereCollider;
 						XMStoreFloat3(&m_xmf3CollisionPoint, XMVectorAdd(origin, XMVectorScale(direction, length)));
@@ -66,29 +74,36 @@ void WeaponControllerComponent::CheckCollision(Component* other)
 				}
 			}
 		}
-		else {
+		else
+		{
 			xmf3Origin = muzzle->GetPosition(Space::world);
 			xmf3Direction = muzzle->GetLookVector(Space::world);
 
 			origin = XMLoadFloat3(&xmf3Origin);
 			direction = XMLoadFloat3(&xmf3Direction);
 
-			BoxColliderComponent* otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
-			if (otherBoxCollider) {
+			auto otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
+			if (otherBoxCollider)
+			{
 				otherBoxCollider->m_box.Intersects(origin, direction, length);
-				if (0 < length) {
-					if (m_fMinLength > length) {
+				if (0 < length)
+				{
+					if (m_fMinLength > length)
+					{
 						m_fMinLength = length;
 						m_pCollided = otherBoxCollider;
 						XMStoreFloat3(&m_xmf3CollisionPoint, XMVectorAdd(origin, XMVectorScale(direction, length)));
 					}
 				}
 			}
-			SphereColliderComponent* otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
-			if (otherSphereCollider) {
+			auto otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
+			if (otherSphereCollider)
+			{
 				otherSphereCollider->m_sphere.Intersects(origin, direction, length);
-				if (0 < length) {
-					if (m_fMinLength > length) {
+				if (0 < length)
+				{
+					if (m_fMinLength > length)
+					{
 						m_fMinLength = length;
 						m_pCollided = otherSphereCollider;
 						XMStoreFloat3(&m_xmf3CollisionPoint, XMVectorAdd(origin, XMVectorScale(direction, length)));
@@ -96,17 +111,17 @@ void WeaponControllerComponent::CheckCollision(Component* other)
 				}
 			}
 		}
-
-
 	}
 }
 
 void WeaponControllerComponent::SolveConstraint()
 {
-	if (m_fTryRaycast) {
+	if (m_fTryRaycast)
+	{
 		m_fTryRaycast = false;
 		m_fMinLength = FLT_MAX;
-		if (m_pCollided) {
+		if (m_pCollided)
+		{
 			Character* enemy = m_pCollided->m_pObject->FindComponent<Character>();
 
 			if (enemy) enemy->Damage(100);
@@ -114,10 +129,10 @@ void WeaponControllerComponent::SolveConstraint()
 		m_pCollided = nullptr;
 
 		{
-			Object* pe = new Object("particleEmitter");
+			auto pe = new Object("particleEmitter");
 
-			TransformComponent* t = new TransformComponent(pe);
-			ParticleEmitterComponent* pec = new ParticleEmitterComponent(pe);
+			auto t = new TransformComponent(pe);
+			auto pec = new ParticleEmitterComponent(pe);
 
 			pec->m_bIsBilboard = false;
 			pec->m_fGravityModifier = 0.0f;
@@ -143,9 +158,6 @@ void WeaponControllerComponent::SolveConstraint()
 
 			g_pCurrScene->AddObject(pe, RENDERGROUP::PARTICLE);
 		}
-
-
-
 	}
 }
 
@@ -155,9 +167,11 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 	m_fCurrCooltime -= fTimeElapsed;
 
-	if (m_bReloading) {
+	if (m_bReloading)
+	{
 		m_fReloadProgress -= fTimeElapsed;
-		if (0 >= m_fReloadProgress) {
+		if (0 >= m_fReloadProgress)
+		{
 			m_bReloading = false;
 			m_fCurrCooltime = 0;
 			m_curAmmo = m_maxAmmo;
@@ -166,9 +180,12 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 
 	// Move to position of Parent's RHand
-	if (m_pObject->m_pParent) {
-		XMMATRIX l_xmmtxTransform = m_pObject->m_pParent->FindComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
-		l_xmmtxTransform = XMMatrixMultiply(XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(-90), XMConvertToRadians(-90)), l_xmmtxTransform);
+	if (m_pObject->m_pParent)
+	{
+		XMMATRIX l_xmmtxTransform = m_pObject->m_pParent->FindComponent<HumanoidAnimatorComponent>()->
+		                                       GetToWorldTransform(28);
+		l_xmmtxTransform = XMMatrixMultiply(
+			XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(-90), XMConvertToRadians(-90)), l_xmmtxTransform);
 
 		TransformComponent* transform = myTransform;
 		transform->SetLocalTransform(l_xmmtxTransform);
@@ -185,12 +202,14 @@ void WeaponControllerComponent::Fire()
 	if (!m_bEnabled) return;
 	if (m_bReloading) return;
 
-	if (0 >= m_curAmmo) {
+	if (0 >= m_curAmmo)
+	{
 		Reload();
 		return;
 	}
 
-	if (0 >= m_fCurrCooltime) {
+	if (0 >= m_fCurrCooltime)
+	{
 		m_pMuzzle->FindComponent<EffectComponent>()->TurnOn();
 
 		m_fCurrCooltime = m_fCooltime;

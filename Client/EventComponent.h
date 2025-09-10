@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 
-enum class EVENT {
+enum class EVENT
+{
 	TRIGGER,
 	DOPEN,
 	DCLOSE,
@@ -11,13 +12,16 @@ enum class EVENT {
 	DEFEAT,
 };
 
-struct EventInfo {
+struct EventInfo
+{
 	EVENT type;
 	void* data;
 
 	EventInfo(EVENT t, void* d)
-		:type(t)
-		, data(d) {}
+		: type(t)
+		  , data(d)
+	{
+	}
 };
 
 class EventComponent : public Component
@@ -26,17 +30,17 @@ public:
 	EventComponent() = delete;
 	EventComponent(Object* pObject);
 	EventComponent(Object* pObject, int count);
-	~EventComponent();
+	~EventComponent() override;
 
 	void AddEvent(EventInfo& info);
 	// trigger가 실행되면, event를 실행한다.
 	void SetEvent();
 
-	virtual void SolveConstraint();
-	virtual void Update(float fTimeElapsed);
+	void SolveConstraint() override;
+	void Update(float fTimeElapsed) override;
 
 private:
-	bool			isTriggerReady = false;
+	bool isTriggerReady = false;
 	vector<Object*> vecEnemyToWatch;
 	bool isWatchingEnemy = false;
 
@@ -47,4 +51,3 @@ private:
 	bool isEventForDefeat = false;
 	int targetCount = -1;
 };
-

@@ -4,16 +4,16 @@
 #include "Object.h"
 
 CameraComponent::CameraComponent(Object* pObject)
-	:Component(pObject)
-	, m_xmf4x4View(Matrix4x4::Identity())
-	, m_xmf4x4Projection(Matrix4x4::Identity())
-	, m_d3dViewport({ 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT, 0.0f, 1.0f })
-	, m_d3dScissorRect({ 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT })
-	, m_xmf3Right(1, 0, 0)
-	, m_xmf3Up(0, 1, 0)
-	, m_xmf3Look(0, 0, 1)
-	, m_pHeadTransform(nullptr)
-	, m_pLookAtTransform(nullptr)
+	: Component(pObject)
+	  , m_xmf4x4View(Matrix4x4::Identity())
+	  , m_xmf4x4Projection(Matrix4x4::Identity())
+	  , m_xmf3Right(1, 0, 0)
+	  , m_xmf3Up(0, 1, 0)
+	  , m_xmf3Look(0, 0, 1)
+	  , m_d3dViewport({0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f})
+	  , m_d3dScissorRect({0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT})
+	  , m_pHeadTransform(nullptr)
+	  , m_pLookAtTransform(nullptr)
 {
 	CalculateProjectionMatrix(0.1f, 1000.0f, ASPECT_RATIO, 60.0f);
 
@@ -21,7 +21,6 @@ CameraComponent::CameraComponent(Object* pObject)
 	SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 
 	t = m_pObject->FindComponent<TransformComponent>();
-
 }
 
 CameraComponent::~CameraComponent()
@@ -36,10 +35,10 @@ void CameraComponent::SetViewportsAndScissorRects(ID3D12GraphicsCommandList* pd3
 
 void CameraComponent::SetViewport(int xTopLeft, int yTopLeft, int nWidth, int nHeight, float fMinZ, float fMaxZ)
 {
-	m_d3dViewport.TopLeftX = float(xTopLeft);
-	m_d3dViewport.TopLeftY = float(yTopLeft);
-	m_d3dViewport.Width = float(nWidth);
-	m_d3dViewport.Height = float(nHeight);
+	m_d3dViewport.TopLeftX = static_cast<float>(xTopLeft);
+	m_d3dViewport.TopLeftY = static_cast<float>(yTopLeft);
+	m_d3dViewport.Width = static_cast<float>(nWidth);
+	m_d3dViewport.Height = static_cast<float>(nHeight);
 	m_d3dViewport.MinDepth = fMinZ;
 	m_d3dViewport.MaxDepth = fMaxZ;
 }
@@ -60,8 +59,8 @@ void CameraComponent::SetLookAtWorldPos(const XMFLOAT3& xmf3LookAt)
 	//XMFLOAT4X4 xmf4x4New = Matrix4x4::LookAtLH(xmf3Pos, xmf3LookAt, m_xmf3Up);
 
 	m_xmf3Right = XMFLOAT3(xmf4x4New._11, xmf4x4New._21, xmf4x4New._31);
-	m_xmf3Up	= XMFLOAT3(xmf4x4New._12, xmf4x4New._22, xmf4x4New._32);
-	m_xmf3Look	= XMFLOAT3(xmf4x4New._13, xmf4x4New._23, xmf4x4New._33);
+	m_xmf3Up = XMFLOAT3(xmf4x4New._12, xmf4x4New._22, xmf4x4New._32);
+	m_xmf3Look = XMFLOAT3(xmf4x4New._13, xmf4x4New._23, xmf4x4New._33);
 }
 
 void CameraComponent::SetLookAtWorldPos(const float& x, const float& y, const float& z)
@@ -99,7 +98,8 @@ const XMFLOAT4X4 CameraComponent::GetProjectionMatrix()
 
 void CameraComponent::CheckCollision(Component* other)
 {
-	if (m_pHeadTransform) {
+	if (m_pHeadTransform)
+	{
 		XMFLOAT3 xmf3Origin, xmf3Direction;
 		XMVECTOR origin, direction;
 		float length = 0;
@@ -113,21 +113,27 @@ void CameraComponent::CheckCollision(Component* other)
 
 		direction = XMVector3Rotate(direction, XMQuaternionRotationMatrix(t->GetWorldTransform()));
 
-		BoxColliderComponent* otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
-		if (otherBoxCollider) {
+		auto otherBoxCollider = dynamic_cast<BoxColliderComponent*>(other);
+		if (otherBoxCollider)
+		{
 			otherBoxCollider->m_box.Intersects(origin, direction, length);
-			if (0 < length) {
-				if (m_fDistance > length && m_fMinLength > length) {
+			if (0 < length)
+			{
+				if (m_fDistance > length && m_fMinLength > length)
+				{
 					m_fMinLength = length;
 					m_bIfCollide = true;
 				}
 			}
 		}
-		SphereColliderComponent* otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
-		if (otherSphereCollider) {
+		auto otherSphereCollider = dynamic_cast<SphereColliderComponent*>(other);
+		if (otherSphereCollider)
+		{
 			otherSphereCollider->m_sphere.Intersects(origin, direction, length);
-			if (0 < length) {
-				if (m_fDistance > length && m_fMinLength > length) {
+			if (0 < length)
+			{
+				if (m_fDistance > length && m_fMinLength > length)
+				{
 					m_fMinLength = length;
 					m_bIfCollide = true;
 				}
@@ -135,13 +141,16 @@ void CameraComponent::CheckCollision(Component* other)
 		}
 	}
 }
+
 void CameraComponent::SolveConstraint()
 {
 	XMFLOAT3 position = m_pHeadTransform->GetPosition(Space::local);
-	if (m_bIfCollide) {
+	if (m_bIfCollide)
+	{
 		position = Vector3::Add(position, Vector3::Multiply(m_fMinLength * 0.8f, m_xmf3Direction));
 	}
-	else {
+	else
+	{
 		position = Vector3::Add(position, Vector3::Multiply(m_fDistance, m_xmf3Direction));
 	}
 	t->SetPosition(position);
@@ -156,8 +165,8 @@ void CameraComponent::Update(float fTimeElapsed)
 	if (!m_bEnabled) return;
 
 
-
-	if (m_pLookAtTransform) {
+	if (m_pLookAtTransform)
+	{
 		SetLookAtWorldPos(m_pLookAtTransform->GetPosition(Space::world));
 	}
 	CalculateViewMatrix();
@@ -167,21 +176,29 @@ void CameraComponent::CalculateViewMatrix()
 {
 	TransformComponent* transform = t;
 	XMFLOAT3 xmf3Position;
-	xmf3Position	= transform->GetPosition(Space::world);
+	xmf3Position = transform->GetPosition(Space::world);
 
-	m_xmf3Look	= Vector3::Normalize(m_xmf3Look);
+	m_xmf3Look = Vector3::Normalize(m_xmf3Look);
 	m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-	m_xmf3Up	= Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+	m_xmf3Up = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
-	m_xmf4x4View._11 = m_xmf3Right.x; m_xmf4x4View._12 = m_xmf3Up.x; m_xmf4x4View._13 = m_xmf3Look.x;
-	m_xmf4x4View._21 = m_xmf3Right.y; m_xmf4x4View._22 = m_xmf3Up.y; m_xmf4x4View._23 = m_xmf3Look.y;
-	m_xmf4x4View._31 = m_xmf3Right.z; m_xmf4x4View._32 = m_xmf3Up.z; m_xmf4x4View._33 = m_xmf3Look.z;
+	m_xmf4x4View._11 = m_xmf3Right.x;
+	m_xmf4x4View._12 = m_xmf3Up.x;
+	m_xmf4x4View._13 = m_xmf3Look.x;
+	m_xmf4x4View._21 = m_xmf3Right.y;
+	m_xmf4x4View._22 = m_xmf3Up.y;
+	m_xmf4x4View._23 = m_xmf3Look.y;
+	m_xmf4x4View._31 = m_xmf3Right.z;
+	m_xmf4x4View._32 = m_xmf3Up.z;
+	m_xmf4x4View._33 = m_xmf3Look.z;
 	m_xmf4x4View._41 = -Vector3::DotProduct(xmf3Position, m_xmf3Right);
 	m_xmf4x4View._42 = -Vector3::DotProduct(xmf3Position, m_xmf3Up);
 	m_xmf4x4View._43 = -Vector3::DotProduct(xmf3Position, m_xmf3Look);
 }
 
-void CameraComponent::CalculateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fAspectRatio, float fFOVAngle)
+void CameraComponent::CalculateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fAspectRatio,
+                                                float fFOVAngle)
 {
-	m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
+	m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance,
+	                                                 fFarPlaneDistance);
 }

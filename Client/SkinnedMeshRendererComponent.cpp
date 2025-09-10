@@ -6,22 +6,24 @@
 #include "Material.h"
 
 SkinnedMeshRendererComponent::SkinnedMeshRendererComponent(
-	Object* pObject, 
+	Object* pObject,
 	ID3D12Device* pd3dDevice,
-	ID3D12GraphicsCommandList* pd3dCommandList, 
-	D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, 
+	ID3D12GraphicsCommandList* pd3dCommandList,
+	D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
 	D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
-	:Component(pObject)
+	: Component(pObject)
 {
 	UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-	m_pd3dCBResourceForMesh = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL, ncbElementBytes,
-		D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+	m_pd3dCBResourceForMesh = CreateBufferResource(pd3dDevice, pd3dCommandList, nullptr, ncbElementBytes,
+	                                               D3D12_HEAP_TYPE_UPLOAD,
+	                                               D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr);
 
 	ncbElementBytes = ((sizeof(CB_BONE_INFO) + 255) & ~255);
 
-	m_pd3dCBResourceForAnimation = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL, ncbElementBytes,
-		D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+	m_pd3dCBResourceForAnimation = CreateBufferResource(pd3dDevice, pd3dCommandList, nullptr, ncbElementBytes,
+	                                                    D3D12_HEAP_TYPE_UPLOAD,
+	                                                    D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr);
 
 	CreateConstantBufferView(pd3dDevice, d3dCbvCPUDescriptorStartHandle);
 	SetCBVGpuHandle(d3dCbvGPUDescriptorStartHandle);
@@ -41,14 +43,15 @@ void SkinnedMeshRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommand
 	XMMATRIX l_xmmtxWorldTransform = m_pObject->FindComponent<TransformComponent>()->GetWorldTransform();
 	XMStoreFloat4x4(m_pCBMappedWorldTransform, XMMatrixTranspose(l_xmmtxWorldTransform));
 
-	pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_ANIMTRANSFORM, m_d3dCbvGPUDescriptorHandleForAnimation);
+	pd3dCommandList->SetGraphicsRootDescriptorTable(
+		ROOTSIGNATURE_ANIMTRANSFORM, m_d3dCbvGPUDescriptorHandleForAnimation);
 	ncbElementBytes = ((sizeof(CB_BONE_INFO) + 255) & ~255);
 	memset(m_pCBMappedBonesTransform, NULL, ncbElementBytes);
 
 	XMFLOAT4X4* xmf4x4AnimTransform = m_pObject->FindComponent<AnimatorComponent>()->GetFinalResultAnimationTransform();
-	for (int i = 0; i < MAX_BONE_NUM; i++) 
+	for (int i = 0; i < MAX_BONE_NUM; i++)
 		m_pCBMappedBonesTransform->arrxmf4x4Transform[i] = xmf4x4AnimTransform[i];
-	
+
 
 	g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
 	g_ModelMng.Render(m_strModelName.c_str(), pd3dCommandList);
@@ -64,14 +67,16 @@ void SkinnedMeshRendererComponent::SetMaterialByName(const char* strMaterialName
 	m_strMaterialName = strMaterialName;
 }
 
-void SkinnedMeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDevice, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
+void SkinnedMeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDevice,
+                                                            D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
 {
-	if (nullptr != m_pd3dCBResourceForMesh) {
-		D3D12_GPU_VIRTUAL_ADDRESS		d3dGpuVirtualAddress;
+	if (nullptr != m_pd3dCBResourceForMesh)
+	{
+		D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress;
 		D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 		UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-		m_pd3dCBResourceForMesh->Map(0, NULL, (void**)&m_pCBMappedWorldTransform);
+		m_pd3dCBResourceForMesh->Map(0, nullptr, (void**)&m_pCBMappedWorldTransform);
 		d3dGpuVirtualAddress = m_pd3dCBResourceForMesh->GetGPUVirtualAddress();
 		d3dCBVDesc.SizeInBytes = ncbElementBytes;
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;
@@ -79,12 +84,13 @@ void SkinnedMeshRendererComponent::CreateConstantBufferView(ID3D12Device* pd3dDe
 
 		d3dCbvCPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
 	}
-	if (nullptr != m_pd3dCBResourceForAnimation) {
-		D3D12_GPU_VIRTUAL_ADDRESS		d3dGpuVirtualAddress;
+	if (nullptr != m_pd3dCBResourceForAnimation)
+	{
+		D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress;
 		D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 		UINT ncbElementBytes = ((sizeof(CB_BONE_INFO) + 255) & ~255);
 
-		m_pd3dCBResourceForAnimation->Map(0, NULL, (void**)&m_pCBMappedBonesTransform);
+		m_pd3dCBResourceForAnimation->Map(0, nullptr, (void**)&m_pCBMappedBonesTransform);
 		d3dGpuVirtualAddress = m_pd3dCBResourceForAnimation->GetGPUVirtualAddress();
 		d3dCBVDesc.SizeInBytes = ncbElementBytes;
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;

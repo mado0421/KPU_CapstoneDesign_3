@@ -11,15 +11,24 @@ public:
 
 	virtual Component* GetInstance();
 
-	virtual void CheckCollision(Component* c) {}
-	virtual void SolveConstraint() {}
-	virtual void Update(float fTimeElapsed) {}
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList) {}
+	virtual void CheckCollision(Component* c)
+	{
+	}
+
+	virtual void SolveConstraint()
+	{
+	}
+
+	virtual void Update(float fTimeElapsed)
+	{
+	}
+
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList)
+	{
+	}
 
 	void SetActive(bool bActive);
 
-public:
-	Object*			m_pObject	= nullptr;
-	bool			m_bEnabled	= true;
+	Object* m_pObject = nullptr;
+	bool m_bEnabled = true;
 };
-

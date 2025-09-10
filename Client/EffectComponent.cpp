@@ -3,9 +3,9 @@
 #include "Object.h"
 
 EffectComponent::EffectComponent(Object* pObject)
-	:Component(pObject)
-	,m_fDuration(0.0f)
-	,m_fLifetime(0.0f)
+	: Component(pObject)
+	  , m_fDuration(0.0f)
+	  , m_fLifetime(0.0f)
 {
 	SetActive(false);
 }

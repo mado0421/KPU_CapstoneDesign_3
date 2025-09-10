@@ -9,20 +9,16 @@ class WeaponControllerComponent : public Component
 public:
 	WeaponControllerComponent() = delete;
 	WeaponControllerComponent(Object* pObject, Object* pMuzzle, Object* pBullet);
-	~WeaponControllerComponent();
+	~WeaponControllerComponent() override;
 
-public:
-	virtual void CheckCollision(Component* other);
-	virtual void SolveConstraint();
-	virtual void Update(float fTimeElapsed);
+	void CheckCollision(Component* other) override;
+	void SolveConstraint() override;
+	void Update(float fTimeElapsed) override;
 
-public:
 	void Fire();
 	void Reload();
 
 	void SetCam(Object* pCam);
-
-public:
 
 	// For Ammo
 	int m_maxAmmo;
@@ -35,19 +31,18 @@ public:
 protected:
 	Object* m_pBullet;
 	Object* m_pMuzzle;
-	float	m_fCooltime;
-	float	m_fCurrCooltime;
+	float m_fCooltime;
+	float m_fCurrCooltime;
 
 private:
-	bool				m_fTryRaycast	= false;
-	float				m_fMinLength	= FLT_MAX;
-	Component*			m_pCollided		= nullptr;
-	XMFLOAT3			m_xmf3CollisionPoint = XMFLOAT3(0, 0, 0);
+	bool m_fTryRaycast = false;
+	float m_fMinLength = FLT_MAX;
+	Component* m_pCollided = nullptr;
+	XMFLOAT3 m_xmf3CollisionPoint = XMFLOAT3(0, 0, 0);
 
 
 	TransformComponent* muzzleTransform;
 	TransformComponent* myTransform;
 	TransformComponent* camTransform;
-	CameraComponent*	cam;
+	CameraComponent* cam;
 };
-

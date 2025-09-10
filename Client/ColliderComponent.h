@@ -6,23 +6,22 @@ class SphereColliderComponent;
 class Object;
 class AnimatorComponent;
 
-using BoxColliders		= vector<BoxColliderComponent*>;
-using SphereColliders	= vector<SphereColliderComponent*>;
+using BoxColliders = vector<BoxColliderComponent*>;
+using SphereColliders = vector<SphereColliderComponent*>;
 
 class ColliderComponent : public Component
 {
 public:
 	ColliderComponent() = delete;
 	ColliderComponent(Object* pObject, AnimatorComponent* pAnimator, bool bTrigger = false, int boneIdx = 0);
-	~ColliderComponent();
+	~ColliderComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
 	bool isTrigger();
 
-public:
-	vector<ColliderComponent*>	m_vecpCollided;
-	XMFLOAT4X4					m_xmf4x4Local;
+	vector<ColliderComponent*> m_vecpCollided;
+	XMFLOAT4X4 m_xmf4x4Local;
 
 protected:
 	AnimatorComponent* m_pAnimator;
@@ -38,7 +37,7 @@ public:
 		Object* pObject,
 		const XMFLOAT3& xmf3Extents,
 		bool bTrigger = false,
-		AnimatorComponent* pAnimator = nullptr, 
+		AnimatorComponent* pAnimator = nullptr,
 		int boneIdx = 0);
 	BoxColliderComponent(
 		Object* pObject,
@@ -48,13 +47,12 @@ public:
 		bool bTrigger = false,
 		AnimatorComponent* pAnimator = nullptr,
 		int boneIdx = 0);
-	~BoxColliderComponent();
+	~BoxColliderComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
-	virtual void CheckCollision(Component* other);
+	void CheckCollision(Component* other) override;
 
-public:
 	BoundingOrientedBox m_box;
 };
 
@@ -75,12 +73,11 @@ public:
 		bool bTrigger = false,
 		AnimatorComponent* pAnimator = nullptr,
 		int boneIdx = 0);
-	~SphereColliderComponent();
+	~SphereColliderComponent() override;
 
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
-	virtual void CheckCollision(Component* other);
+	void CheckCollision(Component* other) override;
 
-public:
 	BoundingSphere m_sphere;
 };

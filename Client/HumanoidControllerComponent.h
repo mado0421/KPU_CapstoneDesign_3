@@ -10,29 +10,26 @@ class HumanoidControllerComponent : public Component, public Character
 public:
 	HumanoidControllerComponent() = delete;
 	HumanoidControllerComponent(Object* pObject, Object* pWeapon);
-	~HumanoidControllerComponent();
+	~HumanoidControllerComponent() override;
 
 	void SetLookAt(Object* pObejct);
 
-public:
+	void Damage(int) override;
+	void Update(float fTimeElapsed) override;
 
-	virtual void Damage(int);
-	virtual void Update(float fTimeElapsed);
-
-	float		m_fTime;
+	float m_fTime;
 
 	// For Movement Part
-	XMFLOAT3	m_xmf3Velocity;
-	float		m_fSpeed;
-	float		m_fDragFactor;
+	XMFLOAT3 m_xmf3Velocity;
+	float m_fSpeed;
+	float m_fDragFactor;
 
-	float		m_fAimProgress;
-	float		m_fTimeForAim;
-	Object*		m_pWeaponObject;
+	float m_fAimProgress;
+	float m_fTimeForAim;
+	Object* m_pWeaponObject;
 
 	TransformComponent* m_pLookAt = nullptr;
 	float lookAtYAngle = 0;
 	InputManagerComponent* l_pInput;
 	TransformComponent* l_transform;
 };
-

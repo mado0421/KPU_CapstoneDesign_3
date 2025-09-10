@@ -13,11 +13,10 @@ public:
 		ID3D12GraphicsCommandList* pd3dCommandList,
 		D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
 		D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle);
-	~ParticleComponent();
+	~ParticleComponent() override;
 
-public:
-	virtual void Update(float fTimeElapsed);
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
+	void Update(float fTimeElapsed) override;
+	void Render(ID3D12GraphicsCommandList* pd3dCommandList) override;
 
 	void Initialize(ParticlePropertiesPack& ppp);
 
@@ -30,14 +29,14 @@ protected:
 
 private:
 	// Render
-	ID3D12Resource*				m_pd3dVertexBuffer;
-	ID3D12Resource*				m_pd3dVertexUploadBuffer;
-	D3D12_VERTEX_BUFFER_VIEW	m_d3dVertexBufferView;
+	ID3D12Resource* m_pd3dVertexBuffer;
+	ID3D12Resource* m_pd3dVertexUploadBuffer;
+	D3D12_VERTEX_BUFFER_VIEW m_d3dVertexBufferView;
 
 	// WorldTransform
-	D3D12_GPU_DESCRIPTOR_HANDLE	m_d3dCbvGPUDescriptorHandle;
-	ID3D12Resource*				m_pd3dCBResource = nullptr;
-	XMFLOAT4X4*					m_pCBMappedWorldTransform = nullptr;
+	D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUDescriptorHandle;
+	ID3D12Resource* m_pd3dCBResource = nullptr;
+	XMFLOAT4X4* m_pCBMappedWorldTransform = nullptr;
 
 	// Particle Properties
 	float m_fLifetime;

@@ -6,13 +6,13 @@
 #include "Mask.h"
 
 AnimatorComponent::AnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
-	:Component(pObject)
+	: Component(pObject)
 {
-	memset(m_arrToDressInv,		NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
-	memset(m_arrToParent,		NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
-	memset(m_arrToWorld,		NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
-	memset(m_arrLocalRotation,	NULL, sizeof(XMFLOAT4) * MAX_BONE_NUM);
-	memset(m_arrParentIdx,		NULL, sizeof(unsigned char) * MAX_BONE_NUM);
+	memset(m_arrToDressInv, NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
+	memset(m_arrToParent, NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
+	memset(m_arrToWorld, NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
+	memset(m_arrLocalRotation, NULL, sizeof(XMFLOAT4) * MAX_BONE_NUM);
+	memset(m_arrParentIdx, NULL, sizeof(unsigned char) * MAX_BONE_NUM);
 	m_numBone = 0;
 
 
@@ -24,10 +24,11 @@ AnimatorComponent::AnimatorComponent(Object* pObject, const char* strClipNameFor
 	m_numBone = clip->vecBone.size();
 
 	// clip의 구조 때문에 memcpy로 한 번에 긁어올 수가 없음.
-	for (int i = 0; i < clip->vecBone.size(); i++) {
-		m_arrToDressInv[i]	= clip->vecBone[i].toDressposeInv;
-		m_arrToParent[i]	= clip->vecBone[i].toParent;
-		m_arrParentIdx[i]	= clip->vecBone[i].parentIdx;
+	for (int i = 0; i < clip->vecBone.size(); i++)
+	{
+		m_arrToDressInv[i] = clip->vecBone[i].toDressposeInv;
+		m_arrToParent[i] = clip->vecBone[i].toParent;
+		m_arrParentIdx[i] = clip->vecBone[i].parentIdx;
 	}
 }
 
@@ -40,7 +41,8 @@ XMFLOAT4X4* AnimatorComponent::GetFinalResultAnimationTransform()
 	XMFLOAT4X4 result[MAX_BONE_NUM];
 
 	for (int i = 0; i < MAX_BONE_NUM; i++)
-		XMStoreFloat4x4(&result[i],	XMMatrixTranspose(XMMatrixMultiply(XMLoadFloat4x4(&m_arrToDressInv[i]), XMLoadFloat4x4(&m_arrToWorld[i]))));
+		XMStoreFloat4x4(&result[i], XMMatrixTranspose(
+			                XMMatrixMultiply(XMLoadFloat4x4(&m_arrToDressInv[i]), XMLoadFloat4x4(&m_arrToWorld[i]))));
 
 	return result;
 }
@@ -59,24 +61,31 @@ void AnimatorComponent::CalcToWorld()
 {
 	memset(m_arrToWorld, NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
 
-	for (int i = 0; i < m_numBone; i++) {
-		if (-1 != m_arrParentIdx[i]) {
+	for (int i = 0; i < m_numBone; i++)
+	{
+		if (-1 != m_arrParentIdx[i])
+		{
 			XMStoreFloat4x4(
 				&m_arrToWorld[i],
-				XMMatrixMultiply(XMMatrixMultiply(XMMatrixRotationQuaternion(XMLoadFloat4(&m_arrLocalRotation[i])), XMLoadFloat4x4(&m_arrToParent[i])), XMLoadFloat4x4(&m_arrToWorld[m_arrParentIdx[i]])));
+				XMMatrixMultiply(
+					XMMatrixMultiply(XMMatrixRotationQuaternion(XMLoadFloat4(&m_arrLocalRotation[i])),
+					                 XMLoadFloat4x4(&m_arrToParent[i])),
+					XMLoadFloat4x4(&m_arrToWorld[m_arrParentIdx[i]])));
 		}
-		else {
+		else
+		{
 			XMStoreFloat4x4(
 				&m_arrToWorld[i],
-				XMMatrixMultiply(XMMatrixRotationQuaternion(XMLoadFloat4(&m_arrLocalRotation[i])), XMLoadFloat4x4(&m_arrToParent[i]))
+				XMMatrixMultiply(XMMatrixRotationQuaternion(XMLoadFloat4(&m_arrLocalRotation[i])),
+				                 XMLoadFloat4x4(&m_arrToParent[i]))
 			);
 		}
 	}
 }
 
 HumanoidAnimatorComponent::HumanoidAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
-	:AnimatorComponent(pObject, strClipNameForBoneHierarchy)
-	, m_pAimingMask(new BoneMask(BoneMask::PreDefined::eUpperBody))
+	: AnimatorComponent(pObject, strClipNameForBoneHierarchy)
+	  , m_pAimingMask(new BoneMask(BoneMask::PreDefined::eUpperBody))
 {
 	l_HCC = m_pObject->FindComponent<HumanoidControllerComponent>();
 }
@@ -86,7 +95,8 @@ HumanoidAnimatorComponent::~HumanoidAnimatorComponent()
 	delete m_pAimingMask;
 }
 
-void AdjustRotationQuaternion(XMVECTOR& src, float x, float y, float z) {
+void AdjustRotationQuaternion(XMVECTOR& src, float x, float y, float z)
+{
 	XMMATRIX originalMtx = XMMatrixRotationQuaternion(src);
 	XMMATRIX adjustMtx = XMMatrixRotationRollPitchYawDegree(x, y, z);
 	originalMtx = XMMatrixMultiply(originalMtx, adjustMtx);
@@ -106,25 +116,33 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 	memset(l_arrMovementLocalRotation, NULL, sizeof(XMVECTOR) * MAX_BONE_NUM);
 	{
 		ClipPair lPair;
-		
+
 		XMFLOAT3 l_xmf3Velocity = l_HCC->m_xmf3Velocity;
 		float l_fVelocityLength = Vector3::Length(l_xmf3Velocity);
 		float l_fidleFactor = (1.5 - l_fVelocityLength) / 1.5;
 
 		Clamp(l_fidleFactor, 0, 1);
 
-		if (l_fVelocityLength) {
+		if (l_fVelocityLength)
+		{
 			XMFLOAT3 normalizedDir = Vector3::Normalize(l_xmf3Velocity);
 			lPair.push_back(pair<string, float>("Humanoid_Idle_NoneMovement", l_fidleFactor));
-			if (!normalizedDir.x) {
-				if (0 < normalizedDir.z) lPair.push_back(pair<string, float>("Humanoid_WalkingForward", (1 - l_fidleFactor) * 1));
-				if (0 > normalizedDir.z) lPair.push_back(pair<string, float>("Humanoid_WalkingBackward", (1 - l_fidleFactor) * 1));
+			if (!normalizedDir.x)
+			{
+				if (0 < normalizedDir.z) lPair.push_back(
+					pair<string, float>("Humanoid_WalkingForward", (1 - l_fidleFactor) * 1));
+				if (0 > normalizedDir.z) lPair.push_back(
+					pair<string, float>("Humanoid_WalkingBackward", (1 - l_fidleFactor) * 1));
 			}
-			else if (!normalizedDir.z) {
-				if (0 < normalizedDir.x) lPair.push_back(pair<string, float>("Humanoid_WalkingRightStrafe", (1 - l_fidleFactor) * 1));
-				if (0 > normalizedDir.x) lPair.push_back(pair<string, float>("Humanoid_WalkingLeftStrafe", (1 - l_fidleFactor) * 1));
+			else if (!normalizedDir.z)
+			{
+				if (0 < normalizedDir.x) lPair.push_back(
+					pair<string, float>("Humanoid_WalkingRightStrafe", (1 - l_fidleFactor) * 1));
+				if (0 > normalizedDir.x) lPair.push_back(
+					pair<string, float>("Humanoid_WalkingLeftStrafe", (1 - l_fidleFactor) * 1));
 			}
-			else {
+			else
+			{
 				float x = normalizedDir.x / (abs(normalizedDir.x) + abs(normalizedDir.z));
 				float z = normalizedDir.z / (abs(normalizedDir.x) + abs(normalizedDir.z));
 				if (0 < z) lPair.push_back(pair<string, float>("Humanoid_WalkingForward", (1 - l_fidleFactor) * z));
@@ -134,30 +152,42 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 				float backward = -normalizedDir.z;
 				Clamp(forward, 0, 1);
 				Clamp(backward, 0, 1);
-				if (0 < x) {
-					if (forward) lPair.push_back(pair<string, float>("Humanoid_WalkingRightStrafeForward", (1 - l_fidleFactor) * x * forward));
-					if (strafe)	 lPair.push_back(pair<string, float>("Humanoid_WalkingRightStrafe", (1 - l_fidleFactor) * x * strafe));
-					if (backward)lPair.push_back(pair<string, float>("Humanoid_WalkingLeftStrafeBack", (1 - l_fidleFactor) * x * backward));
+				if (0 < x)
+				{
+					if (forward) lPair.push_back(
+						pair<string, float>("Humanoid_WalkingRightStrafeForward", (1 - l_fidleFactor) * x * forward));
+					if (strafe) lPair.push_back(
+						pair<string, float>("Humanoid_WalkingRightStrafe", (1 - l_fidleFactor) * x * strafe));
+					if (backward)lPair.push_back(
+						pair<string, float>("Humanoid_WalkingLeftStrafeBack", (1 - l_fidleFactor) * x * backward));
 				}
-				else if (0 > x) {
-					if (forward) lPair.push_back(pair<string, float>("Humanoid_WalkingLeftStrafeForward", (1 - l_fidleFactor) * -x * forward));
-					if (strafe)	 lPair.push_back(pair<string, float>("Humanoid_WalkingLeftStrafe", (1 - l_fidleFactor) * -x * strafe));
-					if (backward)lPair.push_back(pair<string, float>("Humanoid_WalkingRightStrafeBack", (1 - l_fidleFactor) * -x * backward));
+				else if (0 > x)
+				{
+					if (forward) lPair.push_back(
+						pair<string, float>("Humanoid_WalkingLeftStrafeForward", (1 - l_fidleFactor) * -x * forward));
+					if (strafe) lPair.push_back(
+						pair<string, float>("Humanoid_WalkingLeftStrafe", (1 - l_fidleFactor) * -x * strafe));
+					if (backward)lPair.push_back(
+						pair<string, float>("Humanoid_WalkingRightStrafeBack", (1 - l_fidleFactor) * -x * backward));
 				}
 			}
 		}
 
-		if (lPair.empty()) {
+		if (lPair.empty())
+		{
 			lPair.push_back(pair<string, float>("Humanoid_Idle_NoneMovement", 1.0f));
 		}
-		for (int i = 0; i < lPair.size(); i++) {
+		for (int i = 0; i < lPair.size(); i++)
+		{
 			AnimClip* clip = g_AnimMng.GetAnimClip(lPair[i].first.c_str());
 			XMINT4 xmi4FrameIdx;
 			float fNormalizedTime;
 
 			AnimationCalculate::GetFrameIdxAndNormalizedTime(clip, l_fTime, fNormalizedTime, xmi4FrameIdx);
-			for (int j = 0; j < clip->vecBone.size(); j++) {
-				l_arrMovementLocalRotation[j] += AnimationCalculate::GetLocalTransform(clip, j, fNormalizedTime, xmi4FrameIdx) * (lPair[i].second);
+			for (int j = 0; j < clip->vecBone.size(); j++)
+			{
+				l_arrMovementLocalRotation[j] += AnimationCalculate::GetLocalTransform(
+					clip, j, fNormalizedTime, xmi4FrameIdx) * (lPair[i].second);
 			}
 		}
 	}
@@ -170,14 +200,17 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 
 		if (lPair.empty()) lPair.push_back(pair<string, float>("Humanoid_Aiming", 1));
 
-		for (int i = 0; i < lPair.size(); i++) {
+		for (int i = 0; i < lPair.size(); i++)
+		{
 			AnimClip* clip = g_AnimMng.GetAnimClip(lPair[i].first.c_str());
 			XMINT4 xmi4FrameIdx;
 			float fNormalizedTime;
 
 			AnimationCalculate::GetFrameIdxAndNormalizedTime(clip, l_fTime, fNormalizedTime, xmi4FrameIdx);
-			for (int j = 0; j < clip->vecBone.size(); j++) {
-				l_arrAimingLocalRotation[j] += AnimationCalculate::GetLocalTransform(clip, j, fNormalizedTime, xmi4FrameIdx) * (lPair[i].second);
+			for (int j = 0; j < clip->vecBone.size(); j++)
+			{
+				l_arrAimingLocalRotation[j] += AnimationCalculate::GetLocalTransform(
+					clip, j, fNormalizedTime, xmi4FrameIdx) * (lPair[i].second);
 			}
 		}
 	}
@@ -189,8 +222,9 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 	AdjustRotationQuaternion(l_arrAimingLocalRotation[25], 0, 0, -10);
 	AdjustRotationQuaternion(l_arrAimingLocalRotation[28], 20, 0, 0);
 
-	float l_fAimingWeight =  l_HCC->m_fAimProgress / l_HCC->m_fTimeForAim;
-	for (int i = 0; i < MAX_BONE_NUM; i++) {
+	float l_fAimingWeight = l_HCC->m_fAimProgress / l_HCC->m_fTimeForAim;
+	for (int i = 0; i < MAX_BONE_NUM; i++)
+	{
 		l_arrMovementLocalRotation[i] *= (1 - (m_pAimingMask->weight[i] * l_fAimingWeight));
 		l_arrMovementLocalRotation[i] += l_arrAimingLocalRotation[i] * m_pAimingMask->weight[i] * l_fAimingWeight;
 		XMStoreFloat4(&m_arrLocalRotation[i], l_arrMovementLocalRotation[i]);
@@ -200,12 +234,11 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 }
 
 TargetBoardAnimatorComponent::TargetBoardAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
-	:AnimatorComponent(pObject, strClipNameForBoneHierarchy)
+	: AnimatorComponent(pObject, strClipNameForBoneHierarchy)
 {
 	l_TCC = m_pObject->FindComponent<TargetBoardControllerComponent>();
 	if (l_TCC->isAlive()) m_fStandInterpolationValue = 1.0f;
 	else m_fStandInterpolationValue = 0.0f;
-
 }
 
 TargetBoardAnimatorComponent::~TargetBoardAnimatorComponent()
@@ -232,19 +265,23 @@ void TargetBoardAnimatorComponent::Update(float fTimeElapsed)
 		lPair.push_back(pair<string, float>("targetBoardStand", m_fStandInterpolationValue));
 		lPair.push_back(pair<string, float>("targetBoardDown", 1 - m_fStandInterpolationValue));
 
-		for (int i = 0; i < lPair.size(); i++) {
+		for (int i = 0; i < lPair.size(); i++)
+		{
 			AnimClip* clip = g_AnimMng.GetAnimClip(lPair[i].first.c_str());
 			XMINT4 xmi4FrameIdx;
 			float fNormalizedTime;
 
 			AnimationCalculate::GetFrameIdxAndNormalizedTime(clip, 0.0f, fNormalizedTime, xmi4FrameIdx);
-			for (int j = 0; j < clip->vecBone.size(); j++) {
-				l_arrLocalRotation[j] += AnimationCalculate::GetLocalTransform(clip, j, fNormalizedTime, xmi4FrameIdx) * (lPair[i].second);
+			for (int j = 0; j < clip->vecBone.size(); j++)
+			{
+				l_arrLocalRotation[j] += AnimationCalculate::GetLocalTransform(clip, j, fNormalizedTime, xmi4FrameIdx) *
+					(lPair[i].second);
 			}
 		}
 	}
 
-	for (int i = 0; i < MAX_BONE_NUM; i++) {
+	for (int i = 0; i < MAX_BONE_NUM; i++)
+	{
 		XMStoreFloat4(&m_arrLocalRotation[i], l_arrLocalRotation[i]);
 	}
 

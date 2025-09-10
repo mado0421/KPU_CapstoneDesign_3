@@ -5,8 +5,8 @@
 #include "Animation.h"
 #include "Scene.h"
 
-TextureManager	g_TextureMng;
-ModelManager	g_ModelMng;
+TextureManager g_TextureMng;
+ModelManager g_ModelMng;
 MaterialManager g_MaterialMng;
 AnimationManager g_AnimMng;
 int gTestInt = 2;

@@ -10,47 +10,46 @@ class Scene;
 
 class Framework
 {
-private:
 	/////////////////////////////////////////////////////////////////////////////////////
 	// 윈도우 창 생성부
-	HINSTANCE					m_hInstance;
-	HWND						m_hWnd;
-	int							m_nWndClientWidth;
-	int							m_nWndClientHeight;
-	_TCHAR						m_pszFrameRate[NUMDEFAULTSTRINGCHAR];
+	HINSTANCE m_hInstance;
+	HWND m_hWnd;
+	int m_nWndClientWidth;
+	int m_nWndClientHeight;
+	_TCHAR m_pszFrameRate[NUMDEFAULTSTRINGCHAR];
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	// DirectX 12 생성부
-	IDXGIFactory4*				m_pdxgiFactory;
-	IDXGISwapChain3*			m_pdxgiSwapChain;
-	ID3D12Device*				m_pd3dDevice;
+	IDXGIFactory4* m_pdxgiFactory;
+	IDXGISwapChain3* m_pdxgiSwapChain;
+	ID3D12Device* m_pd3dDevice;
 
-	bool						m_bMsaa4xEnable = false;
-	UINT						m_nMsaa4xQualityLevels = 0;
+	bool m_bMsaa4xEnable = false;
+	UINT m_nMsaa4xQualityLevels = 0;
 
-	static const UINT			m_nSwapChainBuffers = NUMSWAPCHAINBUFFER;
-	UINT						m_nSwapChainBufferIndex;
+	static constexpr UINT m_nSwapChainBuffers = NUMSWAPCHAINBUFFER;
+	UINT m_nSwapChainBufferIndex;
 
-	ID3D12Resource*				m_ppd3dSwapChainBackBuffers[m_nSwapChainBuffers];
-	ID3D12DescriptorHeap*		m_pd3dRtvDescriptorHeap;
-	UINT						m_nRtvDescriptorIncrementSize;
+	ID3D12Resource* m_ppd3dSwapChainBackBuffers[m_nSwapChainBuffers];
+	ID3D12DescriptorHeap* m_pd3dRtvDescriptorHeap;
+	UINT m_nRtvDescriptorIncrementSize;
 
-	ID3D12Resource*				m_pd3dDepthStencilBuffer;
-	ID3D12DescriptorHeap*		m_pd3dDsvDescriptorHeap;
-	UINT						m_nDsvDescriptorIncrementSize;
+	ID3D12Resource* m_pd3dDepthStencilBuffer;
+	ID3D12DescriptorHeap* m_pd3dDsvDescriptorHeap;
+	UINT m_nDsvDescriptorIncrementSize;
 
-	ID3D12CommandAllocator*		m_pd3dCommandAllocator;
-	ID3D12CommandQueue*			m_pd3dCommandQueue;
-	ID3D12GraphicsCommandList*	m_pd3dCommandList;
-	
-	ID3D12Fence*				m_pd3dFence;
-	UINT64						m_nFenceValues[m_nSwapChainBuffers];
-	HANDLE						m_hFenceEvent;
+	ID3D12CommandAllocator* m_pd3dCommandAllocator;
+	ID3D12CommandQueue* m_pd3dCommandQueue;
+	ID3D12GraphicsCommandList* m_pd3dCommandList;
+
+	ID3D12Fence* m_pd3dFence;
+	UINT64 m_nFenceValues[m_nSwapChainBuffers];
+	HANDLE m_hFenceEvent;
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Scene
-	Scene**						m_ppScenes;
-	Scene*						m_pCurrentScene;
-	Timer						m_Timer;
+	Scene** m_ppScenes;
+	Scene* m_pCurrentScene;
+	Timer m_Timer;
 
 public:
 	void Update();

@@ -6,9 +6,7 @@ class GameManagerComponent : public Component
 public:
 	GameManagerComponent() = delete;
 	GameManagerComponent(Object* pObject);
-	~GameManagerComponent();
+	~GameManagerComponent() override;
 
-	virtual void Update(float fTimeElapsed);
-private:
+	void Update(float fTimeElapsed) override;
 };
-

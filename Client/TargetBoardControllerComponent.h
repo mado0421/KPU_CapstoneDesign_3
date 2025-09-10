@@ -10,12 +10,11 @@ class TargetBoardControllerComponent : public Component, public Character
 public:
 	TargetBoardControllerComponent() = delete;
 	TargetBoardControllerComponent(Object* pObject, bool bAutoRevive = false);
-	~TargetBoardControllerComponent();
+	~TargetBoardControllerComponent() override;
 
-public:
-	virtual void Update(float fTimeElapsed);
-	virtual void Revive();
-	virtual void Die();
+	void Update(float fTimeElapsed) override;
+	void Revive() override;
+	void Die() override;
 
 	void SetPlayer(Object* pO);
 
@@ -27,4 +26,3 @@ private:
 	Object* pe = nullptr;
 	ParticleEmitterComponent* lpec = nullptr;
 };
-
