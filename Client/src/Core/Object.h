@@ -25,20 +25,20 @@ public:
     virtual void SetParent(Object* pObject) { m_pParent = pObject; }
     void         SetActive(bool state);
 
-    template <typename t>
-    t* FindComponent();
+    template <typename T>
+    T* FindComponent();
 
-    template <typename t>
-    vector<t*> FindComponents();
+    template <typename T>
+    vector<T*> FindComponents();
 
-    template <typename t>
-    vector<t*> FindComponentsInChildren();
+    template <typename T>
+    vector<T*> FindComponentsInChildren();
 
     void AddComponent(Component* component);
 
 protected:
-    template <typename t>
-    void FindComponentsReq(vector<t*>& result);
+    template <typename T>
+    void FindComponentsReq(vector<T*>& result);
 
 public:
     string          m_strName;
@@ -66,49 +66,49 @@ private:
     D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUDescriptorHandle;
 };
 
-template <typename t>
-t* Object::FindComponent()
+template <typename T>
+T* Object::FindComponent()
 {
     for (Component* c : m_vecComponents)
     {
-        t* as = dynamic_cast<t*>(c);
+        T* as = dynamic_cast<T*>(c);
         if (nullptr != as) return as;
     }
     return nullptr;
 }
 
-template <typename t>
-vector<t*> Object::FindComponents()
+template <typename T>
+vector<T*> Object::FindComponents()
 {
-    vector<t*> result;
+    vector<T*> result;
 
     for (Component* c : m_vecComponents)
     {
-        t* as = dynamic_cast<t*>(c);
+        T* as = dynamic_cast<T*>(c);
         if (nullptr != as) result.push_back(as);
     }
 
     return result;
 }
 
-template <typename t>
-vector<t*> Object::FindComponentsInChildren()
+template <typename T>
+vector<T*> Object::FindComponentsInChildren()
 {
-    vector<t*> result;
+    vector<T*> result;
 
     FindComponentsReq(result);
 
     return result;
 }
 
-template <typename t>
-void Object::FindComponentsReq(vector<t*>& result)
+template <typename T>
+void Object::FindComponentsReq(vector<T*>& result)
 {
     for (Component* c : m_vecComponents)
     {
-        t* as = dynamic_cast<t*>(c);
+        T* as = dynamic_cast<T*>(c);
         if (nullptr != as) result.push_back(as);
     }
 
-    for (Object* c : m_vecpChild) c->FindComponentsReq<t>(result);
+    for (Object* c : m_vecpChild) c->FindComponentsReq<T>(result);
 }

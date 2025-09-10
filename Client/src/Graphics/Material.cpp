@@ -5,7 +5,7 @@ Material::Material() : matName("defaultMaterial"), diffuseMap("defaultDiffuseMap
 
 void Material::Set(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-    g_TextureMng.UseForShaderResource(diffuseMap.c_str(), pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-    g_TextureMng.UseForShaderResource(normalMap.c_str(), pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
-    g_TextureMng.UseForShaderResource(specularMap.c_str(), pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
+    g_texture_manager.UseForShaderResource(diffuseMap.c_str(), pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+    g_texture_manager.UseForShaderResource(normalMap.c_str(), pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
+    g_texture_manager.UseForShaderResource(specularMap.c_str(), pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
 }

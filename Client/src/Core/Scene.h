@@ -6,11 +6,11 @@ class Screen;
 class Camera;
 class RenderToTextureClass;
 class Framework;
-class Texture;
+// class Texture;
 class LightManager;
 class TextureManager;
 
-struct CB_PASS_INFO
+struct ConstantBufferPassInfo
 {
     XMFLOAT4X4 m_xmf4x4CameraView;
     XMFLOAT4X4 m_xmf4x4CameraProjection;
@@ -21,7 +21,7 @@ struct CB_PASS_INFO
     float      m_xmfCurrentTime;
 };
 
-struct MY_ENV_OBJECT_DATA
+struct EnvironmentObjectData
 {
     string   strMeshName;
     string   strMatName;
@@ -29,7 +29,7 @@ struct MY_ENV_OBJECT_DATA
     XMFLOAT4 xmf4Rotation;
 };
 
-struct MY_COLLIDER_OBJECT_DATA
+struct ColliderObjectData
 {
     XMFLOAT3 xmf3Position;
     XMFLOAT3 xmf3Extents;
@@ -38,9 +38,9 @@ struct MY_COLLIDER_OBJECT_DATA
 
 namespace LoadMy
 {
-    vector<string>                  Split(istringstream& ss, char delim);
-    vector<MY_ENV_OBJECT_DATA>      LoadEnvMeshList(const char* path);
-    vector<MY_COLLIDER_OBJECT_DATA> LoadColliderList(const char* path);
+    vector<string>                Split(istringstream& ss, char delim);
+    vector<EnvironmentObjectData> LoadEnvMeshList(const char* path);
+    vector<ColliderObjectData>    LoadColliderList(const char* path);
 }
 
 enum class RenderGroup
@@ -87,7 +87,7 @@ protected:
     ID3D12Resource*             m_pd3duabHDRAvgLum;
     D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUuabHDRAvgLumHandle;
     ID3D12Resource*             m_pd3dcbPassInfo;
-    CB_PASS_INFO*               m_pcbMappedPassInfo;
+    ConstantBufferPassInfo*     m_pcbMappedPassInfo;
     D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUPassInfoHandle;
 
     Framework* m_pFramework;
@@ -100,7 +100,7 @@ public:
     int          eventCount    = 0; //enemyDown
     bool         test          = false;
     int          startEndState = 0; // 0: main, 1: start, 2: end
-    virtual void Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+    virtual void Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list);
 
     virtual void CheckCollsion();
     virtual void SolveConstraint();
@@ -142,9 +142,9 @@ protected:
     void LoadLevelEnvironment();
 
     void CreateEnvObject(const char* strModelName, const char* strMaterialName, XMFLOAT3 pos, XMFLOAT4 rot);
-    void CreateEnvObject(MY_ENV_OBJECT_DATA objData);
+    void CreateEnvObject(EnvironmentObjectData objData);
 
-    void CreateCollider(MY_COLLIDER_OBJECT_DATA colData);
+    void CreateCollider(ColliderObjectData colData);
 
     void CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialStateDied);
     void CreateDoor(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool isOpen);

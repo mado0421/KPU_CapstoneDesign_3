@@ -4,57 +4,34 @@
 #include "PipelineStateObject.h"
 #include "../Graphics/Light.h"
 #include "../IO/Importer.h"
-#include "../Resources/Model.h"
-#include "../Resources/Texture.h"
+#include "../Renderer/Elements/Model.h"
+#include "../Renderer/Elements/Texture.h"
 
 #include "Components.h"
 
 bool TEST_MOUSE_USABLE = true;
 
-void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+void Scene::Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list)
 {
-    /*========================================================================
-    * �ֿ� ���� �ʱ�ȭ
-    *=======================================================================*/
-    m_pd3dDevice        = pd3dDevice;
-    m_pd3dCommandList   = pd3dCommandList;
+    m_pd3dDevice        = device;
+    m_pd3dCommandList   = command_list;
     m_pd3dRootSignature = CreateRootSignature();
 
-    /*========================================================================
-    * Ŀ�� ����
-    *=======================================================================*/
     if (TEST_MOUSE_USABLE) SetCursorPos(FRAME_BUFFER_WIDTH / 2, FRAME_BUFFER_HEIGHT / 2);
     ShowCursor(false);
-
-    /*========================================================================
-    * ī�޶� ����
-    *=======================================================================*/
-    //m_pCamera = new FollowCamera();
-    //m_pCamera->SetPosition(XMFLOAT3(0, 2, -3));
-    //m_pCamera->SetLookAt(XMFLOAT3(0, 1, 1));
-
-    /*========================================================================
-    * ��ũ���� �� ����
-    *=======================================================================*/
     CreateDescriptorHeap();
 
-
-    /*==============================================================================
-    * PassConstants ����
-    *=============================================================================*/
     CreatePassInfoShaderResource();
     {
         int totalBckBufPixels = FRAME_BUFFER_WIDTH * 2;
-        //= (FRAME_BUFFER_WIDTH * FRAME_BUFFER_WIDTH) / (16 * 1024);
 
         HRESULT hr = E_FAIL;
 
 
-        //	��ó�� �ؽ�ó�� SRV�� UAV �� �� �������� ��.
         D3D12_HEAP_PROPERTIES hp   = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
         D3D12_RESOURCE_DESC   desc = CD3DX12_RESOURCE_DESC::Buffer(totalBckBufPixels * sizeof(float), D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
-        hr = pd3dDevice->CreateCommittedResource(&hp, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&m_pd3duabHDRAvgLum));
+        hr = device->CreateCommittedResource(&hp, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&m_pd3duabHDRAvgLum));
 
         D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
         uavDesc.Format                           = DXGI_FORMAT_UNKNOWN;
@@ -66,64 +43,41 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
         m_pd3dDevice->CreateUnorderedAccessView(m_pd3duabHDRAvgLum, nullptr, &uavDesc, m_d3dSrvCPUDescriptorStartHandle);
         m_d3dSrvCPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
         m_d3dCbvGPUuabHDRAvgLumHandle = m_d3dSrvGPUDescriptorStartHandle;
-        m_d3dSrvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize; // ������� ��
+        m_d3dSrvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
     }
+    
+    g_texture_manager.Initialize(m_pd3dDevice);
+    g_texture_manager.AddUnorderedAccessTexture("DownScaled", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddUnorderedAccessTexture("Blur_Vertical", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddUnorderedAccessTexture("Blur_Horizontal", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddDepthBufferTexture("GBuffer_Depth", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddRenderTargetTexture("GBuffer_Color", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddRenderTargetTexture("GBuffer_Normal", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.AddRenderTargetTexture("Screen", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
+    g_texture_manager.LoadFromFile("defaultDiffuseMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.LoadFromFile("defaultNormalMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.LoadFromFile("defaultSpecularMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.LoadFromFile("titleImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.LoadFromFile("endImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+    g_texture_manager.LoadFromFile("victory", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
-    /*========================================================================
-    * �ؽ���
-    *=======================================================================*/
-    g_TextureMng.Initialize(m_pd3dDevice);
-    g_TextureMng.AddUnorderedAccessTexture("DownScaled", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddUnorderedAccessTexture("Blur_Vertical", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddUnorderedAccessTexture("Blur_Horizontal", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddDepthBufferTexture("GBuffer_Depth", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddRenderTargetTexture("GBuffer_Color", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddRenderTargetTexture("GBuffer_Normal", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.AddRenderTargetTexture("Screen", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    //g_TextureMng.AddRenderTargetTexture("SmallScreen", m_pd3dDevice, FRAME_BUFFER_WIDTH/2, FRAME_BUFFER_HEIGHT/2, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-
-    g_TextureMng.LoadFromFile("defaultDiffuseMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.LoadFromFile("defaultNormalMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.LoadFromFile("defaultSpecularMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.LoadFromFile("titleImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.LoadFromFile("endImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-    g_TextureMng.LoadFromFile("victory", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-
-    /*========================================================================
-    * ���׸���
-    *=======================================================================*/
     MaterialDataImporter matDataImporter;
     matDataImporter.Load("Data/MaterialData.txt");
 
 
-    /*========================================================================
-    * ��
-    *=======================================================================*/
     g_ModelMng.Initialize();
 
 
-    /*========================================================================
-    * ���� ����Ʈ �ε��ؼ� ���̶� �ؽ�ó�� ���ÿ� �ε�
-    *=======================================================================*/
     AssetListDataImporter assetImporter;
     assetImporter.Load(m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
-    /*========================================================================
-    * Pass 1 ���� ������Ʈ ������ �ε� �� ����
-    *=======================================================================*/
 
     BuildObject();
 
-    /*========================================================================
-    * Pass 2 ���� ��ü ȭ�� �簢��
-    *=======================================================================*/
     auto tempScreen = new Screen(m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle, 1.0f, 1.0f);
     m_vecScreenObject.push_back(tempScreen);
 
-    /*========================================================================
-    * ������ ������ �׸��� �ؽ�ó ����
-    *=======================================================================*/
     LightDataImporter  lightDataImporter;
     vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Data/LightData.txt");
     string             shadow("ShadowMap_");
@@ -150,14 +104,14 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
             temp        = shadow + temp;
             switch (vecLightDesc[i].lightType)
             {
-            case LIGHT_POINT: g_TextureMng.AddDepthBufferTextureCube(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+            case LIGHT_POINT: g_texture_manager.AddDepthBufferTextureCube(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
                 break;
 
-            case LIGHT_SPOT: g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+            case LIGHT_SPOT: g_texture_manager.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
                 break;
-            case LIGHT_DIRECTIONAL: g_TextureMng.AddDepthBufferTextureArray(temp.c_str(), 3, m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+            case LIGHT_DIRECTIONAL: g_texture_manager.AddDepthBufferTextureArray(temp.c_str(), 3, m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
 
                 break;
@@ -167,9 +121,6 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
         }
     }
 
-    /*========================================================================
-    * PSO ����
-    *=======================================================================*/
     CreatePSO();
 }
 
@@ -191,7 +142,6 @@ void Scene::CheckCollsion()
 
 void Scene::SolveConstraint()
 {
-    //for_each(m_vecObject.begin(), m_vecObject.end(), [](Object* o) {o->SolveConstraint(); });
     for (int i = 0; i < m_vecObject.size(); i++) if (m_vecObject[i]->m_bEnable) m_vecObject[i]->SolveConstraint();
 }
 
@@ -250,17 +200,10 @@ void Scene::Update(float fTimeElapsed)
 
 void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_HANDLE hBckBufDsv)
 {
-    /*========================================================================
-    * ��Ʈ �ñ״�ó, ��ũ���� ��, ���������� ������Ʈ, �޽� �������� ����
-    *=======================================================================*/
     m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
     m_pd3dCommandList->SetDescriptorHeaps(1, &m_pd3dCbvSrvDescriptorHeap);
     m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-    /*========================================================================
-    * PassInfo ����
-    *=======================================================================*/
+    
     CameraComponent* cam = m_pCameraObject->FindComponent<CameraComponent>();
     cam->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     cam->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
@@ -272,41 +215,37 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 
     XMFLOAT4X4 texture = {0.5f, 0, 0, 0, 0, -0.5f, 0, 0, 0, 0, 1.0f, 0, 0.5f, 0.5f, 0, 1.0f};
     XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4TextureTransform, XMMatrixTranspose(XMLoadFloat4x4(&texture)));
-
-
-    /*========================================================================
-    * Pass 1. �޽� ���� To Color, Normal, Depth
-    *=======================================================================*/
+    
     D3D12_RESOURCE_BARRIER d3dResourceBarrier[3];
     ::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER) * 3);
     d3dResourceBarrier[0].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     d3dResourceBarrier[0].Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Depth");
+    d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Depth");
     d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_GENERIC_READ;
     d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_DEPTH_WRITE;
     d3dResourceBarrier[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
     d3dResourceBarrier[1].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     d3dResourceBarrier[1].Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Color");
+    d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Color");
     d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
     d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
     d3dResourceBarrier[1].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
     d3dResourceBarrier[2].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
     d3dResourceBarrier[2].Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    d3dResourceBarrier[2].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Normal");
+    d3dResourceBarrier[2].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Normal");
     d3dResourceBarrier[2].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
     d3dResourceBarrier[2].Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
     d3dResourceBarrier[2].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
     m_pd3dCommandList->ResourceBarrier(3, d3dResourceBarrier);
 
-    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_TextureMng.GetDsvCPUHandle("GBuffer_Depth");
+    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_texture_manager.GetDSVCPUHandle("GBuffer_Depth");
     m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
-    rtvHandle[0] = g_TextureMng.GetRtvCPUHandle("GBuffer_Color");
-    rtvHandle[1] = g_TextureMng.GetRtvCPUHandle("GBuffer_Normal");
+    rtvHandle[0] = g_texture_manager.GetRTVCPUHandle("GBuffer_Color");
+    rtvHandle[1] = g_texture_manager.GetRTVCPUHandle("GBuffer_Normal");
 
     float pfClearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     m_pd3dCommandList->ClearRenderTargetView(rtvHandle[0], pfClearColor, 0, nullptr);
@@ -320,22 +259,19 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
     for (auto iter = m_vecNonAnimObjectRenderGroup.begin(); iter != m_vecNonAnimObjectRenderGroup.end(); ++iter) (*iter)->Render(m_pd3dCommandList);
 
 
-    d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Depth");
+    d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Depth");
     d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
     d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_GENERIC_READ;
 
-    d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Color");
+    d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Color");
     d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
     d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
-    d3dResourceBarrier[2].Transition.pResource   = g_TextureMng.GetTextureResource("GBuffer_Normal");
+    d3dResourceBarrier[2].Transition.pResource   = g_texture_manager.GetTextureResource("GBuffer_Normal");
     d3dResourceBarrier[2].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
     d3dResourceBarrier[2].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
     m_pd3dCommandList->ResourceBarrier(3, d3dResourceBarrier);
 
-    /*========================================================================
-    * Pass 1. ������ �׸��ڸ� ����
-    *=======================================================================*/
     cam->SetViewport(0, 0, SHADOWMAPSIZE, SHADOWMAPSIZE, 0.0f, 1.0f);
     cam->SetScissorRect(0, 0, SHADOWMAPSIZE, SHADOWMAPSIZE);
     cam->SetViewportsAndScissorRects(m_pd3dCommandList);
@@ -346,7 +282,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         {
             m_LightMng->SetShaderResource(m_pd3dCommandList, i);
 
-            D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_TextureMng.GetDsvCPUHandle(m_LightMng->GetShadowMapName(i).c_str());
+            D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_texture_manager.GetDSVCPUHandle(m_LightMng->GetShadowMapName(i).c_str());
             m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
             m_pd3dCommandList->OMSetRenderTargets(0, nullptr, TRUE, &dsvHandle);
 
@@ -379,48 +315,21 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
             }
         }
     }
-    /*
-    OMSet(bckBuf);
-    */
-    D3D12_CPU_DESCRIPTOR_HANDLE screenRtv = g_TextureMng.GetRtvCPUHandle("Screen");
+    
+    D3D12_CPU_DESCRIPTOR_HANDLE screenRtv = g_texture_manager.GetRTVCPUHandle("Screen");
     m_pd3dCommandList->ClearRenderTargetView(screenRtv, pfClearColor, 0, nullptr);
     m_pd3dCommandList->OMSetRenderTargets(1, &screenRtv, TRUE, &dsvHandle);
 
-    //m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
-    //m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
-
-    /*========================================================================
-    * ��Ʈ �ñ״�ó, ��ũ���� ��, �޽� �������� ����
-    *
-    * �ٵ� PrevRender���� �ߴ� �������� ������� ������?
-    *=======================================================================*/
-    //m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);				
-    //m_pd3dCommandList->SetDescriptorHeaps(1, &m_pd3dCbvSrvDescriptorHeap);			
-    //m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    /*========================================================================
-    * PassInfo ����
-    *=======================================================================*/
     cam->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     cam->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
     cam->SetViewportsAndScissorRects(m_pd3dCommandList);
-
-
-    /*========================================================================
-    * Pass 2. ��ũ�� ����
-    *=======================================================================*/
-    //m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
-
+    
     m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["ColorFromGBuffer"]);
-    g_TextureMng.UseForShaderResource("GBuffer_Normal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
-    g_TextureMng.UseForShaderResource("GBuffer_Depth", m_pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
-    g_TextureMng.UseForShaderResource("GBuffer_Color", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Normal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Depth", m_pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Color", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
     m_vecScreenObject[0]->Render(m_pd3dCommandList);
-
-
-    /*========================================================================
-    * Pass 2. ��ƼŬ & ����Ʈ ����
-    *=======================================================================*/
+    
     m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Effect"]);
     for (auto iter = m_vecEffectRenderGroup.begin(); iter != m_vecEffectRenderGroup.end(); ++iter) (*iter)->Render(m_pd3dCommandList);
     m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -428,12 +337,9 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
     for (auto iter = m_vecParticleEmitter.begin(); iter != m_vecParticleEmitter.end(); ++iter) (*iter)->Render(m_pd3dCommandList);
     m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    /*========================================================================
-    * Pass 2. ������ ����
-    *=======================================================================*/
-    g_TextureMng.UseForShaderResource("GBuffer_Normal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
-    g_TextureMng.UseForShaderResource("GBuffer_Depth", m_pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
-    g_TextureMng.UseForShaderResource("GBuffer_Color", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Normal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Depth", m_pd3dCommandList, ROOTSIGNATURE_DEPTH_TEXTURE);
+    g_texture_manager.UseForShaderResource("GBuffer_Color", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
     m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["AddLight"]);
 
     for (UINT i = 0; i < m_LightMng->GetNumLight(); i++)
@@ -444,11 +350,11 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         {
             switch (m_LightMng->GetLightType(i))
             {
-            case LIGHT_SPOT: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOW_TEXTURE);
+            case LIGHT_SPOT: g_texture_manager.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOW_TEXTURE);
                 break;
-            case LIGHT_POINT: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_CUBE_TEXTURE);
+            case LIGHT_POINT: g_texture_manager.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_CUBE_TEXTURE);
                 break;
-            case LIGHT_DIRECTIONAL: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOWARRAY_TEXTURE);
+            case LIGHT_DIRECTIONAL: g_texture_manager.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOWARRAY_TEXTURE);
                 break;
             case LIGHT_NONE: default: break;
             }
@@ -479,16 +385,16 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["HDR_First"]);
 
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("DownScaled");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("DownScaled");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-        d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("Screen");
+        d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("Screen");
         d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
         d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
-        g_TextureMng.UseForComputeShaderResourceSRV("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);                        // Render Result
-        g_TextureMng.UseForComputeShaderResourceUAV("DownScaled", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);              // DownScaled
+        g_texture_manager.UseForComputeShaderResourceSRV("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);                        // Render Result
+        g_texture_manager.UseForComputeShaderResourceUAV("DownScaled", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);              // DownScaled
         m_pd3dCommandList->SetComputeRootUnorderedAccessView(ROOTSIGNATURE_HDRLUMBUFFER, m_pd3duabHDRAvgLum->GetGPUVirtualAddress()); // AvgLum Buff
 
         //UINT numGroups = (UINT)ceilf(FRAME_BUFFER_WIDTH / 1024.0f);
@@ -521,16 +427,16 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         *==========================================================================*/
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["PP_Bloom"]);
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("DownScaled");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("DownScaled");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-        d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Horizontal");
+        d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Horizontal");
         d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
-        g_TextureMng.UseForComputeShaderResourceSRV("DownScaled", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-        g_TextureMng.UseForComputeShaderResourceUAV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceSRV("DownScaled", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceUAV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
         UINT numGroups = static_cast<UINT>(ceilf(FRAME_BUFFER_WIDTH / 4 / 1024.0f));
         m_pd3dCommandList->Dispatch(numGroups, FRAME_BUFFER_HEIGHT / 4, 1);
@@ -541,16 +447,16 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         *==========================================================================*/
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Blur_Vertical"]);
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Horizontal");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Horizontal");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-        d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Vertical");
+        d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Vertical");
         d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
-        g_TextureMng.UseForComputeShaderResourceSRV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-        g_TextureMng.UseForComputeShaderResourceUAV("Blur_Vertical", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceSRV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceUAV("Blur_Vertical", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
         numGroups = static_cast<UINT>(ceilf(FRAME_BUFFER_WIDTH / 4 / 256.0f));
         m_pd3dCommandList->Dispatch(numGroups, FRAME_BUFFER_HEIGHT / 4, 1);
@@ -560,16 +466,16 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         *==========================================================================*/
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Blur_Horizontal"]);
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Vertical");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Vertical");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-        d3dResourceBarrier[1].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Horizontal");
+        d3dResourceBarrier[1].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Horizontal");
         d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         d3dResourceBarrier[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
-        g_TextureMng.UseForComputeShaderResourceSRV("Blur_Vertical", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-        g_TextureMng.UseForComputeShaderResourceUAV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceSRV("Blur_Vertical", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+        g_texture_manager.UseForComputeShaderResourceUAV("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
         numGroups = static_cast<UINT>(ceilf(FRAME_BUFFER_HEIGHT / 4 / 256.0f));
         m_pd3dCommandList->Dispatch(FRAME_BUFFER_WIDTH / 4, numGroups, 1);
@@ -580,20 +486,20 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["HDR_Last"]);
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("Blur_Horizontal");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("Blur_Horizontal");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         m_pd3dCommandList->ResourceBarrier(1, d3dResourceBarrier);
 
-        g_TextureMng.UseForShaderResource("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-        g_TextureMng.UseForShaderResource("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
+        g_texture_manager.UseForShaderResource("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+        g_texture_manager.UseForShaderResource("Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_NORMAL_TEXTURE);
         m_pd3dCommandList->SetGraphicsRootUnorderedAccessView(ROOTSIGNATURE_HDRLUMBUFFER, m_pd3duabHDRAvgLum->GetGPUVirtualAddress());
 
         m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
         m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
         m_vecScreenObject[0]->Render(m_pd3dCommandList);
 
-        d3dResourceBarrier[0].Transition.pResource   = g_TextureMng.GetTextureResource("Screen");
+        d3dResourceBarrier[0].Transition.pResource   = g_texture_manager.GetTextureResource("Screen");
         d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         d3dResourceBarrier[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
         m_pd3dCommandList->ResourceBarrier(1, d3dResourceBarrier);
@@ -615,9 +521,9 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
             m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
             m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SRToRt"]);
 
-            if (1 == startEndState) g_TextureMng.UseForShaderResource("titleImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-            else if (3 == startEndState) g_TextureMng.UseForShaderResource("victory", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-            else g_TextureMng.UseForShaderResource("endImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+            if (1 == startEndState) g_texture_manager.UseForShaderResource("titleImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+            else if (3 == startEndState) g_texture_manager.UseForShaderResource("victory", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+            else g_texture_manager.UseForShaderResource("endImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 
             m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
             m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
@@ -629,7 +535,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
         m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
         m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SRToRt"]);
 
-        g_TextureMng.UseForShaderResource("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+        g_texture_manager.UseForShaderResource("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 
         m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
         m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
@@ -961,7 +867,7 @@ void Scene::CreatePSO()
 
 void Scene::CreatePassInfoShaderResource()
 {
-    UINT ncbElementBytes = sizeof(CB_PASS_INFO) + 255 & ~255; //256�� ���
+    UINT ncbElementBytes = sizeof(ConstantBufferPassInfo) + 255 & ~255; //256�� ���
     m_pd3dcbPassInfo     = CreateBufferResource(m_pd3dDevice, m_pd3dCommandList, nullptr, ncbElementBytes, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, nullptr);
 
     D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
@@ -1015,9 +921,9 @@ vector<string> LoadMy::Split(istringstream& ss, const char delim)
     return result;
 }
 
-vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
+vector<EnvironmentObjectData> LoadMy::LoadEnvMeshList(const char* path)
 {
-    vector<MY_ENV_OBJECT_DATA> result;
+    vector<EnvironmentObjectData> result;
 
     string fullPath = path;
     fullPath += "/EnvMeshList.txt";
@@ -1040,7 +946,7 @@ vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
 
         for (int i = 0; i < n; i++)
         {
-            MY_ENV_OBJECT_DATA temp = {};
+            EnvironmentObjectData temp = {};
             ifs >> s;
             //cout << s << "\n";	// mesh name
             temp.strMeshName = s;
@@ -1080,9 +986,9 @@ vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
     return result;
 }
 
-vector<MY_COLLIDER_OBJECT_DATA> LoadMy::LoadColliderList(const char* path)
+vector<ColliderObjectData> LoadMy::LoadColliderList(const char* path)
 {
-    vector<MY_COLLIDER_OBJECT_DATA> result;
+    vector<ColliderObjectData> result;
 
     string fullPath = path;
     fullPath += "/ColliderList.txt";
@@ -1105,7 +1011,7 @@ vector<MY_COLLIDER_OBJECT_DATA> LoadMy::LoadColliderList(const char* path)
 
         for (int i = 0; i < n; i++)
         {
-            MY_COLLIDER_OBJECT_DATA temp = {};
+            ColliderObjectData temp = {};
             ifs >> s;
             //cout << s << "\n";
             {
@@ -1856,9 +1762,9 @@ void Scene::ReloadLight()
             string temp = to_string(i);
             temp        = shadow + temp;
 
-            g_TextureMng.DeleteTexture(temp.c_str());
+            g_texture_manager.DeleteTexture(temp.c_str());
 
-            g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+            g_texture_manager.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
             m_LightMng->SetShadowMapName(temp.c_str(), i);
         }
     }
@@ -1866,10 +1772,10 @@ void Scene::ReloadLight()
 
 void Scene::LoadLevelEnvironment()
 {
-    vector<MY_ENV_OBJECT_DATA> envData = LoadMy::LoadEnvMeshList("Data");
+    vector<EnvironmentObjectData> envData = LoadMy::LoadEnvMeshList("Data");
     for (int i = 0; i < envData.size(); i++) CreateEnvObject(envData[i]);
 
-    vector<MY_COLLIDER_OBJECT_DATA> colliderData = LoadMy::LoadColliderList("Data");
+    vector<ColliderObjectData> colliderData = LoadMy::LoadColliderList("Data");
     for (int i = 0; i < colliderData.size(); i++) CreateCollider(colliderData[i]);
 }
 
@@ -1890,9 +1796,9 @@ void Scene::CreateEnvObject(const char* strModelName, const char* strMaterialNam
     m_vecNonAnimObjectRenderGroup.push_back(env);
 }
 
-void Scene::CreateEnvObject(MY_ENV_OBJECT_DATA objData) { CreateEnvObject(objData.strMeshName.c_str(), objData.strMatName.c_str(), objData.xmf3Position, objData.xmf4Rotation); }
+void Scene::CreateEnvObject(EnvironmentObjectData objData) { CreateEnvObject(objData.strMeshName.c_str(), objData.strMatName.c_str(), objData.xmf3Position, objData.xmf4Rotation); }
 
-void Scene::CreateCollider(MY_COLLIDER_OBJECT_DATA colData)
+void Scene::CreateCollider(ColliderObjectData colData)
 {
     auto box = new Object();
 

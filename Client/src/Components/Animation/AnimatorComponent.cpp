@@ -2,8 +2,8 @@
 #include "AnimatorComponent.h"
 #include "../../Core/Components.h"
 #include "../../Core/Object.h"
-#include "../../Resources/Animation.h"
-#include "../../Resources/Mask.h"
+#include "../../Renderer/Elements/Animation.h"
+#include "../../Renderer/Elements/Mask.h"
 
 AnimatorComponent::AnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy) : Component(pObject)
 {
