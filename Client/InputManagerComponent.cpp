@@ -2,8 +2,8 @@
 #include "Components.h"
 
 InputManagerComponent::InputManagerComponent(Object* pObject)
-	:Component(pObject)
-	, m_xmf2MouseMovement(0, 0)
+	: Component(pObject)
+	  , m_xmf2MouseMovement(0, 0)
 {
 }
 

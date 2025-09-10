@@ -6,13 +6,11 @@ class RigidbodyComponent : public Component
 public:
 	RigidbodyComponent() = delete;
 	RigidbodyComponent(Object* pObject);
-	~RigidbodyComponent();
+	~RigidbodyComponent() override;
 
-public:
-	virtual void SolveConstraint();
-	virtual void Update(float fTimeElapsed);
+	void SolveConstraint() override;
+	void Update(float fTimeElapsed) override;
 
 protected:
 	XMFLOAT3 m_xmf3PrevPosition;
 };
-

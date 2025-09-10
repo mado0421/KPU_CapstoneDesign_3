@@ -3,10 +3,10 @@
 
 Material::Material()
 	: matName("defaultMaterial")
-	, diffuseMap("defaultDiffuseMap")
-	, normalMap("defaultNormalMap")
-	, specularMap("defaultSpecularMap")
-	, fresnelFactor(XMFLOAT3(0.1f,0.1f,0.1f))
+	  , diffuseMap("defaultDiffuseMap")
+	  , normalMap("defaultNormalMap")
+	  , specularMap("defaultSpecularMap")
+	  , fresnelFactor(XMFLOAT3(0.1f, 0.1f, 0.1f))
 {
 }
 

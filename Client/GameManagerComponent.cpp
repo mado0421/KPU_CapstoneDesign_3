@@ -2,7 +2,7 @@
 #include "Components.h"
 
 GameManagerComponent::GameManagerComponent(Object* pObject)
-	:Component(pObject)
+	: Component(pObject)
 {
 }
 

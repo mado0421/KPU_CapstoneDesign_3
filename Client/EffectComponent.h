@@ -6,19 +6,16 @@ class EffectComponent : public Component
 public:
 	EffectComponent() = delete;
 	EffectComponent(Object* pObject);
-	~EffectComponent();
+	~EffectComponent() override;
 
-public:
-	virtual void Update(float fTimeElapsed);
+	void Update(float fTimeElapsed) override;
 
-public:
 	void SetDuration(float fTime);
 	void TurnOn();
 	void TurnOff();
 
-public:
 	float m_fDuration;
+
 private:
 	float m_fLifetime;
 };
-

@@ -31,7 +31,8 @@ GBuffer PS_PackGBuffer(VS_OUTPUT input)
 	output.cColor.rgb = gtxtColorMap.Sample(gSamplerState, input.uv).rgb;
 	output.cColor.a = (1 - gtxtDepthMap.Sample(gSamplerState, input.uv).r);
 
-	output.cNormal.rgb = NormalSampleToWorldSpace(gtxtNormalMap.Sample(gSamplerState, input.uv).rgb, input.normalW, input.tangentW) * 0.5 + 0.5;
+	output.cNormal.rgb = NormalSampleToWorldSpace(gtxtNormalMap.Sample(gSamplerState, input.uv).rgb, input.normalW,
+	                                              input.tangentW) * 0.5 + 0.5;
 
 	return output;
 }
@@ -77,11 +78,12 @@ float4 PS_Text(GS_TEXTOUTPUT input) : SV_TARGET0
 *
 * - Depth만 쓸 예정이므로 PS는 비워두면 됨. 알파 계산은 지금 안 할거니까.
 *=======================================================================*/
-void PS_RenderShadow(VS_OUTPUT input) {
-
+void PS_RenderShadow(VS_OUTPUT input)
+{
 }
-void PS_RenderPointLightShadow(GS_OUTPUT input) {
 
+void PS_RenderPointLightShadow(GS_OUTPUT input)
+{
 }
 
 /*========================================================================
@@ -89,12 +91,14 @@ void PS_RenderPointLightShadow(GS_OUTPUT input) {
 *
 * - Color만 읽어올 예정. 그대로 뿌리면 된다.
 *=======================================================================*/
-float4 PS_ColorFromGBuffer(VS_OUTPUT input) : SV_TARGET{
+float4 PS_ColorFromGBuffer(VS_OUTPUT input) : SV_TARGET
+{
 	float3 color = gtxtColorMap.Sample(gSamplerState, input.uv).xyz;
 	return float4(color, 1.0f);
 }
 
-float4 PS_ColorFromGBufferAmbient(VS_OUTPUT input) : SV_TARGET {
+float4 PS_ColorFromGBufferAmbient(VS_OUTPUT input) : SV_TARGET
+{
 	float3 vWorldPosition = WorldPosFromLinearDepth(input.uv);
 	float3 vColor = gtxtColorMap.Sample(gSamplerState, input.uv).xyz;
 	float3 vNormal = gtxtNormalMap.Sample(gSamplerState, input.uv).xyz * 2.0f - 1.0f;
@@ -110,7 +114,8 @@ float4 PS_ColorFromGBufferAmbient(VS_OUTPUT input) : SV_TARGET {
 *
 * - Depth만 읽어올 예정. 그대로 뿌리면 된다.
 *=======================================================================*/
-float4 PS_DepthFromGBuffer(VS_OUTPUT input) : SV_TARGET{
+float4 PS_DepthFromGBuffer(VS_OUTPUT input) : SV_TARGET
+{
 	float depth = gtxtShadowArrayMap.Sample(gSamplerState, float3(input.uv, 0.0f)).r;
 	depth = pow(depth, 5);
 
@@ -122,19 +127,24 @@ float4 PS_DepthFromGBuffer(VS_OUTPUT input) : SV_TARGET{
 *
 * - 조명값을 계산하기 위해 GBuffer의 Normal과 Depth를 읽어야 한다.
 *=======================================================================*/
-float4 PS_AddLight(VS_OUTPUT input) : SV_TARGET{
-	float3 vWorldPosition	= WorldPosFromLinearDepth(input.uv);
-	float3 vColor			= gtxtColorMap.Sample(gSamplerState, input.uv).rgb;
-	float3 vNormal			= gtxtNormalMap.Sample(gSamplerState, input.uv).xyz * 2.0f - 1.0f;
-	float3 vToEye			= normalize(gvCameraPosition - vWorldPosition);
-	float fRoughness		= gtxtColorMap.Sample(gSamplerState, input.uv).a;
+float4 PS_AddLight(VS_OUTPUT input) : SV_TARGET
+{
+	float3 vWorldPosition = WorldPosFromLinearDepth(input.uv);
+	float3 vColor = gtxtColorMap.Sample(gSamplerState, input.uv).rgb;
+	float3 vNormal = gtxtNormalMap.Sample(gSamplerState, input.uv).xyz * 2.0f - 1.0f;
+	float3 vToEye = normalize(gvCameraPosition - vWorldPosition);
+	float fRoughness = gtxtColorMap.Sample(gSamplerState, input.uv).a;
 
 	float3 result = float3(0.0f, 0.0f, 0.0f);
 
-	switch (gLightType) {
-	case 1: result += CalcPointLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness); break;
-	case 2: result += CalcSpotLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness); break;
-	case 3: result += CalcDirectionalLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness);	break;
+	switch (gLightType)
+	{
+	case 1: result += CalcPointLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness);
+		break;
+	case 2: result += CalcSpotLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness);
+		break;
+	case 3: result += CalcDirectionalLight(vWorldPosition, vNormal, vToEye, vColor, fRoughness);
+		break;
 	default: break;
 	}
 	return float4(result, 1.0f);
@@ -144,7 +154,8 @@ float4 PS_AddLight(VS_OUTPUT input) : SV_TARGET{
 /*=============================================================================
 * HDR
 =============================================================================*/
-float3 ToneMapping(float3 vColor) {
+float3 ToneMapping(float3 vColor)
+{
 	float MiddleGrey = 0.229f;
 	float LumWhiteSqr = 5.789f;
 	float LumScale = dot(vColor, LUM_FACTOR);
@@ -155,7 +166,8 @@ float3 ToneMapping(float3 vColor) {
 	return vColor * LumScale;
 }
 
-float4 PS_HDRToneMapping(VS_OUTPUT input) : SV_TARGET{
+float4 PS_HDRToneMapping(VS_OUTPUT input) : SV_TARGET
+{
 	float fBloomScale = 0.9f;
 	float3 vColor = gtxtColorMap.Sample(gSamplerState, input.uv).rgb;
 

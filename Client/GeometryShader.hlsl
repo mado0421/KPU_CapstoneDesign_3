@@ -2,16 +2,18 @@
 
 [maxvertexcount(18)]
 void GS_RenderPointLightShadow(
-	triangle float4 input[3] : SV_POSITION, 
-	inout TriangleStream< GS_OUTPUT > outStream
+	triangle float4 input[3] : SV_POSITION,
+	inout TriangleStream<GS_OUTPUT> outStream
 )
 {
-	for (uint iFace = 0; iFace < 6; iFace++) {
+	for (uint iFace = 0; iFace < 6; iFace++)
+	{
 		GS_OUTPUT output;
 
 		output.RTIndex = iFace;
 
-		for (int v = 0; v < 3; v++) {
+		for (int v = 0; v < 3; v++)
+		{
 			output.pos = mul(input[v], gmtxLightViewProj[iFace]);
 			outStream.Append(output);
 		}
@@ -27,15 +29,17 @@ void GS_RenderPointLightShadow(
 [maxvertexcount(9)]
 void GS_RenderDirectionalLightShadow(
 	triangle float4 input[3] : SV_POSITION,
-	inout TriangleStream< GS_OUTPUT > outStream
+	inout TriangleStream<GS_OUTPUT> outStream
 )
 {
-	for (uint iFace = 0; iFace < 3; iFace++) {
+	for (uint iFace = 0; iFace < 3; iFace++)
+	{
 		GS_OUTPUT output;
 
 		output.RTIndex = iFace;
 
-		for (int v = 0; v < 3; v++) {
+		for (int v = 0; v < 3; v++)
+		{
 			output.pos = mul(input[v], gmtxLightViewProj[iFace]);
 			outStream.Append(output);
 		}
@@ -46,23 +50,27 @@ void GS_RenderDirectionalLightShadow(
 [maxvertexcount(4)]
 void GS_ParticleBillboard(
 	point VS_PARTICLEOUTPUT input[1],
-	inout TriangleStream< GS_PARTICLEOUT > outStream
+	inout TriangleStream<GS_PARTICLEOUT> outStream
 )
 {
 	float3 up, right;
 	float3 look = input[0].positionW - gvCameraPosition;
 	float3 pos = input[0].positionW;
 
-	if (input[0].direction.w) {	// bilboard X
+	if (input[0].direction.w)
+	{
+		// bilboard X
 		up = normalize(cross(look, input[0].direction));
 		right = normalize(input[0].direction);
 	}
-	else {						// bilboard O
+	else
+	{
+		// bilboard O
 		right = normalize(cross(look, float3(0, 1, 0)));
 		up = normalize(cross(look, right));
 	}
 
-	float3 TR, TL, BR, BL;	//Top, Right, Bottom, Left
+	float3 TR, TL, BR, BL; //Top, Right, Bottom, Left
 	TR = pos + input[0].size * up + input[0].size * right;
 	TL = pos + input[0].size * up - input[0].size * right;
 	BR = pos - input[0].size * up + input[0].size * right;
@@ -90,12 +98,12 @@ void GS_ParticleBillboard(
 [maxvertexcount(4)]
 void GS_Text(
 	point VS_TEXTOUTPUT input[1],
-	inout TriangleStream< GS_TEXTOUTPUT > outStream
+	inout TriangleStream<GS_TEXTOUTPUT> outStream
 )
 {
-	float3 pos		= float3(gmtxGameObject._23, gmtxGameObject._33, 0);
-	float3 right	= float3(1, 0, 0) * (gmtxGameObject._43 / 32.0);
-	float3 down		= float3(0, -1.77777, 0) * (gmtxGameObject._43 / 32.0);
+	float3 pos = float3(gmtxGameObject._23, gmtxGameObject._33, 0);
+	float3 right = float3(1, 0, 0) * (gmtxGameObject._43 / 32.0);
+	float3 down = float3(0, -1.77777, 0) * (gmtxGameObject._43 / 32.0);
 
 	float3 TR, TL, BR, BL;
 	TL = pos;

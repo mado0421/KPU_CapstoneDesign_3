@@ -4,9 +4,9 @@
 
 
 Component::Component(Object* pObject)
-    : m_pObject(pObject)
+	: m_pObject(pObject)
 {
-    pObject->AddComponent(this);
+	pObject->AddComponent(this);
 }
 
 Component::~Component()
@@ -15,10 +15,10 @@ Component::~Component()
 
 Component* Component::GetInstance()
 {
-    return this;
+	return this;
 }
 
 void Component::SetActive(bool bActive)
 {
-    m_bEnabled = bActive;
+	m_bEnabled = bActive;
 }

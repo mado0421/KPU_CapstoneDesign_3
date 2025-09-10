@@ -3,11 +3,16 @@
 #include "Vertex.h"
 #include "Material.h"
 
-TextRendererComponent::TextRendererComponent(Object* pObject, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
+TextRendererComponent::TextRendererComponent(Object* pObject, ID3D12Device* pd3dDevice,
+                                             ID3D12GraphicsCommandList* pd3dCommandList,
+                                             D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
+                                             D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
 	: Component(pObject)
 {
-	for (int i = 0; i < 80; i++) {
-		LetterRenderer* lr = new LetterRenderer(pd3dDevice, pd3dCommandList, d3dCbvCPUDescriptorStartHandle, d3dCbvGPUDescriptorStartHandle);
+	for (int i = 0; i < 80; i++)
+	{
+		auto lr = new LetterRenderer(pd3dDevice, pd3dCommandList, d3dCbvCPUDescriptorStartHandle,
+		                             d3dCbvGPUDescriptorStartHandle);
 		m_vecLetterRenderer.push_back(lr);
 	}
 }
@@ -31,7 +36,8 @@ void TextRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 
 	int offset = 0;
 
-	for (int i = 0; i < text.length(); i++) {
+	for (int i = 0; i < text.length(); i++)
+	{
 		m_vecLetterRenderer[i]->Render(pd3dCommandList, m_font.charData[text[i]], screenPos, m_size, offset);
 	}
 }
@@ -83,11 +89,12 @@ Font FontFunc::ImportFont(const char* strFontName)
 	//cout << ss.str();
 
 	vector<string> lines = Split(ss.str(), '\n');
-	for (int i = 0; i < lines.size(); i++) {
+	for (int i = 0; i < lines.size(); i++)
+	{
 		FontCharData temp;
 		char str[256];
 		strcpy_s(str, sizeof(str), lines[i].c_str());
-		char* pch, * context = NULL;
+		char *pch, *context = nullptr;
 		pch = strtok_s(str, " ", &context);
 		int charId = atoi(pch);
 		pch = strtok_s(nullptr, " ", &context);
@@ -110,18 +117,19 @@ Font FontFunc::ImportFont(const char* strFontName)
 		temp.chnl = atoi(pch);
 
 		result.charData[charId] = temp;
-
 	}
 	return result;
 }
 
-LetterRenderer::LetterRenderer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
+LetterRenderer::LetterRenderer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
+                               D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
+                               D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle)
 {
-	Vertex* pVertices = new Vertex();
+	auto pVertices = new Vertex();
 
 	pVertices->m_xmf3Pos = XMFLOAT3(0, 0, 0);
 
-	m_pd3dVertexBuffer = ::CreateBufferResource(
+	m_pd3dVertexBuffer = CreateBufferResource(
 		pd3dDevice, pd3dCommandList,
 		pVertices, sizeof(Vertex),
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
@@ -134,8 +142,9 @@ LetterRenderer::LetterRenderer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandLi
 
 	UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-	m_pd3dCBResource = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL, ncbElementBytes,
-		D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+	m_pd3dCBResource = CreateBufferResource(pd3dDevice, pd3dCommandList, nullptr, ncbElementBytes,
+	                                        D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                        nullptr);
 
 	CreateConstantBufferView(pd3dDevice, d3dCbvCPUDescriptorStartHandle);
 	SetCBVGpuHandle(d3dCbvGPUDescriptorStartHandle);
@@ -143,8 +152,8 @@ LetterRenderer::LetterRenderer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandLi
 
 LetterRenderer::~LetterRenderer()
 {
-	if (m_pd3dVertexBuffer)			m_pd3dVertexBuffer->Release();
-	if (m_pd3dVertexUploadBuffer)	m_pd3dVertexUploadBuffer->Release();
+	if (m_pd3dVertexBuffer) m_pd3dVertexBuffer->Release();
+	if (m_pd3dVertexUploadBuffer) m_pd3dVertexUploadBuffer->Release();
 }
 
 void LetterRenderer::Render(
@@ -170,7 +179,8 @@ void LetterRenderer::Render(
 	m_pCBFontCharData->_24 = charData.page;
 	m_pCBFontCharData->_31 = charData.chnl;
 	m_pCBFontCharData->_32 = ((screenPos.x + offset) / static_cast<float>(FRAME_BUFFER_WIDTH / 2)) - 1;
-	m_pCBFontCharData->_33 = ((screenPos.y - charData.yoffset * 3.7 * scale) / static_cast<float>(FRAME_BUFFER_HEIGHT / 2)) - 1;
+	m_pCBFontCharData->_33 = ((screenPos.y - charData.yoffset * 3.7 * scale) / static_cast<float>(FRAME_BUFFER_HEIGHT /
+		2)) - 1;
 	m_pCBFontCharData->_34 = static_cast<float>(size);
 
 	pd3dCommandList->IASetVertexBuffers(0, 1, &m_d3dVertexBufferView);
@@ -179,14 +189,16 @@ void LetterRenderer::Render(
 	offset += charData.xadvance * 3.7 * scale;
 }
 
-void LetterRenderer::CreateConstantBufferView(ID3D12Device* pd3dDevice, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
+void LetterRenderer::CreateConstantBufferView(ID3D12Device* pd3dDevice,
+                                              D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle)
 {
-	D3D12_GPU_VIRTUAL_ADDRESS		d3dGpuVirtualAddress;
+	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress;
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 	UINT ncbElementBytes = ((sizeof(XMFLOAT4X4) + 255) & ~255);
 
-	if (nullptr != m_pd3dCBResource) {
-		m_pd3dCBResource->Map(0, NULL, (void**)&m_pCBFontCharData);
+	if (nullptr != m_pd3dCBResource)
+	{
+		m_pd3dCBResource->Map(0, nullptr, (void**)&m_pCBFontCharData);
 		d3dGpuVirtualAddress = m_pd3dCBResource->GetGPUVirtualAddress();
 		d3dCBVDesc.SizeInBytes = ncbElementBytes;
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;

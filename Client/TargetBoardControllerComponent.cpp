@@ -5,7 +5,7 @@
 
 TargetBoardControllerComponent::TargetBoardControllerComponent(Object* pObject, bool bAutoRevive)
 	: Component(pObject)
-	, Character(10, bAutoRevive)
+	  , Character(10, bAutoRevive)
 {
 }
 
@@ -19,15 +19,17 @@ void TargetBoardControllerComponent::Update(float fTimeElapsed)
 	if (!this->isAlive()) return;
 
 	float temp = floor(m_fTime);
-	if (pe) {
-		if		(0 == temp) { lpec->SetMaterialByName("p5"); }
+	if (pe)
+	{
+		if (0 == temp) { lpec->SetMaterialByName("p5"); }
 		else if (1 == temp) { lpec->SetMaterialByName("p4"); }
 		else if (2 == temp) { lpec->SetMaterialByName("p3"); }
 		else if (3 == temp) { lpec->SetMaterialByName("p2"); }
 		else if (4 == temp) { lpec->SetMaterialByName("p1"); }
 	}
 
-	if (m_fTime > m_fAttackPeriod) {
+	if (m_fTime > m_fAttackPeriod)
+	{
 		m_pPlayerCharacter->Damage(10);
 		Revive();
 	}
@@ -44,8 +46,8 @@ void TargetBoardControllerComponent::Revive()
 	{
 		pe = new Object("particleEmitter");
 
-		TransformComponent* t = new TransformComponent(pe);
-		ParticleEmitterComponent* pec = new ParticleEmitterComponent(pe);
+		auto t = new TransformComponent(pe);
+		auto pec = new ParticleEmitterComponent(pe);
 
 		t->Translate(m_pObject->FindComponent<TransformComponent>()->GetPosition(Space::world));
 		t->Translate(0, 2.5, 0);
@@ -66,7 +68,6 @@ void TargetBoardControllerComponent::Revive()
 
 		lpec = pec;
 	}
-
 }
 
 void TargetBoardControllerComponent::Die()
@@ -76,7 +77,8 @@ void TargetBoardControllerComponent::Die()
 	g_pCurrScene->eventCount++;
 
 
-	if (pe) {
+	if (pe)
+	{
 		//pe->m_bEnable = false;	// 이걸 끄면 파티클이 계속 남음
 		lpec->m_bEnabled = false;
 

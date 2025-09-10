@@ -2,16 +2,15 @@
 #include "Components.h"
 
 DoorComponent::DoorComponent(Object* pObject, bool bOpen)
-	:Component(pObject)
-	, m_bOpen(bOpen)
-	, m_xmf3OrigPosition(pObject->FindComponent<TransformComponent>()->GetPosition())
-	, m_fProgress(0)
+	: Component(pObject)
+	  , m_bOpen(bOpen)
+	  , m_fProgress(0)
+	  , m_xmf3OrigPosition(pObject->FindComponent<TransformComponent>()->GetPosition())
 {
 	if (m_bOpen) m_fProgress = 1;
 	else m_fProgress = 0;
 
 	l_transform = m_pObject->FindComponent<TransformComponent>();
-
 }
 
 DoorComponent::~DoorComponent()
@@ -32,11 +31,13 @@ void DoorComponent::Update(float fTimeElapsed)
 {
 	if (!m_bEnabled) return;
 
-	if (m_bOpen) {
+	if (m_bOpen)
+	{
 		if (m_fProgress < 1) m_fProgress += fTimeElapsed;
 		else m_fProgress = 1;
 	}
-	else {
+	else
+	{
 		if (m_fProgress > 0) m_fProgress -= fTimeElapsed;
 		else m_fProgress = 0;
 	}

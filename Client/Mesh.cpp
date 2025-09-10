@@ -8,36 +8,36 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 	m_nVertices = 36;
 	m_strName = "";
 
-	Vertex* pVertices = new Vertex[m_nVertices];
+	auto pVertices = new Vertex[m_nVertices];
 
 	int i = 0;
 	XMFLOAT3 pos[8];
-	pos[i++] = XMFLOAT3(-0.5f,	0.5f,  0.5f);
-	pos[i++] = XMFLOAT3( 0.5f,	0.5f,  0.5f);
-	pos[i++] = XMFLOAT3( 0.5f,	0.5f, -0.5f);
-	pos[i++] = XMFLOAT3(-0.5f,	0.5f, -0.5f);
-	pos[i++] = XMFLOAT3(-0.5f, -0.5f,  0.5f);
-	pos[i++] = XMFLOAT3( 0.5f, -0.5f,  0.5f);
-	pos[i++] = XMFLOAT3( 0.5f, -0.5f, -0.5f);
+	pos[i++] = XMFLOAT3(-0.5f, 0.5f, 0.5f);
+	pos[i++] = XMFLOAT3(0.5f, 0.5f, 0.5f);
+	pos[i++] = XMFLOAT3(0.5f, 0.5f, -0.5f);
+	pos[i++] = XMFLOAT3(-0.5f, 0.5f, -0.5f);
+	pos[i++] = XMFLOAT3(-0.5f, -0.5f, 0.5f);
+	pos[i++] = XMFLOAT3(0.5f, -0.5f, 0.5f);
+	pos[i++] = XMFLOAT3(0.5f, -0.5f, -0.5f);
 	pos[i++] = XMFLOAT3(-0.5f, -0.5f, -0.5f);
 
 	i = 0;
 	XMFLOAT3 normal[6];
-	normal[i++] = XMFLOAT3( 0.0f,  1.0f,  0.0f);
-	normal[i++] = XMFLOAT3(	0.0f,  0.0f,  1.0f);
-	normal[i++] = XMFLOAT3(	1.0f,  0.0f,  0.0f);
-	normal[i++] = XMFLOAT3(	0.0f,  0.0f, -1.0f);
-	normal[i++] = XMFLOAT3(-1.0f,  0.0f,  0.0f);
-	normal[i++] = XMFLOAT3(	0.0f, -1.0f,  0.0f);
+	normal[i++] = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	normal[i++] = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	normal[i++] = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	normal[i++] = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	normal[i++] = XMFLOAT3(-1.0f, 0.0f, 0.0f);
+	normal[i++] = XMFLOAT3(0.0f, -1.0f, 0.0f);
 
 	i = 0;
 	XMFLOAT3 tangent[6];
-	tangent[i++] = XMFLOAT3( 1.0f,  0.0f,  0.0f);
-	tangent[i++] = XMFLOAT3(-1.0f,  0.0f,  0.0f);
-	tangent[i++] = XMFLOAT3( 0.0f,  0.0f,  1.0f);
-	tangent[i++] = XMFLOAT3( 1.0f,  0.0f,  0.0f);
-	tangent[i++] = XMFLOAT3( 0.0f,  0.0f, -1.0f);
-	tangent[i++] = XMFLOAT3( 1.0f,  0.0f,  0.0f);
+	tangent[i++] = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	tangent[i++] = XMFLOAT3(-1.0f, 0.0f, 0.0f);
+	tangent[i++] = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	tangent[i++] = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	tangent[i++] = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	tangent[i++] = XMFLOAT3(1.0f, 0.0f, 0.0f);
 
 	i = 0;
 	XMFLOAT2 uv[13];
@@ -94,7 +94,9 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 	pVertices[i++] = Vertex(pos[4], normal[5], tangent[5], uv[11]);
 	pVertices[i++] = Vertex(pos[5], normal[5], tangent[5], uv[12]);
 
-	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
+	m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices,
+	                                          D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                          &m_pd3dVertexUploadBuffer);
 
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
@@ -110,11 +112,13 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
 
 	m_strName = meshData.name;
 
-	Vertex* pVertices = new Vertex[m_nVertices];
+	auto pVertices = new Vertex[m_nVertices];
 
 	for (UINT i = 0; i < m_nVertices; i++) pVertices[i] = meshData.shape[i];
-	
-	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
+
+	m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices,
+	                                          D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                          &m_pd3dVertexUploadBuffer);
 
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
@@ -128,14 +132,14 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
 	m_nStride = sizeof(Vertex);
 	m_nVertices = 6;
 
-	Vertex* pVertices = new Vertex[m_nVertices];
+	auto pVertices = new Vertex[m_nVertices];
 
 	int i = 0;
 	XMFLOAT3 pos[4];
-	pos[i++] = XMFLOAT3(-width,  height, 0.0f);
-	pos[i++] = XMFLOAT3( width,  height, 0.0f);
+	pos[i++] = XMFLOAT3(-width, height, 0.0f);
+	pos[i++] = XMFLOAT3(width, height, 0.0f);
 	pos[i++] = XMFLOAT3(-width, -height, 0.0f);
-	pos[i++] = XMFLOAT3( width, -height, 0.0f);
+	pos[i++] = XMFLOAT3(width, -height, 0.0f);
 
 
 	i = 0;
@@ -153,7 +157,9 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
 	pVertices[i++] = Vertex(pos[2], XMFLOAT3(0, 0, -1), uv[2]);
 	pVertices[i++] = Vertex(pos[3], XMFLOAT3(0, 0, -1), uv[3]);
 
-	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
+	m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices,
+	                                          D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                          &m_pd3dVertexUploadBuffer);
 
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
@@ -164,7 +170,6 @@ Mesh::Mesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
 
 void Mesh::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-
 	/*========================================================================
 	* 이제 메쉬마다 구분해서 토폴로지 변경함
 	* 근데 맘에 안 드니까

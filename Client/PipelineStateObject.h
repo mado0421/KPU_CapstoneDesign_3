@@ -3,23 +3,28 @@ class PipelineStateObject
 {
 public:
 	PipelineStateObject() = default;
-	PipelineStateObject(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+
+	PipelineStateObject(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 	ID3D12PipelineState* GetPipelineState() { return m_pd3dPipelineState; }
 
 protected:
 	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
 
-	virtual D3D12_INPUT_LAYOUT_DESC		CreateInputLayout();
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
-	virtual D3D12_BLEND_DESC			CreateBlendState();
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
+	virtual D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
+	virtual D3D12_RASTERIZER_DESC CreateRasterizerState();
+	virtual D3D12_BLEND_DESC CreateBlendState();
+	virtual D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState();
 
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
-	D3D12_SHADER_BYTECODE				CompileShaderFromFile(const WCHAR* pszFileName, LPCSTR pszShaderName, LPCSTR pszShaderProfile, ID3DBlob** ppd3dShaderBlob);
+	virtual D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	virtual D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
+	virtual D3D12_SHADER_BYTECODE CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
+	D3D12_SHADER_BYTECODE CompileShaderFromFile(const WCHAR* pszFileName, LPCSTR pszShaderName, LPCSTR pszShaderProfile,
+	                                            ID3DBlob** ppd3dShaderBlob);
 
-protected:
 	ID3D12PipelineState* m_pd3dPipelineState = nullptr;
 };
 
@@ -36,12 +41,16 @@ protected:
 class SRToRtPSO : public PipelineStateObject
 {
 public:
-	SRToRtPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	SRToRtPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 
@@ -58,13 +67,17 @@ protected:
 class PackGBufferPSO : public PipelineStateObject
 {
 public:
-	PackGBufferPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+	PackGBufferPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -80,13 +93,17 @@ protected:
 class AnimatedObjectPSO : public PipelineStateObject
 {
 public:
-	AnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+	AnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -104,22 +121,34 @@ protected:
 class RenderShadowPSO : public PipelineStateObject
 {
 public:
-	RenderShadowPSO() {}
-	RenderShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+	RenderShadowPSO()
+	{
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	RenderShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class RenderSpotLightShadowAnimatedObjectPSO : public RenderShadowPSO
 {
 public:
-	RenderSpotLightShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+	RenderSpotLightShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -137,23 +166,35 @@ protected:
 class RenderPointLightShadowPSO : public PipelineStateObject
 {
 public:
-	RenderPointLightShadowPSO() {}
-	RenderPointLightShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+	RenderPointLightShadowPSO()
+	{
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	RenderPointLightShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+
+	D3D12_SHADER_BYTECODE CreateGeometryShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class RenderPointLightShadowAnimatedObjectPSO : public RenderPointLightShadowPSO
 {
 public:
-	RenderPointLightShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+	RenderPointLightShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -171,23 +212,35 @@ protected:
 class RenderDirectionalShadowPSO : public PipelineStateObject
 {
 public:
-	RenderDirectionalShadowPSO() {}
-	RenderDirectionalShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+	RenderDirectionalShadowPSO()
+	{
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	RenderDirectionalShadowPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+
+	D3D12_SHADER_BYTECODE CreateGeometryShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class RenderDirectionalShadowAnimatedObjectPSO : public RenderDirectionalShadowPSO
 {
 public:
-	RenderDirectionalShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+	RenderDirectionalShadowAnimatedObjectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 
@@ -205,14 +258,19 @@ class ColorFromGBufferPSO : public PipelineStateObject
 {
 public:
 	ColorFromGBufferPSO() = default;
-	ColorFromGBufferPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
 
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	ColorFromGBufferPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState() override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 
@@ -230,15 +288,19 @@ protected:
 class AddLightPSO : public PipelineStateObject
 {
 public:
-	AddLightPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	AddLightPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_BLEND_DESC			CreateBlendState();
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_BLEND_DESC CreateBlendState() override;
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState() override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -254,10 +316,14 @@ protected:
 class DebugColorPSO : public ColorFromGBufferPSO
 {
 public:
-	DebugColorPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+	DebugColorPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 protected:
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -273,10 +339,14 @@ protected:
 class DebugDepthPSO : public ColorFromGBufferPSO
 {
 public:
-	DebugDepthPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+	DebugDepthPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 protected:
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*========================================================================
@@ -291,15 +361,19 @@ protected:
 class EffectPSO : public PipelineStateObject
 {
 public:
-	EffectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	EffectPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_BLEND_DESC			CreateBlendState();
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_BLEND_DESC CreateBlendState() override;
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState() override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
 };
 
 
@@ -317,16 +391,20 @@ protected:
 class ParticlePSO : public PipelineStateObject
 {
 public:
-	ParticlePSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	ParticlePSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_BLEND_DESC			CreateBlendState();
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_BLEND_DESC CreateBlendState() override;
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState() override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateGeometryShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
 };
 
 
@@ -343,35 +421,44 @@ protected:
 class TextPSO : public PipelineStateObject
 {
 public:
-	TextPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	TextPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_BLEND_DESC			CreateBlendState();
-	virtual D3D12_DEPTH_STENCIL_DESC	CreateDepthStencilState();
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreateGeometryShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_RASTERIZER_DESC		CreateRasterizerState();
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_BLEND_DESC CreateBlendState() override;
+	D3D12_DEPTH_STENCIL_DESC CreateDepthStencilState() override;
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreateGeometryShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_RASTERIZER_DESC CreateRasterizerState() override;
 };
 
 
 /*========================================================================
 * PostProcess PSOs
 *=======================================================================*/
-class ComputePipelineStateObject {
+class ComputePipelineStateObject
+{
 public:
 	ComputePipelineStateObject() = default;
-	ComputePipelineStateObject(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) { CreatePipelineState(pd3dDevice, pd3dRootSignature); }
+
+	ComputePipelineStateObject(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
+
 	ID3D12PipelineState* GetPipelineState() { return m_pd3dPipelineState; }
 
 protected:
 	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
-protected:
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
-	D3D12_SHADER_BYTECODE				CompileShaderFromFile(const WCHAR* pszFileName, LPCSTR pszShaderName, LPCSTR pszShaderProfile, ID3DBlob** ppd3dShaderBlob);
+	virtual D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+	D3D12_SHADER_BYTECODE CompileShaderFromFile(const WCHAR* pszFileName, LPCSTR pszShaderName, LPCSTR pszShaderProfile,
+	                                            ID3DBlob** ppd3dShaderBlob);
 
-protected:
 	ID3D12PipelineState* m_pd3dPipelineState = nullptr;
 };
 
@@ -383,22 +470,29 @@ protected:
 class VerticalBlurCPSO : public ComputePipelineStateObject
 {
 public:
-	VerticalBlurCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) 
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:	
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	VerticalBlurCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class HorizontalBlurCPSO : public ComputePipelineStateObject
 {
 public:
-	HorizontalBlurCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) 
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	HorizontalBlurCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*=============================================================================
@@ -410,33 +504,44 @@ protected:
 class HDRFstPassCPSO : public ComputePipelineStateObject
 {
 public:
-	HDRFstPassCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) 
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	HDRFstPassCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class HDRScdPassCPSO : public ComputePipelineStateObject
 {
 public:
 	HDRScdPassCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob) override;
 };
+
 class HDRToneMappingPSO : public PipelineStateObject
 {
 public:
-	HDRToneMappingPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) 
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	HDRToneMappingPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
-	virtual D3D12_SHADER_BYTECODE		CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob) override;
+	D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob) override;
 };
 
 /*=============================================================================
@@ -446,10 +551,13 @@ protected:
 class BloomCPSO : public ComputePipelineStateObject
 {
 public:
-	BloomCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) 
-	{ CreatePipelineState(pd3dDevice, pd3dRootSignature); }
-protected:
-	virtual void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature);
+	BloomCPSO(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature)
+	{
+		CreatePipelineState(pd3dDevice, pd3dRootSignature);
+	}
 
-	virtual D3D12_SHADER_BYTECODE		CreateComputeShader(ID3DBlob** ppd3dShaderBlob);
+protected:
+	void CreatePipelineState(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dRootSignature) override;
+
+	D3D12_SHADER_BYTECODE CreateComputeShader(ID3DBlob** ppd3dShaderBlob) override;
 };
