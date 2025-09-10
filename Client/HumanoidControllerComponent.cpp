@@ -53,7 +53,7 @@ void HumanoidControllerComponent::Damage(int dmg)
 		ParticleBurstInfo pb = {};
 		pec->SetBurst(pb);
 
-		g_pCurrScene->AddObject(pe, RENDERGROUP::PARTICLE);
+		g_pCurrScene->AddObject(pe, RenderGroup::PARTICLE);
 	}
 }
 

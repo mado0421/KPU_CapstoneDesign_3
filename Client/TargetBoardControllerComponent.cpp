@@ -64,7 +64,7 @@ void TargetBoardControllerComponent::Revive()
 		ParticleBurstInfo pb = {};
 		pec->SetBurst(pb);
 
-		g_pCurrScene->AddObject(pe, RENDERGROUP::PARTICLE);
+		g_pCurrScene->AddObject(pe, RenderGroup::PARTICLE);
 
 		lpec = pec;
 	}
