@@ -43,7 +43,7 @@ namespace LoadMy
 	vector<MY_COLLIDER_OBJECT_DATA> LoadColliderList(const char* path);
 }
 
-enum class RENDERGROUP
+enum class RenderGroup
 {
 	OBJECT,
 	ANIMATED,
@@ -114,7 +114,7 @@ public:
 	void Victory();
 	void Defeat();
 
-	void AddObject(Object* pObject, RENDERGROUP renderGroup);
+	void AddObject(Object* pObject, RenderGroup renderGroup);
 	void DeleteObject(Object* pObject);
 	Object* FindObjectByName(const char*);
 

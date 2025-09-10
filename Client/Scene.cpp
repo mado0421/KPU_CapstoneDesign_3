@@ -787,22 +787,22 @@ void Scene::Defeat()
 {
 }
 
-void Scene::AddObject(Object* pObject, RENDERGROUP renderGroup)
+void Scene::AddObject(Object* pObject, RenderGroup renderGroup)
 {
 	m_vecObject.push_back(pObject);
 
 	switch (renderGroup)
 	{
-	case RENDERGROUP::OBJECT:
+	case RenderGroup::OBJECT:
 		m_vecNonAnimObjectRenderGroup.push_back(pObject);
 		break;
-	case RENDERGROUP::ANIMATED:
+	case RenderGroup::ANIMATED:
 		m_vecAnimObjectRenderGroup.push_back(pObject);
 		break;
-	case RENDERGROUP::PARTICLE:
+	case RenderGroup::PARTICLE:
 		m_vecParticleEmitter.push_back(pObject);
 		break;
-	case RENDERGROUP::EFFECT:
+	case RenderGroup::EFFECT:
 		m_vecEffectRenderGroup.push_back(pObject);
 		break;
 	}

@@ -156,7 +156,7 @@ void WeaponControllerComponent::SolveConstraint()
 			pb.isEnable = true;
 			pec->SetBurst(pb);
 
-			g_pCurrScene->AddObject(pe, RENDERGROUP::PARTICLE);
+			g_pCurrScene->AddObject(pe, RenderGroup::PARTICLE);
 		}
 	}
 }
