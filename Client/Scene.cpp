@@ -16,15 +16,15 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 	/*========================================================================
 	* 주요 변수 초기화
 	*=======================================================================*/
-	m_pd3dDevice		= pd3dDevice;
-	m_pd3dCommandList	= pd3dCommandList;
+	m_pd3dDevice = pd3dDevice;
+	m_pd3dCommandList = pd3dCommandList;
 	m_pd3dRootSignature = CreateRootSignature();
 
 	/*========================================================================
 	* 커서 설정
 	*=======================================================================*/
-	if(TEST_MOUSE_USABLE)
-		SetCursorPos(FRAME_BUFFER_WIDTH / 2, FRAME_BUFFER_HEIGHT / 2);	
+	if (TEST_MOUSE_USABLE)
+		SetCursorPos(FRAME_BUFFER_WIDTH / 2, FRAME_BUFFER_HEIGHT / 2);
 	ShowCursor(false);
 
 	/*========================================================================
@@ -45,18 +45,17 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 	*=============================================================================*/
 	CreatePassInfoShaderResource();
 	{
-		int totalBckBufPixels 
+		int totalBckBufPixels
 			= FRAME_BUFFER_WIDTH * 2;
 		//= (FRAME_BUFFER_WIDTH * FRAME_BUFFER_WIDTH) / (16 * 1024);
 
 		HRESULT hr = E_FAIL;
 
 
-
 		//	후처리 텍스처는 SRV와 UAV 둘 다 만들어줘야 함.
 		D3D12_HEAP_PROPERTIES hp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 		D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(totalBckBufPixels * sizeof(float),
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		                                                         D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
 		hr = pd3dDevice->CreateCommittedResource(
 			&hp,
@@ -67,41 +66,55 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 			IID_PPV_ARGS(&m_pd3duabHDRAvgLum));
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-		uavDesc.Format						= DXGI_FORMAT_UNKNOWN;
-		uavDesc.ViewDimension				= D3D12_UAV_DIMENSION_BUFFER;
-		uavDesc.Buffer.NumElements			= totalBckBufPixels * sizeof(float);
-		uavDesc.Buffer.StructureByteStride	= 1;
-		uavDesc.Buffer.Flags				= D3D12_BUFFER_UAV_FLAG_NONE;
+		uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+		uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+		uavDesc.Buffer.NumElements = totalBckBufPixels * sizeof(float);
+		uavDesc.Buffer.StructureByteStride = 1;
+		uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
 
 		m_pd3dDevice->CreateUnorderedAccessView(m_pd3duabHDRAvgLum, nullptr,
-			&uavDesc, m_d3dSrvCPUDescriptorStartHandle);
+		                                        &uavDesc, m_d3dSrvCPUDescriptorStartHandle);
 		m_d3dSrvCPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
 		m_d3dCbvGPUuabHDRAvgLumHandle = m_d3dSrvGPUDescriptorStartHandle;
-		m_d3dSrvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;	// 여기까지 됨
+		m_d3dSrvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize; // 여기까지 됨
 	}
-
 
 
 	/*========================================================================
 	* 텍스쳐
 	*=======================================================================*/
 	g_TextureMng.Initialize(m_pd3dDevice);
-	g_TextureMng.AddUnorderedAccessTexture("DownScaled", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddUnorderedAccessTexture("Blur_Vertical", m_pd3dDevice, FRAME_BUFFER_WIDTH/4, FRAME_BUFFER_HEIGHT/4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddUnorderedAccessTexture("Blur_Horizontal", m_pd3dDevice, FRAME_BUFFER_WIDTH/4, FRAME_BUFFER_HEIGHT/4, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddDepthBufferTexture("GBuffer_Depth", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddRenderTargetTexture("GBuffer_Color", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddRenderTargetTexture("GBuffer_Normal", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.AddRenderTargetTexture("Screen", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddUnorderedAccessTexture("DownScaled", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4, FRAME_BUFFER_HEIGHT / 4,
+	                                       m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddUnorderedAccessTexture("Blur_Vertical", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4,
+	                                       FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle,
+	                                       m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddUnorderedAccessTexture("Blur_Horizontal", m_pd3dDevice, FRAME_BUFFER_WIDTH / 4,
+	                                       FRAME_BUFFER_HEIGHT / 4, m_d3dSrvCPUDescriptorStartHandle,
+	                                       m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddDepthBufferTexture("GBuffer_Depth", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT,
+	                                   m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddRenderTargetTexture("GBuffer_Color", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT,
+	                                    m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddRenderTargetTexture("GBuffer_Normal", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT,
+	                                    m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.AddRenderTargetTexture("Screen", m_pd3dDevice, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT,
+	                                    m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 	//g_TextureMng.AddRenderTargetTexture("SmallScreen", m_pd3dDevice, FRAME_BUFFER_WIDTH/2, FRAME_BUFFER_HEIGHT/2, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
-	g_TextureMng.LoadFromFile("defaultDiffuseMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.LoadFromFile("defaultNormalMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.LoadFromFile("defaultSpecularMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.LoadFromFile("titleImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.LoadFromFile("endImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	g_TextureMng.LoadFromFile("victory", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
-	
+	g_TextureMng.LoadFromFile("defaultDiffuseMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.LoadFromFile("defaultNormalMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.LoadFromFile("defaultSpecularMap", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.LoadFromFile("titleImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.LoadFromFile("endImage_rescale", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+	g_TextureMng.LoadFromFile("victory", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                          m_d3dSrvGPUDescriptorStartHandle);
+
 	/*========================================================================
 	* 마테리얼
 	*=======================================================================*/
@@ -119,7 +132,8 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 	* 에셋 리스트 로드해서 모델이랑 텍스처를 동시에 로드
 	*=======================================================================*/
 	AssetListDataImporter assetImporter;
-	assetImporter.Load(m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+	assetImporter.Load(m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle,
+	                   m_d3dSrvGPUDescriptorStartHandle);
 
 	/*========================================================================
 	* Pass 1 전용 오브젝트 데이터 로드 및 생성
@@ -130,10 +144,10 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 	/*========================================================================
 	* Pass 2 전용 전체 화면 사각형
 	*=======================================================================*/
-	Screen* tempScreen
+	auto tempScreen
 		= new Screen(m_pd3dDevice, m_pd3dCommandList,
-			m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle,
-			1.0f, 1.0f);
+		             m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle,
+		             1.0f, 1.0f);
 	m_vecScreenObject.push_back(tempScreen);
 
 	/*========================================================================
@@ -143,46 +157,56 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 	vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Data/LightData.txt");
 	string shadow("ShadowMap_");
 	m_LightMng = new LightManager();
-	for (int i = 0; i < vecLightDesc.size(); i++) {
+	for (int i = 0; i < vecLightDesc.size(); i++)
+	{
 		switch (vecLightDesc[i].lightType)
 		{
-		case LightType::LIGHT_POINT:		
-			m_LightMng->AddPointLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);		
-			
+		case LIGHT_POINT:
+			m_LightMng->AddPointLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList,
+			                          m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+
 			break;
-		case LightType::LIGHT_DIRECTIONAL:	
-			m_LightMng->AddDirectionalLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle, 3);	
-			
+		case LIGHT_DIRECTIONAL:
+			m_LightMng->AddDirectionalLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList,
+			                                m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle, 3);
+
 			break;
-		case LightType::LIGHT_SPOT:			
-			m_LightMng->AddSpotLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);		
-			
+		case LIGHT_SPOT:
+			m_LightMng->AddSpotLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+			                         m_d3dCbvGPUDescriptorStartHandle);
+
 			break;
-		case LightType::LIGHT_NONE:
+		case LIGHT_NONE:
 		default:
 			break;
 		}
 
-		if (vecLightDesc[i].bIsShadow) {
+		if (vecLightDesc[i].bIsShadow)
+		{
 			string temp = to_string(i);
 			temp = shadow + temp;
 			switch (vecLightDesc[i].lightType)
 			{
-			case LightType::LIGHT_POINT:
-				g_TextureMng.AddDepthBufferTextureCube(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+			case LIGHT_POINT:
+				g_TextureMng.AddDepthBufferTextureCube(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE,
+				                                       m_d3dSrvCPUDescriptorStartHandle,
+				                                       m_d3dSrvGPUDescriptorStartHandle);
 
 				break;
 
-			case LightType::LIGHT_SPOT:
-				g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+			case LIGHT_SPOT:
+				g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE,
+				                                   m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
 				break;
-			case LightType::LIGHT_DIRECTIONAL:
-				g_TextureMng.AddDepthBufferTextureArray(temp.c_str(), 3, m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+			case LIGHT_DIRECTIONAL:
+				g_TextureMng.AddDepthBufferTextureArray(temp.c_str(), 3, m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE,
+				                                        m_d3dSrvCPUDescriptorStartHandle,
+				                                        m_d3dSrvGPUDescriptorStartHandle);
 
 
 				break;
-			case LightType::LIGHT_NONE:
+			case LIGHT_NONE:
 			default:
 				break;
 			}
@@ -199,12 +223,17 @@ void Scene::Init(Framework* pFramework, ID3D12Device* pd3dDevice, ID3D12Graphics
 void Scene::CheckCollsion()
 {
 	static bool first = true;
-	if (first) { first = false; return; }
-	for (int i = 0; i < m_vecObject.size(); i++) {
-
+	if (first)
+	{
+		first = false;
+		return;
+	}
+	for (int i = 0; i < m_vecObject.size(); i++)
+	{
 		if (!m_vecObject[i]->m_bEnable) continue;
 
-		for (int j = i + 1; j < m_vecObject.size(); j++) {
+		for (int j = i + 1; j < m_vecObject.size(); j++)
+		{
 			m_vecObject[i]->CheckCollision(m_vecObject[j]);
 		}
 	}
@@ -213,8 +242,9 @@ void Scene::CheckCollsion()
 void Scene::SolveConstraint()
 {
 	//for_each(m_vecObject.begin(), m_vecObject.end(), [](Object* o) {o->SolveConstraint(); });
-	for (int i = 0; i < m_vecObject.size(); i++) {
-		if(m_vecObject[i]->m_bEnable) m_vecObject[i]->SolveConstraint();
+	for (int i = 0; i < m_vecObject.size(); i++)
+	{
+		if (m_vecObject[i]->m_bEnable) m_vecObject[i]->SolveConstraint();
 	}
 }
 
@@ -223,42 +253,65 @@ void Scene::Input(UCHAR* pKeyBuffer)
 	POINT ptCursorPos;
 	GetCursorPos(&ptCursorPos);
 	XMFLOAT2 xmf2MouseMovement;
-	if (TEST_MOUSE_USABLE) {
-		xmf2MouseMovement.x = (float)(ptCursorPos.x - FRAME_BUFFER_WIDTH / 2);
-		xmf2MouseMovement.y = (float)(ptCursorPos.y - FRAME_BUFFER_HEIGHT / 2);
+	if (TEST_MOUSE_USABLE)
+	{
+		xmf2MouseMovement.x = static_cast<float>(ptCursorPos.x - FRAME_BUFFER_WIDTH / 2);
+		xmf2MouseMovement.y = static_cast<float>(ptCursorPos.y - FRAME_BUFFER_HEIGHT / 2);
 		SetCursorPos(FRAME_BUFFER_WIDTH / 2, FRAME_BUFFER_HEIGHT / 2);
 	}
-	else {
+	else
+	{
 		xmf2MouseMovement.x = 0;
 		xmf2MouseMovement.y = 0;
 	}
 
-	for_each(m_vecObject.begin(), m_vecObject.end(), [&](Object* o) {o->Input(pKeyBuffer, xmf2MouseMovement); });
+	for_each(m_vecObject.begin(), m_vecObject.end(), [&](Object* o) { o->Input(pKeyBuffer, xmf2MouseMovement); });
 
-	if (pKeyBuffer[KeyCode::_M] & 0xF0) { TEST_MOUSE_USABLE = true; ShowCursor(false); }
-	if (pKeyBuffer[KeyCode::_N] & 0xF0) { TEST_MOUSE_USABLE = false; ShowCursor(true); }
-
-	if (1 == startEndState) {
-		if (pKeyBuffer[KeyCode::_Space] & 0xF0) { startEndState = 0; TEST_MOUSE_USABLE = true; ShowCursor(false); }
+	if (pKeyBuffer[_M] & 0xF0)
+	{
+		TEST_MOUSE_USABLE = true;
+		ShowCursor(false);
 	}
-	else if (2 == startEndState) {
-		if (pKeyBuffer[KeyCode::_Space] & 0xF0) { 
-			startEndState = 1; 
+	if (pKeyBuffer[_N] & 0xF0)
+	{
+		TEST_MOUSE_USABLE = false;
+		ShowCursor(true);
+	}
+
+	if (1 == startEndState)
+	{
+		if (pKeyBuffer[_Space] & 0xF0)
+		{
+			startEndState = 0;
+			TEST_MOUSE_USABLE = true;
+			ShowCursor(false);
+		}
+	}
+	else if (2 == startEndState)
+	{
+		if (pKeyBuffer[_Space] & 0xF0)
+		{
+			startEndState = 1;
 		}
 	}
 }
+
 void Scene::Update(float fTimeElapsed)
 {
 	m_fCurrentTime += fTimeElapsed;
-	::memcpy(&m_pcbMappedPassInfo->m_xmfCurrentTime, &m_fCurrentTime, sizeof(float));
+	memcpy(&m_pcbMappedPassInfo->m_xmfCurrentTime, &m_fCurrentTime, sizeof(float));
 
 	CheckCollsion();
 	SolveConstraint();
 
-	for_each(m_vecObject.begin(), m_vecObject.end(), [&fTimeElapsed](Object* o) { if(o->m_bEnable) o->Update(fTimeElapsed); });
+	for_each(m_vecObject.begin(), m_vecObject.end(), [&fTimeElapsed](Object* o)
+	{
+		if (o->m_bEnable) o->Update(fTimeElapsed);
+	});
 }
+
 void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_HANDLE hBckBufDsv)
-{	
+{
 	/*========================================================================
 	* 루트 시그니처, 디스크립터 힙, 파이프라인 스테이트, 메쉬 토폴로지 설정
 	*=======================================================================*/
@@ -280,13 +333,12 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	m_pd3dCommandList->SetGraphicsRootConstantBufferView(ROOTSIGNATURE_PASSCONSTANTS, d3dGpuVirtualAddress);
 
 	XMFLOAT4X4 texture = {
-	0.5f,		0,		0,		0,
-	0,		-0.5f,		0,		0,
-	0,			0,	 1.0f,		0,
-	0.5f,	 0.5f,		0,	 1.0f };
+		0.5f, 0, 0, 0,
+		0, -0.5f, 0, 0,
+		0, 0, 1.0f, 0,
+		0.5f, 0.5f, 0, 1.0f
+	};
 	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4TextureTransform, XMMatrixTranspose(XMLoadFloat4x4(&texture)));
-
-
 
 
 	/*========================================================================
@@ -317,23 +369,25 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	m_pd3dCommandList->ResourceBarrier(3, d3dResourceBarrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_TextureMng.GetDsvCPUHandle("GBuffer_Depth");
-	m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+	m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0,
+	                                         nullptr);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
 	rtvHandle[0] = g_TextureMng.GetRtvCPUHandle("GBuffer_Color");
 	rtvHandle[1] = g_TextureMng.GetRtvCPUHandle("GBuffer_Normal");
 
-	float pfClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	m_pd3dCommandList->ClearRenderTargetView(rtvHandle[0], pfClearColor, 0, NULL);
-	m_pd3dCommandList->ClearRenderTargetView(rtvHandle[1], pfClearColor, 0, NULL);
+	float pfClearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+	m_pd3dCommandList->ClearRenderTargetView(rtvHandle[0], pfClearColor, 0, nullptr);
+	m_pd3dCommandList->ClearRenderTargetView(rtvHandle[1], pfClearColor, 0, nullptr);
 
 	m_pd3dCommandList->OMSetRenderTargets(2, rtvHandle, FALSE, &dsvHandle);
 
 	m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["AnimatedObject"]);
-	for (auto iter = m_vecAnimObjectRenderGroup.begin(); iter != m_vecAnimObjectRenderGroup.end(); iter++) (*iter)->Render(m_pd3dCommandList);
+	for (auto iter = m_vecAnimObjectRenderGroup.begin(); iter != m_vecAnimObjectRenderGroup.end(); ++iter) (*iter)->
+		Render(m_pd3dCommandList);
 	m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["PackGBuffer"]);
-	for (auto iter = m_vecNonAnimObjectRenderGroup.begin(); iter != m_vecNonAnimObjectRenderGroup.end(); iter++) (*iter)->Render(m_pd3dCommandList);
-
+	for (auto iter = m_vecNonAnimObjectRenderGroup.begin(); iter != m_vecNonAnimObjectRenderGroup.end(); ++iter) (*iter)
+		->Render(m_pd3dCommandList);
 
 
 	d3dResourceBarrier[0].Transition.pResource = g_TextureMng.GetTextureResource("GBuffer_Depth");
@@ -356,57 +410,66 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	cam->SetScissorRect(0, 0, SHADOWMAPSIZE, SHADOWMAPSIZE);
 	cam->SetViewportsAndScissorRects(m_pd3dCommandList);
 
-	for (UINT i = 0; i < m_LightMng->GetNumLight(); i++) {
-		if (m_LightMng->GetIsShadow(i)) {
+	for (UINT i = 0; i < m_LightMng->GetNumLight(); i++)
+	{
+		if (m_LightMng->GetIsShadow(i))
+		{
 			m_LightMng->SetShaderResource(m_pd3dCommandList, i);
 
-			D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_TextureMng.GetDsvCPUHandle(m_LightMng->GetShadowMapName(i).c_str());
-			m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
-			m_pd3dCommandList->OMSetRenderTargets(0, NULL, TRUE, &dsvHandle);
+			D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = g_TextureMng.GetDsvCPUHandle(
+				m_LightMng->GetShadowMapName(i).c_str());
+			m_pd3dCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f,
+			                                         0, 0, nullptr);
+			m_pd3dCommandList->OMSetRenderTargets(0, nullptr, TRUE, &dsvHandle);
 
 			switch (m_LightMng->GetLightType(i))
 			{
-			case LightType::LIGHT_SPOT:
+			case LIGHT_SPOT:
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SpotLightShadow"]);
-				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SpotLightShadowAnim"]);
-				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 				break;
 
-			case LightType::LIGHT_POINT:
+			case LIGHT_POINT:
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["PointLightShadow"]);
-				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["PointLightShadowAnim"]);
-				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 				break;
 
-			case LightType::LIGHT_DIRECTIONAL:
+			case LIGHT_DIRECTIONAL:
 
 				m_LightMng->UpdateDirectionalLightOrthographicLH(cam->GetViewMatrix(), i);
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["DirectionalLightShadow"]);
-				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecNonAnimObjectRenderGroup.size(); i++) m_vecNonAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 
 				m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["DirectionalLightShadowAnim"]);
-				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(m_pd3dCommandList);
+				for (int i = 0; i < m_vecAnimObjectRenderGroup.size(); i++) m_vecAnimObjectRenderGroup[i]->Render(
+					m_pd3dCommandList);
 				break;
 
-			case LightType::LIGHT_NONE:
+			case LIGHT_NONE:
 			default:
 				break;
 			}
-
 		}
 	}
 	/*
 	OMSet(bckBuf);
 	*/
 	D3D12_CPU_DESCRIPTOR_HANDLE screenRtv = g_TextureMng.GetRtvCPUHandle("Screen");
-	m_pd3dCommandList->ClearRenderTargetView(screenRtv, pfClearColor, 0, NULL);
+	m_pd3dCommandList->ClearRenderTargetView(screenRtv, pfClearColor, 0, nullptr);
 	m_pd3dCommandList->OMSetRenderTargets(1, &screenRtv, TRUE, &dsvHandle);
 
 	//m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
@@ -429,7 +492,6 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	cam->SetViewportsAndScissorRects(m_pd3dCommandList);
 
 
-
 	/*========================================================================
 	* Pass 2. 스크린 렌더
 	*=======================================================================*/
@@ -446,10 +508,12 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	* Pass 2. 파티클 & 이펙트 렌더
 	*=======================================================================*/
 	m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Effect"]);
-	for (auto iter = m_vecEffectRenderGroup.begin(); iter != m_vecEffectRenderGroup.end(); iter++) (*iter)->Render(m_pd3dCommandList);
+	for (auto iter = m_vecEffectRenderGroup.begin(); iter != m_vecEffectRenderGroup.end(); ++iter) (*iter)->Render(
+		m_pd3dCommandList);
 	m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Particle"]);
-	for (auto iter = m_vecParticleEmitter.begin(); iter != m_vecParticleEmitter.end(); iter++) (*iter)->Render(m_pd3dCommandList);
+	for (auto iter = m_vecParticleEmitter.begin(); iter != m_vecParticleEmitter.end(); ++iter) (*iter)->Render(
+		m_pd3dCommandList);
 	m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	/*========================================================================
@@ -460,16 +524,25 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 	g_TextureMng.UseForShaderResource("GBuffer_Color", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 	m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["AddLight"]);
 
-	for (UINT i = 0; i < m_LightMng->GetNumLight(); i++) {
+	for (UINT i = 0; i < m_LightMng->GetNumLight(); i++)
+	{
 		m_LightMng->SetShaderResource(m_pd3dCommandList, i);
 
-		if (m_LightMng->GetIsShadow(i)) {
+		if (m_LightMng->GetIsShadow(i))
+		{
 			switch (m_LightMng->GetLightType(i))
 			{
-			case LightType::LIGHT_SPOT:			g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOW_TEXTURE);		break;
-			case LightType::LIGHT_POINT:		g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_CUBE_TEXTURE);			break;
-			case LightType::LIGHT_DIRECTIONAL:	g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(), m_pd3dCommandList, ROOTSIGNATURE_SHADOWARRAY_TEXTURE);	break;
-			case LightType::LIGHT_NONE:
+			case LIGHT_SPOT: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(),
+			                                                   m_pd3dCommandList, ROOTSIGNATURE_SHADOW_TEXTURE);
+				break;
+			case LIGHT_POINT: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(),
+			                                                    m_pd3dCommandList, ROOTSIGNATURE_CUBE_TEXTURE);
+				break;
+			case LIGHT_DIRECTIONAL: g_TextureMng.UseForShaderResource(m_LightMng->GetShadowMapName(i).c_str(),
+			                                                          m_pd3dCommandList,
+			                                                          ROOTSIGNATURE_SHADOWARRAY_TEXTURE);
+				break;
+			case LIGHT_NONE:
 			default:
 				break;
 			}
@@ -478,8 +551,8 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		m_vecScreenObject[0]->Render(m_pd3dCommandList);
 	}
 
-	if (gTestInt == 2) {
-
+	if (gTestInt == 2)
+	{
 		/*===========================================================================
 		* Post Process List
 		* - Calc AvgLum
@@ -509,11 +582,11 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
 		g_TextureMng.UseForComputeShaderResourceSRV(
-			"Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);					// Render Result
+			"Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE); // Render Result
 		g_TextureMng.UseForComputeShaderResourceUAV(
-			"DownScaled", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);		// DownScaled
+			"DownScaled", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE); // DownScaled
 		m_pd3dCommandList->SetComputeRootUnorderedAccessView(
-			ROOTSIGNATURE_HDRLUMBUFFER, m_pd3duabHDRAvgLum->GetGPUVirtualAddress());	// AvgLum Buff
+			ROOTSIGNATURE_HDRLUMBUFFER, m_pd3duabHDRAvgLum->GetGPUVirtualAddress()); // AvgLum Buff
 
 		UINT numGroups;
 		//UINT numGroups = (UINT)ceilf(FRAME_BUFFER_WIDTH / 1024.0f);
@@ -550,7 +623,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 		d3dResourceBarrier[0].Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 		d3dResourceBarrier[1].Transition.pResource = g_TextureMng.GetTextureResource("Blur_Horizontal");
-		d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE ;
+		d3dResourceBarrier[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 		d3dResourceBarrier[1].Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 		m_pd3dCommandList->ResourceBarrier(2, d3dResourceBarrier);
 
@@ -559,7 +632,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		g_TextureMng.UseForComputeShaderResourceUAV(
 			"Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
-		numGroups = (UINT)ceilf((FRAME_BUFFER_WIDTH / 4) / 1024.0f);
+		numGroups = static_cast<UINT>(ceilf((FRAME_BUFFER_WIDTH / 4) / 1024.0f));
 		m_pd3dCommandList->Dispatch(numGroups, FRAME_BUFFER_HEIGHT / 4, 1);
 
 
@@ -581,7 +654,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		g_TextureMng.UseForComputeShaderResourceUAV(
 			"Blur_Vertical", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
-		numGroups = (UINT)ceilf((FRAME_BUFFER_WIDTH / 4) / 256.0f);
+		numGroups = static_cast<UINT>(ceilf((FRAME_BUFFER_WIDTH / 4) / 256.0f));
 		m_pd3dCommandList->Dispatch(numGroups, FRAME_BUFFER_HEIGHT / 4, 1);
 
 		/*===========================================================================
@@ -602,7 +675,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		g_TextureMng.UseForComputeShaderResourceUAV(
 			"Blur_Horizontal", m_pd3dCommandList, ROOTSIGNATURE_POSTPROCESS_TEXTURE);
 
-		numGroups = (UINT)ceilf((FRAME_BUFFER_HEIGHT / 4) / 256.0f);
+		numGroups = static_cast<UINT>(ceilf((FRAME_BUFFER_HEIGHT / 4) / 256.0f));
 		m_pd3dCommandList->Dispatch(FRAME_BUFFER_WIDTH / 4, numGroups, 1);
 
 		/*===========================================================================
@@ -613,7 +686,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 
 		d3dResourceBarrier[0].Transition.pResource = g_TextureMng.GetTextureResource("Blur_Horizontal");
 		d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-		d3dResourceBarrier[0].Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE ;
+		d3dResourceBarrier[0].Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 		m_pd3dCommandList->ResourceBarrier(1, d3dResourceBarrier);
 
 		g_TextureMng.UseForShaderResource(
@@ -623,13 +696,14 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		m_pd3dCommandList->SetGraphicsRootUnorderedAccessView(
 			ROOTSIGNATURE_HDRLUMBUFFER, m_pd3duabHDRAvgLum->GetGPUVirtualAddress());
 
-		m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, 
-			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+		m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv,
+		                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0,
+		                                         nullptr);
 		m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
 		m_vecScreenObject[0]->Render(m_pd3dCommandList);
 
 		d3dResourceBarrier[0].Transition.pResource = g_TextureMng.GetTextureResource("Screen");
-		d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE ;
+		d3dResourceBarrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 		d3dResourceBarrier[0].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		m_pd3dCommandList->ResourceBarrier(1, d3dResourceBarrier);
 
@@ -639,47 +713,49 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_
 		m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 		m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["Text"]);
-		for (auto iter = m_vecUIRenderGroup.begin(); iter != m_vecUIRenderGroup.end(); iter++) (*iter)->Render(m_pd3dCommandList);
+		for (auto iter = m_vecUIRenderGroup.begin(); iter != m_vecUIRenderGroup.end(); ++iter) (*iter)->Render(
+			m_pd3dCommandList);
 		m_pd3dCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		/*========================================================================
 		* Pass 2. Title Card or End Card Render
 		*=======================================================================*/
-		if (startEndState) {
-
+		if (startEndState)
+		{
 			m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
 			m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SRToRt"]);
 
-			if (1 == startEndState) g_TextureMng.UseForShaderResource("titleImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
-			else if (3 == startEndState) g_TextureMng.UseForShaderResource("victory", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
+			if (1 == startEndState) g_TextureMng.UseForShaderResource("titleImage_rescale", m_pd3dCommandList,
+			                                                          ROOTSIGNATURE_COLOR_TEXTURE);
+			else if (3 == startEndState) g_TextureMng.UseForShaderResource(
+				"victory", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 			else g_TextureMng.UseForShaderResource("endImage_rescale", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 
-			m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+			m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+			                                         1.0f, 0, 0, nullptr);
 			m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
 			m_vecScreenObject[0]->Render(m_pd3dCommandList);
 		}
 	}
-	else {
+	else
+	{
 		m_pd3dCommandList->SetGraphicsRootSignature(m_pd3dRootSignature);
 		m_pd3dCommandList->SetPipelineState(m_uomPipelineStates["SRToRt"]);
 
 		g_TextureMng.UseForShaderResource("Screen", m_pd3dCommandList, ROOTSIGNATURE_COLOR_TEXTURE);
 
-		m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+		m_pd3dCommandList->ClearDepthStencilView(hBckBufDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0,
+		                                         0, nullptr);
 		m_pd3dCommandList->OMSetRenderTargets(1, &hBckBufRtv, TRUE, &hBckBufDsv);
 		m_vecScreenObject[0]->Render(m_pd3dCommandList);
 	}
-
-
-
-
 }
 
 void Scene::Release()
 {
 	if (m_pd3dcbPassInfo)
 	{
-		m_pd3dcbPassInfo->Unmap(0, NULL);
+		m_pd3dcbPassInfo->Unmap(0, nullptr);
 		m_pd3dcbPassInfo->Release();
 	}
 }
@@ -687,7 +763,7 @@ void Scene::Release()
 void Scene::Clear()
 {
 	eventCount = 0;
-	startEndState = 2;	// End;
+	startEndState = 2; // End;
 
 	m_vecObject.clear();
 	m_vecNonAnimObjectRenderGroup.clear();
@@ -698,7 +774,8 @@ void Scene::Clear()
 
 	BuildObject();
 
-	TEST_MOUSE_USABLE = false; ShowCursor(true);
+	TEST_MOUSE_USABLE = false;
+	ShowCursor(true);
 }
 
 void Scene::Victory()
@@ -716,16 +793,16 @@ void Scene::AddObject(Object* pObject, RENDERGROUP renderGroup)
 
 	switch (renderGroup)
 	{
-	case RENDERGROUP::OBJECT:	
+	case RENDERGROUP::OBJECT:
 		m_vecNonAnimObjectRenderGroup.push_back(pObject);
 		break;
-	case RENDERGROUP::ANIMATED:	
+	case RENDERGROUP::ANIMATED:
 		m_vecAnimObjectRenderGroup.push_back(pObject);
 		break;
-	case RENDERGROUP::PARTICLE:	
+	case RENDERGROUP::PARTICLE:
 		m_vecParticleEmitter.push_back(pObject);
 		break;
-	case RENDERGROUP::EFFECT:	
+	case RENDERGROUP::EFFECT:
 		m_vecEffectRenderGroup.push_back(pObject);
 		break;
 	}
@@ -733,12 +810,11 @@ void Scene::AddObject(Object* pObject, RENDERGROUP renderGroup)
 
 void Scene::DeleteObject(Object* pObject)
 {
-	
 }
 
 ID3D12RootSignature* Scene::CreateRootSignature()
 {
-	ID3D12RootSignature* pd3dGraphicsRootSignature = NULL;
+	ID3D12RootSignature* pd3dGraphicsRootSignature = nullptr;
 	D3D12_DESCRIPTOR_RANGE d3dDescriptorRange[10];
 
 	d3dDescriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
@@ -893,7 +969,7 @@ ID3D12RootSignature* Scene::CreateRootSignature()
 	d3dSamplerDesc[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 	D3D12_ROOT_SIGNATURE_FLAGS d3dRootSignatureFlags
-		= D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT 
+		= D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
 		| D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS
 		| D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;
 	D3D12_ROOT_SIGNATURE_DESC d3dRootSignatureDesc;
@@ -904,16 +980,20 @@ ID3D12RootSignature* Scene::CreateRootSignature()
 	d3dRootSignatureDesc.pStaticSamplers = &d3dSamplerDesc[0];
 	d3dRootSignatureDesc.Flags = d3dRootSignatureFlags;
 
-	ID3DBlob* pd3dSignatureBlob = NULL;
-	ID3DBlob* pd3dErrorBlob = NULL;
-	HRESULT isSuccess = D3D12SerializeRootSignature(&d3dRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &pd3dSignatureBlob, &pd3dErrorBlob);
-	isSuccess = m_pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(), pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pd3dGraphicsRootSignature);
+	ID3DBlob* pd3dSignatureBlob = nullptr;
+	ID3DBlob* pd3dErrorBlob = nullptr;
+	HRESULT isSuccess = D3D12SerializeRootSignature(&d3dRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0,
+	                                                &pd3dSignatureBlob, &pd3dErrorBlob);
+	isSuccess = m_pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(),
+	                                              pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature),
+	                                              (void**)&pd3dGraphicsRootSignature);
 	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
 	if (pd3dErrorBlob) pd3dErrorBlob->Release();
 
 	return pd3dGraphicsRootSignature;
 }
-void Scene::CreateDescriptorHeap() 
+
+void Scene::CreateDescriptorHeap()
 {
 	// heap 생성을 하려면 미리 서술자를 몇 개나 생성할 지 알아야 하기 때문에
 	// obj 개수도 중요하지만 srv에 들어갈 texture 개수도 중요함..
@@ -937,43 +1017,48 @@ void Scene::CreateDescriptorHeap()
 
 	m_d3dCbvCPUDescriptorStartHandle = m_pd3dCbvSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	m_d3dCbvGPUDescriptorStartHandle = m_pd3dCbvSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	m_d3dSrvCPUDescriptorStartHandle.ptr = m_d3dCbvCPUDescriptorStartHandle.ptr + (::gnCbvSrvDescriptorIncrementSize * MAXNUMCBV);
-	m_d3dSrvGPUDescriptorStartHandle.ptr = m_d3dCbvGPUDescriptorStartHandle.ptr + (::gnCbvSrvDescriptorIncrementSize * MAXNUMCBV);
-
+	m_d3dSrvCPUDescriptorStartHandle.ptr = m_d3dCbvCPUDescriptorStartHandle.ptr + (gnCbvSrvDescriptorIncrementSize *
+		MAXNUMCBV);
+	m_d3dSrvGPUDescriptorStartHandle.ptr = m_d3dCbvGPUDescriptorStartHandle.ptr + (gnCbvSrvDescriptorIncrementSize *
+		MAXNUMCBV);
 }
+
 void Scene::CreatePSO()
 {
-	PackGBufferPSO PackGBufferPso = PackGBufferPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto PackGBufferPso = PackGBufferPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["PackGBuffer"] = PackGBufferPso.GetPipelineState();
 
-	AnimatedObjectPSO AnimatedObjectPso = AnimatedObjectPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto AnimatedObjectPso = AnimatedObjectPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["AnimatedObject"] = AnimatedObjectPso.GetPipelineState();
 
-	RenderShadowPSO RenderShadowPso = RenderShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderShadowPso = RenderShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["SpotLightShadow"] = RenderShadowPso.GetPipelineState();
-	RenderSpotLightShadowAnimatedObjectPSO RenderSpotLightShadowAnimatedObjectPso = RenderSpotLightShadowAnimatedObjectPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderSpotLightShadowAnimatedObjectPso = RenderSpotLightShadowAnimatedObjectPSO(
+		m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["SpotLightShadowAnim"] = RenderSpotLightShadowAnimatedObjectPso.GetPipelineState();
 
-	RenderPointLightShadowPSO RenderPointLightShadowPso = RenderPointLightShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderPointLightShadowPso = RenderPointLightShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["PointLightShadow"] = RenderPointLightShadowPso.GetPipelineState();
-	RenderPointLightShadowAnimatedObjectPSO RenderPointLightShadowAnimatedObjectPso = RenderPointLightShadowAnimatedObjectPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderPointLightShadowAnimatedObjectPso = RenderPointLightShadowAnimatedObjectPSO(
+		m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["PointLightShadowAnim"] = RenderPointLightShadowAnimatedObjectPso.GetPipelineState();
 
-	RenderDirectionalShadowPSO RenderDirectionalShadowPso = RenderDirectionalShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderDirectionalShadowPso = RenderDirectionalShadowPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["DirectionalLightShadow"] = RenderDirectionalShadowPso.GetPipelineState();
-	RenderDirectionalShadowAnimatedObjectPSO RenderDirectionalShadowAnimatedObjectPso = RenderDirectionalShadowAnimatedObjectPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto RenderDirectionalShadowAnimatedObjectPso = RenderDirectionalShadowAnimatedObjectPSO(
+		m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["DirectionalLightShadowAnim"] = RenderDirectionalShadowAnimatedObjectPso.GetPipelineState();
 
-	ColorFromGBufferPSO ColorFromGBufferPso = ColorFromGBufferPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto ColorFromGBufferPso = ColorFromGBufferPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["ColorFromGBuffer"] = ColorFromGBufferPso.GetPipelineState();
 
-	AddLightPSO AddLightPso = AddLightPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto AddLightPso = AddLightPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["AddLight"] = AddLightPso.GetPipelineState();
 
-	EffectPSO EffectPso = EffectPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto EffectPso = EffectPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["Effect"] = EffectPso.GetPipelineState();
 
-	ParticlePSO ParticlePso = ParticlePSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto ParticlePso = ParticlePSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["Particle"] = ParticlePso.GetPipelineState();
 
 	//DebugColorPSO DebugColorPso = DebugColorPSO(m_pd3dDevice, m_pd3dRootSignature);
@@ -982,49 +1067,50 @@ void Scene::CreatePSO()
 	//DebugDepthPSO DebugDepthPso = DebugDepthPSO(m_pd3dDevice, m_pd3dRootSignature);
 	//m_uomPipelineStates["DebugDepth"] = DebugDepthPso.GetPipelineState();
 
-	TextPSO TextPso = TextPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto TextPso = TextPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["Text"] = TextPso.GetPipelineState();
 
 	/*============================================================================
 	* Blur
 	============================================================================*/
-	VerticalBlurCPSO VerticalBlurPso = VerticalBlurCPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto VerticalBlurPso = VerticalBlurCPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["Blur_Vertical"] = VerticalBlurPso.GetPipelineState();
-	HorizontalBlurCPSO HorizontalBlurPso = HorizontalBlurCPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto HorizontalBlurPso = HorizontalBlurCPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["Blur_Horizontal"] = HorizontalBlurPso.GetPipelineState();
-	SRToRtPSO SRToRtPso = SRToRtPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto SRToRtPso = SRToRtPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["SRToRt"] = SRToRtPso.GetPipelineState();
 
 
 	/*============================================================================
 	* HDR
 	============================================================================*/
-	HDRFstPassCPSO HDRFstPassCpso = HDRFstPassCPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto HDRFstPassCpso = HDRFstPassCPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["HDR_First"] = HDRFstPassCpso.GetPipelineState();
-	HDRScdPassCPSO HDRScdPassCpso = HDRScdPassCPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto HDRScdPassCpso = HDRScdPassCPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["HDR_Second"] = HDRScdPassCpso.GetPipelineState();
-	HDRToneMappingPSO HDRToneMappingPso = HDRToneMappingPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto HDRToneMappingPso = HDRToneMappingPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["HDR_Last"] = HDRToneMappingPso.GetPipelineState();
 
 	/*============================================================================
 	* Bloom
 	============================================================================*/
-	BloomCPSO BloomCpso = BloomCPSO(m_pd3dDevice, m_pd3dRootSignature);
+	auto BloomCpso = BloomCPSO(m_pd3dDevice, m_pd3dRootSignature);
 	m_uomPipelineStates["PP_Bloom"] = BloomCpso.GetPipelineState();
-
-
 }
 
 void Scene::CreatePassInfoShaderResource()
 {
 	UINT ncbElementBytes = ((sizeof(CB_PASS_INFO) + 255) & ~255); //256의 배수
-	m_pd3dcbPassInfo = ::CreateBufferResource(m_pd3dDevice, m_pd3dCommandList, NULL, ncbElementBytes, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
+	m_pd3dcbPassInfo = CreateBufferResource(m_pd3dDevice, m_pd3dCommandList, nullptr, ncbElementBytes,
+	                                        D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+	                                        nullptr);
 
-	D3D12_GPU_VIRTUAL_ADDRESS		d3dGpuVirtualAddress;
+	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress;
 	D3D12_CONSTANT_BUFFER_VIEW_DESC d3dCBVDesc;
 
-	if (nullptr != m_pd3dcbPassInfo) {
-		m_pd3dcbPassInfo->Map(0, NULL, (void**)&m_pcbMappedPassInfo);
+	if (nullptr != m_pd3dcbPassInfo)
+	{
+		m_pd3dcbPassInfo->Map(0, nullptr, (void**)&m_pcbMappedPassInfo);
 		d3dGpuVirtualAddress = m_pd3dcbPassInfo->GetGPUVirtualAddress();
 		d3dCBVDesc.SizeInBytes = ncbElementBytes;
 		d3dCBVDesc.BufferLocation = d3dGpuVirtualAddress;
@@ -1035,8 +1121,8 @@ void Scene::CreatePassInfoShaderResource()
 
 	m_d3dCbvGPUPassInfoHandle = m_d3dCbvGPUDescriptorStartHandle;
 	m_d3dCbvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
-
 }
+
 void Scene::UpdatePassInfoAboutCamera()
 {
 	CameraComponent* cam = m_pCameraObject->FindComponent<CameraComponent>();
@@ -1044,19 +1130,19 @@ void Scene::UpdatePassInfoAboutCamera()
 
 	//xmf4x4Temp = m_pCamera->GetViewMatrix();
 	xmf4x4Temp = cam->GetViewMatrix();
-	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraView,			XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
+	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraView, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 	xmf4x4Temp = Matrix4x4::Inverse(xmf4x4Temp);
-	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraViewInv,		XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
+	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraViewInv, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 
 	//xmf4x4Temp = m_pCamera->GetProjectionMatrix();
 	xmf4x4Temp = cam->GetProjectionMatrix();
-	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraProjection,		XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
+	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraProjection, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 	xmf4x4Temp = Matrix4x4::Inverse(xmf4x4Temp);
-	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraProjectionInv,	XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
+	XMStoreFloat4x4(&m_pcbMappedPassInfo->m_xmf4x4CameraProjectionInv, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 
 	//::memcpy(&m_pcbMappedPassInfo->m_xmf3CameraPosition, &m_pCamera->GetPosition(), sizeof(XMFLOAT3));
 	XMFLOAT3 xmf3WorldPos = m_pCameraObject->FindComponent<TransformComponent>()->GetPosition(Space::world);
-	::memcpy(&m_pcbMappedPassInfo->m_xmf3CameraPosition, &xmf3WorldPos, sizeof(XMFLOAT3));
+	memcpy(&m_pcbMappedPassInfo->m_xmf3CameraPosition, &xmf3WorldPos, sizeof(XMFLOAT3));
 }
 
 #define MAX_PARTICLE_NUM 1000
@@ -1064,11 +1150,13 @@ void Scene::UpdatePassInfoAboutCamera()
 void Scene::BuildObject()
 {
 	// Particle Pool Initialize
-	for (int i = 0; i < MAX_PARTICLE_NUM; i++) {
-		Object* ptc = new Object();
+	for (int i = 0; i < MAX_PARTICLE_NUM; i++)
+	{
+		auto ptc = new Object();
 
-		TransformComponent* t = new TransformComponent(ptc);
-		ParticleComponent* pc = new ParticleComponent(ptc, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto t = new TransformComponent(ptc);
+		auto pc = new ParticleComponent(ptc, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                m_d3dCbvGPUDescriptorStartHandle);
 
 		ptc->SetActive(false);
 
@@ -1097,10 +1185,11 @@ void Scene::BuildObject()
 
 	{
 		// muzzle, empty object for weapon
-		Object* muzzle = new Object("muzzle");
-		TransformComponent* mTransform = new TransformComponent(muzzle);
-		EffectComponent* effect = new EffectComponent(muzzle);
-		MeshRendererComponent* mrcm = new MeshRendererComponent(muzzle, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto muzzle = new Object("muzzle");
+		auto mTransform = new TransformComponent(muzzle);
+		auto effect = new EffectComponent(muzzle);
+		auto mrcm = new MeshRendererComponent(muzzle, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                      m_d3dCbvGPUDescriptorStartHandle);
 
 		mrcm->SetActive(false);
 		mrcm->SetModelByName("muzzleFlash");
@@ -1113,11 +1202,12 @@ void Scene::BuildObject()
 		m_vecEffectRenderGroup.push_back(muzzle);
 
 		// weapon
-		Object* weapon = new Object("pistol");
+		auto weapon = new Object("pistol");
 
-		TransformComponent* wTransform = new TransformComponent(weapon);
-		WeaponControllerComponent* wcc = new WeaponControllerComponent(weapon, muzzle, nullptr);
-		MeshRendererComponent* mrc = new MeshRendererComponent(weapon, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto wTransform = new TransformComponent(weapon);
+		auto wcc = new WeaponControllerComponent(weapon, muzzle, nullptr);
+		auto mrc = new MeshRendererComponent(weapon, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                     m_d3dCbvGPUDescriptorStartHandle);
 
 		mrc->SetModelByName("pistol");
 		mrc->SetMaterialByName("PistolMat");
@@ -1128,15 +1218,17 @@ void Scene::BuildObject()
 	}
 	{
 		// player
-		Object* player = new Object("player");//Vector3(-6.78999996,0,15.6700001)
+		auto player = new Object("player"); //Vector3(-6.78999996,0,15.6700001)
 
-		TransformComponent* transform = new TransformComponent(player);
-		InputManagerComponent* controller = new InputManagerComponent(player);
-		RigidbodyComponent* rigidbody = new RigidbodyComponent(player);
-		SkinnedMeshRendererComponent* skinnedMeshRenderer = new SkinnedMeshRendererComponent(player, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-		HumanoidControllerComponent* humanoidController = new HumanoidControllerComponent(player, m_vecNonAnimObjectRenderGroup[0]);
-		HumanoidAnimatorComponent* humanoidAnimator = new HumanoidAnimatorComponent(player, "Humanoid_Idle");
-		SphereColliderComponent* sphereCollider = new SphereColliderComponent(player, XMFLOAT3(0, 0.5f, 0), 0.5f);
+		auto transform = new TransformComponent(player);
+		auto controller = new InputManagerComponent(player);
+		auto rigidbody = new RigidbodyComponent(player);
+		auto skinnedMeshRenderer = new SkinnedMeshRendererComponent(player, m_pd3dDevice, m_pd3dCommandList,
+		                                                            m_d3dCbvCPUDescriptorStartHandle,
+		                                                            m_d3dCbvGPUDescriptorStartHandle);
+		auto humanoidController = new HumanoidControllerComponent(player, m_vecNonAnimObjectRenderGroup[0]);
+		auto humanoidAnimator = new HumanoidAnimatorComponent(player, "Humanoid_Idle");
+		auto sphereCollider = new SphereColliderComponent(player, XMFLOAT3(0, 0.5f, 0), 0.5f);
 
 		skinnedMeshRenderer->SetModelByName("human");
 		skinnedMeshRenderer->SetMaterialByName("DefaultMaterial");
@@ -1150,18 +1242,18 @@ void Scene::BuildObject()
 		FindObjectByName("pistol")->m_pParent = player;
 	}
 	{
-		Object* head = new Object("head");
+		auto head = new Object("head");
 
-		TransformComponent* transform = new TransformComponent(head);
+		auto transform = new TransformComponent(head);
 		transform->Translate(0, 1.5f, 0.0f);
 		m_vecObject.push_back(head);
 
 		head->m_pParent = FindObjectByName("player");
 	}
 	{
-		Object* look = new Object("lookAt");
+		auto look = new Object("lookAt");
 
-		TransformComponent* transform = new TransformComponent(look);
+		auto transform = new TransformComponent(look);
 		transform->Translate(0, 1.5f, 5.0f);
 		m_vecObject.push_back(look);
 
@@ -1170,10 +1262,10 @@ void Scene::BuildObject()
 		FindObjectByName("player")->FindComponent<HumanoidControllerComponent>()->SetLookAt(look);
 	}
 	{
-		Object* camera = new Object("camera");
+		auto camera = new Object("camera");
 
-		TransformComponent* transform = new TransformComponent(camera);
-		CameraComponent* cam = new CameraComponent(camera);
+		auto transform = new TransformComponent(camera);
+		auto cam = new CameraComponent(camera);
 
 		//transform->Translate(0.6f, 1.8f, -2.2f);
 		cam->SetHeadAndLookAt(FindObjectByName("head"), FindObjectByName("lookAt"), XMFLOAT3(0.6f, 0.3f, -2.2f));
@@ -1187,38 +1279,36 @@ void Scene::BuildObject()
 	}
 
 	{
+		//CreateTargetBoard("TB0", XMFLOAT3(-4, 0.5f, -20), XMFLOAT3(0, 270, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
 
-	//CreateTargetBoard("TB0", XMFLOAT3(-4, 0.5f, -20), XMFLOAT3(0, 270, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB1", XMFLOAT3(-10.5, 0.5f, -24), XMFLOAT3(0, 300, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB2", XMFLOAT3(-13, 0.5f, -22), XMFLOAT3(0, 270, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB3", XMFLOAT3(-11.8, 0.5f, -19.7), XMFLOAT3(0, 240, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
 
-	//CreateTargetBoard("TB1", XMFLOAT3(-10.5, 0.5f, -24), XMFLOAT3(0, 300, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB2", XMFLOAT3(-13, 0.5f, -22), XMFLOAT3(0, 270, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB3", XMFLOAT3(-11.8, 0.5f, -19.7), XMFLOAT3(0, 240, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB4", XMFLOAT3(-17.1, 0.5f, -22), XMFLOAT3(0, 0, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB5", XMFLOAT3(-19.5, 0.5f, -25.3), XMFLOAT3(0, 0, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB6", XMFLOAT3(-23.8, 0.5f, -25.3), XMFLOAT3(0, 0, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB7", XMFLOAT3(-26.5, 0.5f, -21.7), XMFLOAT3(0, 0, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
 
-	//CreateTargetBoard("TB4", XMFLOAT3(-17.1, 0.5f, -22), XMFLOAT3(0, 0, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB5", XMFLOAT3(-19.5, 0.5f, -25.3), XMFLOAT3(0, 0, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB6", XMFLOAT3(-23.8, 0.5f, -25.3), XMFLOAT3(0, 0, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB7", XMFLOAT3(-26.5, 0.5f, -21.7), XMFLOAT3(0, 0, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB8", XMFLOAT3(-11.8, 0.5f, -13), XMFLOAT3(0, 70, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB9", XMFLOAT3(-10.6, 0.5f, -7.1), XMFLOAT3(0, 70, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB10", XMFLOAT3(-14.9, 0.5f, -8.2), XMFLOAT3(0, 90, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
 
-	//CreateTargetBoard("TB8", XMFLOAT3(-11.8, 0.5f, -13), XMFLOAT3(0, 70, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB9", XMFLOAT3(-10.6, 0.5f, -7.1), XMFLOAT3(0, 70, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB10", XMFLOAT3(-14.9, 0.5f, -8.2), XMFLOAT3(0, 90, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-
-	//CreateTargetBoard("TB11", XMFLOAT3(-19.5, 0.5f, -8), XMFLOAT3(0, 80, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//CreateTargetBoard("TB12", XMFLOAT3(-22.6, 0.5f, -6.1), XMFLOAT3(0, 90, 0), true,
-	//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-
+		//CreateTargetBoard("TB11", XMFLOAT3(-19.5, 0.5f, -8), XMFLOAT3(0, 80, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//CreateTargetBoard("TB12", XMFLOAT3(-22.6, 0.5f, -6.1), XMFLOAT3(0, 90, 0), true,
+		//	m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
 	}
 
 	/*===========================================================================
@@ -1226,8 +1316,6 @@ void Scene::BuildObject()
 	*==========================================================================*/
 	LoadLevelEnvironment();
 	{
-
-
 		//// Door
 		//{
 		//	Object* env = new Object("door00");
@@ -1310,106 +1398,104 @@ void Scene::BuildObject()
 		//{
 		//	Object* env = new Object("door05");
 
-	//	TransformComponent* transform = new TransformComponent(env);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
-	//	transform->Translate(-7.85, 0, -1.5);
-	//	transform->RotateXYZDegree(0, 270, 0);
-	//	MeshRendererComponent* mrc = new MeshRendererComponent(env, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
-	//	mrc->SetModelByName("tutorialHouse_door");
-	//	mrc->SetMaterialByName("doorMat");
-	//	DoorComponent* dc = new DoorComponent(env);
+		//	TransformComponent* transform = new TransformComponent(env);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
+		//	transform->Translate(-7.85, 0, -1.5);
+		//	transform->RotateXYZDegree(0, 270, 0);
+		//	MeshRendererComponent* mrc = new MeshRendererComponent(env, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		//	mrc->SetModelByName("tutorialHouse_door");
+		//	mrc->SetMaterialByName("doorMat");
+		//	DoorComponent* dc = new DoorComponent(env);
 
 
-	//	m_vecObject.push_back(env);
-	//	m_vecNonAnimObjectRenderGroup.push_back(env);
-	//}
+		//	m_vecObject.push_back(env);
+		//	m_vecNonAnimObjectRenderGroup.push_back(env);
+		//}
 
-	//// Trigger
-	//{
-	//	Object* trig = new Object();
+		//// Trigger
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-1.5, 0, -7.5);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 1.5), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorOpen(FindObjectByName("door00")->FindComponent<DoorComponent>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-1.5, 0, -7.5);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 1.5), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorOpen(FindObjectByName("door00")->FindComponent<DoorComponent>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-	//{
-	//	Object* trig = new Object();
+		//	m_vecObject.push_back(trig);
+		//}
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-1.5, 0, -15);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorOpen(FindObjectByName("door01")->FindComponent<DoorComponent>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-1.5, 0, -15);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorOpen(FindObjectByName("door01")->FindComponent<DoorComponent>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-	//{
-	//	Object* trig = new Object();
+		//	m_vecObject.push_back(trig);
+		//}
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-1.5, 0, -20);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB0")->FindComponent<Character>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-1.5, 0, -20);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB0")->FindComponent<Character>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-	//{
-	//	Object* trig = new Object();
+		//	m_vecObject.push_back(trig);
+		//}
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-7.5, 0, -21);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
-	//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB1")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB2")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB3")->FindComponent<Character>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-7.5, 0, -21);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB1")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB2")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB3")->FindComponent<Character>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-	//{
-	//	Object* trig = new Object();
+		//	m_vecObject.push_back(trig);
+		//}
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-19, 0, -17);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
-	//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB4")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB5")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB6")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB7")->FindComponent<Character>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-19, 0, -17);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB4")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB5")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB6")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB7")->FindComponent<Character>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-	//{
-	//	Object* trig = new Object();
+		//	m_vecObject.push_back(trig);
+		//}
+		//{
+		//	Object* trig = new Object();
 
-	//	TransformComponent* transform = new TransformComponent(trig);
-	//	transform->Translate(-27, 0, -11.5);
-	//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
-	//	EventComponent* trigEvent = new EventComponent(trig);
-	//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
-	//	trigEvent->AddDoorClose(FindObjectByName("door05")->FindComponent<DoorComponent>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB8")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB9")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB10")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB11")->FindComponent<Character>());
-	//	trigEvent->AddSpawn(FindObjectByName("TB12")->FindComponent<Character>());
+		//	TransformComponent* transform = new TransformComponent(trig);
+		//	transform->Translate(-27, 0, -11.5);
+		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
+		//	EventComponent* trigEvent = new EventComponent(trig);
+		//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door05")->FindComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB8")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB9")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB10")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB11")->FindComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB12")->FindComponent<Character>());
 
-	//	m_vecObject.push_back(trig);
-	//}
-
+		//	m_vecObject.push_back(trig);
+		//}
 	}
-
 
 
 	/*===========================================================================
@@ -1436,9 +1522,9 @@ void Scene::BuildObject()
 	CreateTargetBoard("t5", XMFLOAT3(-24.6700001, 0, 18.3500004), XMFLOAT3(0, 180, 0), true);
 
 	//FinalRoom
-	CreateTargetBoard("t6", XMFLOAT3(-11.4799995,	1.3, 33.0699997), XMFLOAT3(0, 0, 0), true);
+	CreateTargetBoard("t6", XMFLOAT3(-11.4799995, 1.3, 33.0699997), XMFLOAT3(0, 0, 0), true);
 	//CreateTargetBoard("t7", XMFLOAT3(-6.11999989,	1.3, 33.0699997), XMFLOAT3(0, 0, 0), true);
-	CreateTargetBoard("t8", XMFLOAT3(-2.5,			1.3, 35.8800011), XMFLOAT3(0, 90, 0), true);
+	CreateTargetBoard("t8", XMFLOAT3(-2.5, 1.3, 35.8800011), XMFLOAT3(0, 90, 0), true);
 	//CreateTargetBoard("t9", XMFLOAT3(-2.5, 1.3, 43.5999985), XMFLOAT3(0, 90, 0), true);
 	CreateTargetBoard("t9", XMFLOAT3(-6.11999989, 1.3, 33.0699997), XMFLOAT3(0, 0, 0), true);
 	//CreateTargetBoard("t10", XMFLOAT3(-5.78000021,	1.3, 46.8300018), XMFLOAT3(0, 180, 0), true);
@@ -1449,21 +1535,23 @@ void Scene::BuildObject()
 	//CreateTargetBoard("t12", XMFLOAT3(-6.78999996, 0, 13.6700001), XMFLOAT3(0, 90, 0), false);
 
 
-	eventCount = 0;	// 위에서 생성할 때 다 한 번씩 누워서 안 됨
+	eventCount = 0; // 위에서 생성할 때 다 한 번씩 누워서 안 됨
 
-	{	// 처음 문 닫기
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 0);
+	{
+		// 처음 문 닫기
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 0);
 
-		transform->Translate(-4.48, 0, 0.7);//-6.78999996, 0, 15.6700001
+		transform->Translate(-4.48, 0, 0.7); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("d0"));
-		EventInfo close = EventInfo(EVENT::DCLOSE, temp);
-		EventInfo triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
+		auto close = EventInfo(EVENT::DCLOSE, temp);
+		auto triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
 
 		trigEvent->AddEvent(close);
 		trigEvent->AddEvent(triggerOn);
@@ -1475,19 +1563,21 @@ void Scene::BuildObject()
 
 		m_vecObject.push_back(trig);
 	}
-	{	// 첫 복도에서 적 스폰
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 0);
+	{
+		// 첫 복도에서 적 스폰
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 0);
 
-		transform->Translate(-14.5600004, 0, 0.879999995);//-6.78999996, 0, 15.6700001
+		transform->Translate(-14.5600004, 0, 0.879999995); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t0"));
-		EventInfo i = EventInfo(EVENT::EWAKE, temp);
-		EventInfo triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
+		auto i = EventInfo(EVENT::EWAKE, temp);
+		auto triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
 
 		trigEvent->AddEvent(i);
 		trigEvent->AddEvent(triggerOn);
@@ -1496,20 +1586,21 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 첫 복도 적 죽으면 첫 방 문 열기
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		EventComponent* trigEvent = new EventComponent(trig, 1);
+	{
+		// 첫 복도 적 죽으면 첫 방 문 열기
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto trigEvent = new EventComponent(trig, 1);
 
-		transform->Translate(-8.81999969, 0, 39.6100006);//-6.78999996, 0, 15.6700001
+		transform->Translate(-8.81999969, 0, 39.6100006); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("d1"));
-		EventInfo i = EventInfo(EVENT::DOPEN, temp);
+		auto i = EventInfo(EVENT::DOPEN, temp);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
+		auto temp2 = new vector<Object*>;
 		temp2->push_back(FindObjectByName("t0"));
 		i = EventInfo(EVENT::EDIED, temp2);
 		trigEvent->AddEvent(i);
@@ -1518,20 +1609,22 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 첫 방 들어오면 적 셋 스폰
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 1);
+	{
+		// 첫 방 들어오면 적 셋 스폰
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 1);
 
-		transform->Translate(-19.2399998, 0.39199999, 0.949999988);//-6.78999996, 0, 15.6700001
+		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t1"));
 		//temp->push_back(FindObjectByName("t2"));
 		temp->push_back(FindObjectByName("t3"));
-		EventInfo i = EventInfo(EVENT::EWAKE, temp);
+		auto i = EventInfo(EVENT::EWAKE, temp);
 		trigEvent->AddEvent(i);
 
 		i = EventInfo(EVENT::TRIGGER, nullptr);
@@ -1541,22 +1634,23 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 총 넷 잡으면 첫 방 나가는 문 열림
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		EventComponent* trigEvent = new EventComponent(trig, 3);
+	{
+		// 총 넷 잡으면 첫 방 나가는 문 열림
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto trigEvent = new EventComponent(trig, 3);
 
-		transform->Translate(-19.2399998, 0.39199999, 0.949999988);//-6.78999996, 0, 15.6700001
+		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t1"));
 		//temp->push_back(FindObjectByName("t2"));
 		temp->push_back(FindObjectByName("t3"));
-		EventInfo i = EventInfo(EVENT::EDIED, temp);
+		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
+		auto temp2 = new vector<Object*>;
 		temp2->push_back(FindObjectByName("d2"));
 		i = EventInfo(EVENT::DOPEN, temp2);
 		trigEvent->AddEvent(i);
@@ -1565,18 +1659,20 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 두번째 복도 도착하면 적 둘 스폰
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 3);
+	{
+		// 두번째 복도 도착하면 적 둘 스폰
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 3);
 
 		transform->Translate(-24.0100002, 0.39199999, 10.3000002);
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t4"));
 		temp->push_back(FindObjectByName("t5"));
-		EventInfo i = EventInfo(EVENT::EWAKE, temp);
+		auto i = EventInfo(EVENT::EWAKE, temp);
 		trigEvent->AddEvent(i);
 
 		i = EventInfo(EVENT::TRIGGER, nullptr);
@@ -1586,21 +1682,22 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 총 여섯 잡으면 두번째 복도 나가는 문 열림
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		EventComponent* trigEvent = new EventComponent(trig, 5);
+	{
+		// 총 여섯 잡으면 두번째 복도 나가는 문 열림
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto trigEvent = new EventComponent(trig, 5);
 
-		transform->Translate(-19.2399998, 0.39199999, 0.949999988);//-6.78999996, 0, 15.6700001
+		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t4"));
 		temp->push_back(FindObjectByName("t5"));
-		EventInfo i = EventInfo(EVENT::EDIED, temp);
+		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
+		auto temp2 = new vector<Object*>;
 		temp2->push_back(FindObjectByName("d3"));
 		i = EventInfo(EVENT::DOPEN, temp2);
 		trigEvent->AddEvent(i);
@@ -1609,53 +1706,56 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 마지막 방 도착하면 문 닫고 적 여섯 스폰
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 5);
+	{
+		// 마지막 방 도착하면 문 닫고 적 여섯 스폰
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 5);
 
 		transform->Translate(-8.18999958, 0.39199999, 39.4799995);
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t6"));
 		//temp->push_back(FindObjectByName("t7"));
 		temp->push_back(FindObjectByName("t8"));
 		temp->push_back(FindObjectByName("t9"));
 		//temp->push_back(FindObjectByName("t10"));
 		//temp->push_back(FindObjectByName("t11"));
-		EventInfo i = EventInfo(EVENT::EWAKE, temp);
+		auto i = EventInfo(EVENT::EWAKE, temp);
 		trigEvent->AddEvent(i);
 
 		i = EventInfo(EVENT::TRIGGER, nullptr);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
+		auto temp2 = new vector<Object*>;
 		temp2->push_back(FindObjectByName("d4"));
 		temp2->push_back(FindObjectByName("d5"));
-		EventInfo close = EventInfo(EVENT::DCLOSE, temp2);
+		auto close = EventInfo(EVENT::DCLOSE, temp2);
 		trigEvent->AddEvent(close);
 
 		m_vecObject.push_back(trig);
 	}
 
 
-	{	// 총 12 잡으면 마지막 방 나가는 문, 시작지점 가는 문 열림
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		EventComponent* trigEvent = new EventComponent(trig, 8);
+	{
+		// 총 12 잡으면 마지막 방 나가는 문, 시작지점 가는 문 열림
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto trigEvent = new EventComponent(trig, 8);
 
-		vector<Object*>* temp = new vector<Object*>;
+		auto temp = new vector<Object*>;
 		temp->push_back(FindObjectByName("t6"));
 		//temp->push_back(FindObjectByName("t7"));
 		temp->push_back(FindObjectByName("t8"));
 		temp->push_back(FindObjectByName("t9"));
 		//temp->push_back(FindObjectByName("t10"));
 		//temp->push_back(FindObjectByName("t11"));
-		EventInfo i = EventInfo(EVENT::EDIED, temp);
+		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
+		auto temp2 = new vector<Object*>;
 		temp2->push_back(FindObjectByName("d5"));
 		temp2->push_back(FindObjectByName("d6"));
 		i = EventInfo(EVENT::DOPEN, temp2);
@@ -1665,19 +1765,21 @@ void Scene::BuildObject()
 	}
 
 
-	{	// 시작지점까지 돌아갈 수 있으면 승리
-		Object* trig = new Object();
-		TransformComponent* transform = new TransformComponent(trig);
-		BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1), true);
-		EventComponent* trigEvent = new EventComponent(trig, 8);
+	{
+		// 시작지점까지 돌아갈 수 있으면 승리
+		auto trig = new Object();
+		auto transform = new TransformComponent(trig);
+		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
+		                                            true);
+		auto trigEvent = new EventComponent(trig, 8);
 
 		transform->Translate(-11.7200003, 0.39199999, 23.3899994);
 
-		EventInfo i = EventInfo(EVENT::TRIGGER, nullptr);
+		auto i = EventInfo(EVENT::TRIGGER, nullptr);
 		trigEvent->AddEvent(i);
 
-		vector<Object*>* temp2 = new vector<Object*>;
-		EventInfo close = EventInfo(EVENT::VICTORY, temp2);
+		auto temp2 = new vector<Object*>;
+		auto close = EventInfo(EVENT::VICTORY, temp2);
 		trigEvent->AddEvent(close);
 
 		m_vecObject.push_back(trig);
@@ -1688,44 +1790,47 @@ void Scene::BuildObject()
 	*==========================================================================*/
 
 	{
-		Object* text = new Object("TextHpInfo");
+		auto text = new Object("TextHpInfo");
 
-		TransformComponent* transform = new TransformComponent(text);
-		TextRendererComponent* TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto transform = new TransformComponent(text);
+		auto TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                     m_d3dCbvGPUDescriptorStartHandle);
 
 		TRC->Initialize("consolas");
 		TRC->SetMaterialByName("font_consolasMat");
 		TRC->SetText("+");
 		TRC->SetSize(16);
-		transform->Translate(960-16, 540+24, 0);
+		transform->Translate(960 - 16, 540 + 24, 0);
 
 		m_vecObject.push_back(text);
 		m_vecUIRenderGroup.push_back(text);
 	}
 	{
-		Object* text = new Object("TextHpInfo");
+		auto text = new Object("TextHpInfo");
 
-		TransformComponent* transform = new TransformComponent(text);
-		TextRendererComponent* TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto transform = new TransformComponent(text);
+		auto TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                     m_d3dCbvGPUDescriptorStartHandle);
 
 		TRC->Initialize("consolas");
 		TRC->SetMaterialByName("font_consolasMat");
 		TRC->SetSize(10);
-		TextUIPlayerHPComponent* tuiHP = new TextUIPlayerHPComponent(text, FindObjectByName("player"));
+		auto tuiHP = new TextUIPlayerHPComponent(text, FindObjectByName("player"));
 		transform->Translate(1200, 300, 0);
 
 		m_vecObject.push_back(text);
 		m_vecUIRenderGroup.push_back(text);
 	}
 	{
-		Object* text = new Object("TextAmmoInfo");
+		auto text = new Object("TextAmmoInfo");
 
-		TransformComponent* transform = new TransformComponent(text);
-		TextRendererComponent* TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+		auto transform = new TransformComponent(text);
+		auto TRC = new TextRendererComponent(text, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		                                     m_d3dCbvGPUDescriptorStartHandle);
 		TRC->Initialize("consolas");
 		TRC->SetMaterialByName("font_consolasMat");
 		TRC->SetSize(8);
-		TextUIAmmoComponent* tuiAmmo = new TextUIAmmoComponent(text, FindObjectByName("pistol"));
+		auto tuiAmmo = new TextUIAmmoComponent(text, FindObjectByName("pistol"));
 		transform->Translate(1200, 270, 0);
 
 		m_vecObject.push_back(text);
@@ -1741,24 +1846,34 @@ void Scene::ReloadLight()
 
 	m_LightMng->DeleteAll();
 
-	for (int i = 0; i < vecLightDesc.size(); i++) {
+	for (int i = 0; i < vecLightDesc.size(); i++)
+	{
 		switch (vecLightDesc[i].lightType)
 		{
-		case LightType::LIGHT_POINT:		m_LightMng->AddPointLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);		break;
-		case LightType::LIGHT_DIRECTIONAL:	m_LightMng->AddDirectionalLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);	break;
-		case LightType::LIGHT_SPOT:			m_LightMng->AddSpotLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);			break;
-		case LightType::LIGHT_NONE:
+		case LIGHT_POINT: m_LightMng->AddPointLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList,
+		                                            m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+			break;
+		case LIGHT_DIRECTIONAL: m_LightMng->AddDirectionalLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList,
+		                                                        m_d3dCbvCPUDescriptorStartHandle,
+		                                                        m_d3dCbvGPUDescriptorStartHandle);
+			break;
+		case LIGHT_SPOT: m_LightMng->AddSpotLight(vecLightDesc[i], m_pd3dDevice, m_pd3dCommandList,
+		                                          m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+			break;
+		case LIGHT_NONE:
 		default:
 			break;
 		}
 
-		if (vecLightDesc[i].bIsShadow) {
+		if (vecLightDesc[i].bIsShadow)
+		{
 			string temp = to_string(i);
 			temp = shadow + temp;
 
 			g_TextureMng.DeleteTexture(temp.c_str());
 
-			g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
+			g_TextureMng.AddDepthBufferTexture(temp.c_str(), m_pd3dDevice, SHADOWMAPSIZE, SHADOWMAPSIZE,
+			                                   m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 			m_LightMng->SetShadowMapName(temp.c_str(), i);
 		}
 	}
@@ -1766,7 +1881,7 @@ void Scene::ReloadLight()
 
 Object* Scene::FindObjectByName(const char* strName)
 {
-	for (auto iter = m_vecObject.begin(); iter != m_vecObject.end(); iter++) 
+	for (auto iter = m_vecObject.begin(); iter != m_vecObject.end(); ++iter)
 		if (strName == (*iter)->m_strName) return *iter;
 	return nullptr;
 }
@@ -1774,22 +1889,25 @@ Object* Scene::FindObjectByName(const char* strName)
 void Scene::LoadLevelEnvironment()
 {
 	vector<MY_ENV_OBJECT_DATA> envData = LoadMy::LoadEnvMeshList("Data");
-	for (int i = 0; i < envData.size(); i++) {
+	for (int i = 0; i < envData.size(); i++)
+	{
 		CreateEnvObject(envData[i]);
 	}
 
 	vector<MY_COLLIDER_OBJECT_DATA> colliderData = LoadMy::LoadColliderList("Data");
-	for (int i = 0; i < colliderData.size(); i++) {
+	for (int i = 0; i < colliderData.size(); i++)
+	{
 		CreateCollider(colliderData[i]);
 	}
 }
 
 void Scene::CreateEnvObject(const char* strModelName, const char* strMaterialName, XMFLOAT3 pos, XMFLOAT4 rot)
 {
-	Object* env = new Object();
+	auto env = new Object();
 
-	TransformComponent* transform = new TransformComponent(env);
-	MeshRendererComponent* mrc = new MeshRendererComponent(env, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+	auto transform = new TransformComponent(env);
+	auto mrc = new MeshRendererComponent(env, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+	                                     m_d3dCbvGPUDescriptorStartHandle);
 
 	mrc->SetModelByName(strModelName);
 	mrc->SetMaterialByName(strMaterialName);
@@ -1803,36 +1921,38 @@ void Scene::CreateEnvObject(const char* strModelName, const char* strMaterialNam
 
 void Scene::CreateEnvObject(MY_ENV_OBJECT_DATA objData)
 {
-	CreateEnvObject(objData.strMeshName.c_str(), objData.strMatName.c_str(), objData.xmf3Position, objData.xmf4Rotation);
+	CreateEnvObject(objData.strMeshName.c_str(), objData.strMatName.c_str(), objData.xmf3Position,
+	                objData.xmf4Rotation);
 }
 
 void Scene::CreateCollider(MY_COLLIDER_OBJECT_DATA colData)
 {
-	Object* box = new Object();
+	auto box = new Object();
 
 	XMFLOAT3 extents(colData.xmf3Extents.x * 0.5f, colData.xmf3Extents.y * 0.5f, colData.xmf3Extents.z * 0.5f);
 
-	TransformComponent* transform = new TransformComponent(box);
-	BoxColliderComponent* boxCollider = new BoxColliderComponent(box, colData.xmf3Position, extents, colData.xmf4Rotation);
+	auto transform = new TransformComponent(box);
+	auto boxCollider = new BoxColliderComponent(box, colData.xmf3Position, extents, colData.xmf4Rotation);
 
 	m_vecObject.push_back(box);
 }
 
 void Scene::CreateTargetBoard(const char* strName,
-	XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialState)
+                              XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialState)
 {
-	Object* targetBoard = new Object(strName);
+	auto targetBoard = new Object(strName);
 
-	TransformComponent* transform = new TransformComponent(targetBoard);
-	SkinnedMeshRendererComponent* skinnedMeshRenderer = new SkinnedMeshRendererComponent(
-		targetBoard, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+	auto transform = new TransformComponent(targetBoard);
+	auto skinnedMeshRenderer = new SkinnedMeshRendererComponent(
+		targetBoard, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+		m_d3dCbvGPUDescriptorStartHandle);
 	// SkinnedMeshRenderer가 작동하려면 Animator가 있어야 함!
 	// TBAC가 작동하려면 TargetBoardController가 있어야 함!
-	TargetBoardControllerComponent* TCC = new TargetBoardControllerComponent(targetBoard);
-	TargetBoardAnimatorComponent* TAC = new TargetBoardAnimatorComponent(targetBoard, "targetBoardStand");
-	BoxColliderComponent* bodyCollider = new BoxColliderComponent(
+	auto TCC = new TargetBoardControllerComponent(targetBoard);
+	auto TAC = new TargetBoardAnimatorComponent(targetBoard, "targetBoardStand");
+	auto bodyCollider = new BoxColliderComponent(
 		targetBoard, XMFLOAT3(0, 0.5f, 0), XMFLOAT3(0.3f, 0.5f, 0.1f), XMFLOAT4(0, 0, 0, 1), false, TAC, 1);
-	BoxColliderComponent* headCollider = new BoxColliderComponent(
+	auto headCollider = new BoxColliderComponent(
 		targetBoard, XMFLOAT3(0, 1.2f, 0), XMFLOAT3(0.15f, 0.2f, 0.1f), XMFLOAT4(0, 0, 0, 1), false, TAC, 1);
 
 	skinnedMeshRenderer->SetModelByName("targetBoardStand");
@@ -1850,20 +1970,20 @@ void Scene::CreateTargetBoard(const char* strName,
 
 void Scene::CreateDoor(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool isOpen)
 {
-	Object* d = new Object(strName);
-	TransformComponent* transform = new TransformComponent(d);
+	auto d = new Object(strName);
+	auto transform = new TransformComponent(d);
 	transform->Translate(position);
 	transform->RotateXYZDegree(rotationAngle);
 
-	BoxColliderComponent* boxCollider = new BoxColliderComponent(d, XMFLOAT3(0, 1.5, 0), XMFLOAT3(2.9, 3.6, 0.2), XMFLOAT4(0, 0, 0, 1));
-	MeshRendererComponent* mrcm = new MeshRendererComponent(d, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle, m_d3dCbvGPUDescriptorStartHandle);
+	auto boxCollider = new BoxColliderComponent(d, XMFLOAT3(0, 1.5, 0), XMFLOAT3(2.9, 3.6, 0.2), XMFLOAT4(0, 0, 0, 1));
+	auto mrcm = new MeshRendererComponent(d, m_pd3dDevice, m_pd3dCommandList, m_d3dCbvCPUDescriptorStartHandle,
+	                                      m_d3dCbvGPUDescriptorStartHandle);
 	mrcm->SetModelByName("level00_door");
 	mrcm->SetMaterialByName("level00_1");
 
-	DoorComponent* dc = new DoorComponent(d, isOpen);
+	auto dc = new DoorComponent(d, isOpen);
 	m_vecObject.push_back(d);
 	m_vecNonAnimObjectRenderGroup.push_back(d);
-
 }
 
 vector<string> LoadMy::Split(istringstream& ss, const char delim)
@@ -1879,35 +1999,35 @@ vector<string> LoadMy::Split(istringstream& ss, const char delim)
 
 vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
 {
-
 	vector<MY_ENV_OBJECT_DATA> result;
 
 	string fullPath = path;
 	fullPath += "/EnvMeshList.txt";
 	std::ifstream ifs(fullPath);
 	if (ifs.fail()) cout << "Error\n";
-	else {
+	else
+	{
 		//cout << "===========================\n";
 		//cout << "EnvMeshList.txt\n";
 		//cout << "===========================\n";
 
 		string s;
-		ifs >> s; 
+		ifs >> s;
 		//cout << s;
-		ifs >> s; 
+		ifs >> s;
 		//cout << s << "\n";
 		int n = stoi(s);
 		//cout << "===========================\n";
 
 
-
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
+		{
 			MY_ENV_OBJECT_DATA temp = {};
-			ifs >> s; 
+			ifs >> s;
 			//cout << s << "\n";	// mesh name
 			temp.strMeshName = s;
 
-			ifs >> s; 
+			ifs >> s;
 			//cout << s << "\n";	// position
 			{
 				istringstream ss(s);
@@ -1917,7 +2037,7 @@ vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
 				temp.xmf3Position.z = stof(pos[2]);
 			}
 
-			ifs >> s; 
+			ifs >> s;
 			//cout << s << "\n";	// rotation
 			{
 				istringstream ss(s);
@@ -1928,7 +2048,7 @@ vector<MY_ENV_OBJECT_DATA> LoadMy::LoadEnvMeshList(const char* path)
 				temp.xmf4Rotation.w = stof(pos[3]);
 			}
 
-			ifs >> s; 
+			ifs >> s;
 			//cout << s << "\n\n";	// mat name
 			temp.strMatName = s;
 
@@ -1950,7 +2070,8 @@ vector<MY_COLLIDER_OBJECT_DATA> LoadMy::LoadColliderList(const char* path)
 	fullPath += "/ColliderList.txt";
 	std::ifstream ifs(fullPath);
 	if (ifs.fail()) cout << "Error\n";
-	else {
+	else
+	{
 		//cout << "===========================\n";
 		//cout << "ColliderList.txt\n";
 		//cout << "===========================\n";
@@ -1964,8 +2085,8 @@ vector<MY_COLLIDER_OBJECT_DATA> LoadMy::LoadColliderList(const char* path)
 		//cout << "===========================\n";
 
 
-
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
+		{
 			MY_COLLIDER_OBJECT_DATA temp = {};
 			ifs >> s;
 			//cout << s << "\n";
@@ -1987,7 +2108,7 @@ vector<MY_COLLIDER_OBJECT_DATA> LoadMy::LoadColliderList(const char* path)
 				temp.xmf3Extents.z = stof(pos[2]);
 			}
 
-			ifs >> s; 
+			ifs >> s;
 			//cout << s << "\n";
 			{
 				istringstream ss(s);
