@@ -2,7 +2,7 @@
 #include "../../Core/Components.h"
 #include "../../Core/Object.h"
 #include "../../Graphics/Material.h"
-#include "../../Resources/Model.h"
+#include "../../Renderer/Elements/Model.h"
 
 MeshRendererComponent::MeshRendererComponent(Object*                      pObject,
                                              ID3D12Device*                pd3dDevice,

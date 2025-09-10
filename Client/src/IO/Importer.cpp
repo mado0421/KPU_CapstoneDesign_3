@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Importer.h"
 #include "../Graphics/Material.h"
-#include "../Resources/Animation.h"
-#include "../Resources/Model.h"
+#include "../Renderer/Elements/Animation.h"
+#include "../Renderer/Elements/Model.h"
 
 
 XMFLOAT3 IImporter::GetFloat3(stringstream& ss)
@@ -471,8 +471,8 @@ void AssetListDataImporter::Load(ID3D12Device* pd3dDevice, ID3D12GraphicsCommand
         getline(ss, type, '\n');
         if (type.compare("dds") == 0)
         {
-            if (g_TextureMng.IsAleadyExist(name.c_str())) continue;
-            g_TextureMng.LoadFromFile(name.c_str(), pd3dDevice, pd3dCommandList, srvCpuHandle, srvGpuHandle);
+            if (g_texture_manager.IsExist(name.c_str())) continue;
+            g_texture_manager.LoadFromFile(name.c_str(), pd3dDevice, pd3dCommandList, srvCpuHandle, srvGpuHandle);
         }
         if (type.compare("obj") == 0)
         {

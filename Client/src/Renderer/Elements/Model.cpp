@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Model.h"
-#include "../Graphics/Mesh.h"
-#include "../IO/Importer.h"
+#include "../../Graphics/Mesh.h"
+#include "../../IO/Importer.h"
 
 void ModelManager::Initialize() { m_uomModel.clear(); }
 

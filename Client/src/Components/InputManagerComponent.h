@@ -2,6 +2,8 @@
 #include "../../pch.h"
 #include "../Core/Component.h"
 
+#include "src/Game/Input/KeyCode.h"
+
 class InputManagerComponent : public Component
 {
 public:
