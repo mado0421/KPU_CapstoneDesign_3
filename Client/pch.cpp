@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "src/Core/Scene.h"
 #include "src/Graphics/Material.h"
-#include "src/Resources/Animation.h"
-#include "src/Resources/Model.h"
-#include "src/Resources/Texture.h"
+#include "src/Renderer/Elements/Animation.h"
+#include "src/Renderer/Elements/Model.h"
+#include "src/Renderer/Elements/Texture.h"
 
 AnimationManager g_AnimMng;
 MaterialManager  g_MaterialMng;
-TextureManager   g_TextureMng;
+TextureManager   g_texture_manager;
 ModelManager     g_ModelMng;
 UINT             gnCbvSrvDescriptorIncrementSize = 0;
 
