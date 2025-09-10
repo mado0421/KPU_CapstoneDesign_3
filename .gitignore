@@ -230,3 +230,7 @@ settings.ini
 
 # Documentation build
 docs/_build/
+
+# Claude Code
+.claude/
+**/.claude/
