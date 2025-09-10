@@ -61,7 +61,7 @@ private:
 /*========================================================================
 * Texture Manager
 *=======================================================================*/
-using unorderedTextureMap = unordered_map<string, TempTexture*>;
+using unorderedTextureMap = std::unordered_map<std::string, TempTexture*>;
 
 class TextureManager
 {
