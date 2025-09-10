@@ -1,11 +1,10 @@
 #pragma once
 
-// ���̺귯��
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-
-//#define DEBUG
+#include "src/Renderer/TextureManager.h"
+#include "src/Renderer/Elements/Texture.h"
 
 #ifdef DEBUG
 #ifdef UNICODE
@@ -16,37 +15,33 @@
 #endif
 
 
-#include "targetver.h"
-#define WIN32_LEAN_AND_MEAN             // ���� ������ �ʴ� ������ Windows ������� �����մϴ�.
-// Windows ��� ����
-#include <windows.h>
-// C ��Ÿ�� ��� �����Դϴ�.
-#include <malloc.h>
-#include <memory.h>
-#include <stdlib.h>
-#include <tchar.h>
-
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-
+#define WIN32_LEAN_AND_MEAN
 #include <D3Dcompiler.h>
 #include <DirectXCollision.h>
 #include <DirectXColors.h>
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
+#include <algorithm>
 #include <d3d12.h>
 #include <dxgi1_4.h>
+#include <fstream>
+#include <iostream>
+#include <malloc.h>
+#include <memory.h>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
+#include <tchar.h>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+#include <windows.h>
+#include "targetver.h"
 #include "src/IO/DDSTextureLoader12.h"
 #include "src/Utils/MathHelper.h"
 #include "src/Utils/d3dUtil.h"
 #include "src/Utils/d3dx12.h"
 
-#include <sstream>
-#include <string>
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -56,16 +51,12 @@ using Microsoft::WRL::ComPtr;
 
 #define FRAME_BUFFER_WIDTH 1920
 #define FRAME_BUFFER_HEIGHT 1080
-#define ASPECT_RATIO				(float(FRAME_BUFFER_WIDTH) / float(FRAME_BUFFER_HEIGHT))
-
+#define ASPECT_RATIO (float(FRAME_BUFFER_WIDTH) / float(FRAME_BUFFER_HEIGHT))
 #define MAXNUMCBV (1024 * 3)
 #define MAXNUMSRV (128 * 2)
 #define MAXNUMLIGHT 32
-
 #define MAX_BONE_NUM 64
-
 #define SHADOWMAPSIZE 2048
-
 #define ROOTSIGNATURE_PASSCONSTANTS			0
 #define ROOTSIGNATURE_OBJECTS				1
 #define ROOTSIGNATURE_LIGHTS				2
@@ -78,75 +69,19 @@ using Microsoft::WRL::ComPtr;
 #define ROOTSIGNATURE_ANIMTRANSFORM			9
 #define ROOTSIGNATURE_POSTPROCESS_TEXTURE	10
 #define ROOTSIGNATURE_HDRLUMBUFFER			11
-
-
 #define RESOURCE_TEXTURE2D			0x01
 #define RESOURCE_TEXTURE2D_ARRAY	0x02	//[]
 #define RESOURCE_TEXTURE2DARRAY		0x03
 #define RESOURCE_TEXTURE_CUBE		0x04
 #define RESOURCE_BUFFER				0x05
 
-enum KeyCode
-{
-    _LMB   = 1,
-    _RMB   = 2,
-    _MMB   = 4,
-    _BS    = 8,
-    _Tab   = 9,
-    _ENTER = 13,
-    _Shift = 16,
-    _Ctrl  = 17,
-    _Alt   = 18,
-    _ESC   = 27,
-    _Space = 32,
-
-    _0 = 48,
-    _1 = 49,
-    _2 = 50,
-    _3 = 51,
-    _4 = 52,
-    _5 = 53,
-    _6 = 54,
-    _7 = 55,
-    _8 = 56,
-    _9 = 57,
-
-    _A = 65,
-    _B = 66,
-    _C = 67,
-    _D = 68,
-    _E = 69,
-    _F = 70,
-    _G = 71,
-    _H = 72,
-    _I = 73,
-    _J = 74,
-    _K = 75,
-    _L = 76,
-    _M = 77,
-    _N = 78,
-    _O = 79,
-    _P = 80,
-    _Q = 81,
-    _R = 82,
-    _S = 83,
-    _T = 84,
-    _U = 85,
-    _V = 86,
-    _W = 87,
-    _X = 88,
-    _Y = 89,
-    _Z = 90,
-};
-
-#include "src/Resources/Texture.h"
 
 class ModelManager;
 class MaterialManager;
 class AnimationManager;
 extern AnimationManager g_AnimMng;
 extern MaterialManager  g_MaterialMng;
-extern TextureManager   g_TextureMng;
+extern TextureManager   g_texture_manager;
 extern ModelManager     g_ModelMng;
 extern UINT             gnCbvSrvDescriptorIncrementSize;
 extern int              gTestInt;
@@ -160,8 +95,9 @@ inline ID3D12Resource* CreateBufferResource(ID3D12Device*              pd3dDevic
                                             void*                      pData,
                                             UINT                       nBytes,
                                             D3D12_HEAP_TYPE            d3dHeapType       = D3D12_HEAP_TYPE_UPLOAD,
-                                            D3D12_RESOURCE_STATES      d3dResourceStates = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-                                            ID3D12Resource**           ppd3dUploadBuffer = nullptr)
+                                            D3D12_RESOURCE_STATES      d3dResourceStates =
+                                                    D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+                                            ID3D12Resource** ppd3dUploadBuffer = nullptr)
 {
     ID3D12Resource* pd3dBuffer = nullptr;
 
@@ -191,7 +127,9 @@ inline ID3D12Resource* CreateBufferResource(ID3D12Device*              pd3dDevic
     if (d3dHeapType == D3D12_HEAP_TYPE_UPLOAD) d3dResourceInitialStates = D3D12_RESOURCE_STATE_GENERIC_READ;
     else if (d3dHeapType == D3D12_HEAP_TYPE_READBACK) d3dResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
 
-    HRESULT hResult = pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, d3dResourceInitialStates, nullptr, __uuidof(ID3D12Resource), (void**)&pd3dBuffer);
+    HRESULT hResult = pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE,
+                                                          &d3dResourceDesc, d3dResourceInitialStates, nullptr,
+                                                          __uuidof(ID3D12Resource), (void**)&pd3dBuffer);
 
     if (pData)
     {
@@ -202,16 +140,21 @@ inline ID3D12Resource* CreateBufferResource(ID3D12Device*              pd3dDevic
                 if (ppd3dUploadBuffer)
                 {
                     d3dHeapPropertiesDesc.Type = D3D12_HEAP_TYPE_UPLOAD;
-                    pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)ppd3dUploadBuffer);
+                    pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dResourceDesc,
+                                                        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                                        __uuidof(ID3D12Resource), (void**)ppd3dUploadBuffer);
 #ifdef _WITH_MAPPING
-                    D3D12_RANGE d3dReadRange = {0, 0}; UINT8* pBufferDataBegin = NULL; (*ppd3dUploadBuffer)->Map(0, &d3dReadRange, (void**)&pBufferDataBegin); memcpy(pBufferDataBegin, pData, nBytes); (*ppd3dUploadBuffer)->Unmap(0, NULL);
-                    pd3dCommandList->CopyResource(pd3dBuffer, *ppd3dUploadBuffer);
+                    D3D12_RANGE d3dReadRange = {0, 0}; UINT8* pBufferDataBegin = NULL; (*ppd3dUploadBuffer)->
+                            Map(0, &d3dReadRange, (void**)&pBufferDataBegin); memcpy(pBufferDataBegin, pData, nBytes); (
+                        *ppd3dUploadBuffer)->Unmap(0, NULL); pd3dCommandList->CopyResource(
+                        pd3dBuffer, *ppd3dUploadBuffer);
 #else
                     D3D12_SUBRESOURCE_DATA d3dSubResourceData;
                     ::ZeroMemory(&d3dSubResourceData, sizeof(D3D12_SUBRESOURCE_DATA));
                     d3dSubResourceData.pData      = pData;
                     d3dSubResourceData.SlicePitch = d3dSubResourceData.RowPitch = nBytes;
-                    ::UpdateSubresources<1>(pd3dCommandList, pd3dBuffer, *ppd3dUploadBuffer, 0, 0, 1, &d3dSubResourceData);
+                    ::UpdateSubresources<1>(pd3dCommandList, pd3dBuffer, *ppd3dUploadBuffer, 0, 0, 1,
+                                            &d3dSubResourceData);
 
 #endif
                     D3D12_RESOURCE_BARRIER d3dResourceBarrier;
@@ -245,7 +188,8 @@ inline ID3D12Resource* CreateTextureResourceFromFile(ID3D12Device*              
                                                      ID3D12GraphicsCommandList* pd3dCommandList,
                                                      const wchar_t*             pszFileName,
                                                      ID3D12Resource**           ppd3dUploadBuffer,
-                                                     D3D12_RESOURCE_STATES      d3dResourceStates = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
+                                                     D3D12_RESOURCE_STATES      d3dResourceStates =
+                                                             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)
 {
     ID3D12Resource*                     pd3dTexture = nullptr;
     std::unique_ptr<uint8_t[]>          ddsData;
@@ -253,7 +197,8 @@ inline ID3D12Resource* CreateTextureResourceFromFile(ID3D12Device*              
     DDS_ALPHA_MODE                      ddsAlphaMode = DDS_ALPHA_MODE_UNKNOWN;
     bool                                bIsCubeMap   = false;
 
-    HRESULT hResult = LoadDDSTextureFromFileEx(pd3dDevice, pszFileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT, &pd3dTexture, ddsData, vSubresources, &ddsAlphaMode, &bIsCubeMap);
+    HRESULT hResult = LoadDDSTextureFromFileEx(pd3dDevice, pszFileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT,
+                                               &pd3dTexture, ddsData, vSubresources, &ddsAlphaMode, &bIsCubeMap);
 
     D3D12_HEAP_PROPERTIES d3dHeapPropertiesDesc;
     ::ZeroMemory(&d3dHeapPropertiesDesc, sizeof(D3D12_HEAP_PROPERTIES));
@@ -285,14 +230,17 @@ inline ID3D12Resource* CreateTextureResourceFromFile(ID3D12Device*              
     d3dBufferResourceDesc.Layout             = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
     d3dBufferResourceDesc.Flags              = D3D12_RESOURCE_FLAG_NONE;
 
-    hResult = pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dBufferResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource), (void**)ppd3dUploadBuffer);
+    hResult = pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &d3dBufferResourceDesc,
+                                                  D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, __uuidof(ID3D12Resource),
+                                                  (void**)ppd3dUploadBuffer);
 
     //UINT nSubResources = (UINT)vSubresources.size();
     //D3D12_SUBRESOURCE_DATA *pd3dSubResourceData = new D3D12_SUBRESOURCE_DATA[nSubResources];
     //for (UINT i = 0; i < nSubResources; i++) pd3dSubResourceData[i] = vSubresources.at(i);
 
     //	std::vector<D3D12_SUBRESOURCE_DATA>::pointer ptr = &vSubresources[0];
-    UINT64 nBytesUpdated = UpdateSubresources(pd3dCommandList, pd3dTexture, *ppd3dUploadBuffer, 0, 0, nSubResources, &vSubresources[0]);
+    UINT64 nBytesUpdated = UpdateSubresources(pd3dCommandList, pd3dTexture, *ppd3dUploadBuffer, 0, 0, nSubResources,
+                                              &vSubresources[0]);
 
     D3D12_RESOURCE_BARRIER d3dResourceBarrier;
     ::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
@@ -386,5 +334,6 @@ inline float CatmullRomInterpolate(float f0, float f1, float f2, float f3, float
     float U = (f2 - f0) * 0.5f;
     float V = (f3 - f1) * 0.5f;
 
-    return static_cast<float>(pow(s, 2)) * (1 + 2 * t) * f0 + static_cast<float>(pow(t, 2)) * (1 + 2 * s) * f1 + static_cast<float>(pow(s, 2)) * t * U - static_cast<float>(pow(t, 2)) * s * V;
+    return static_cast<float>(pow(s, 2)) * (1 + 2 * t) * f0 + static_cast<float>(pow(t, 2)) * (1 + 2 * s) * f1 +
+            static_cast<float>(pow(s, 2)) * t * U - static_cast<float>(pow(t, 2)) * s * V;
 }
