@@ -1,429 +1,365 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="리소스 파일">
+    <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\etc">
-      <UniqueIdentifier>{98dfff54-befe-43a6-9491-ef30ff0f4d86}</UniqueIdentifier>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{a0def10a-32da-49e2-93e8-558936b33286}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Scene">
-      <UniqueIdentifier>{f375394c-0324-46c7-9701-b09a7834d7d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\PipelineStateObject">
-      <UniqueIdentifier>{b4531a72-44fc-474f-b5f8-6222777c3755}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\HLSL">
-      <UniqueIdentifier>{c42eda4d-34c4-440b-bae0-066ad089088d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object">
-      <UniqueIdentifier>{54ae5e0d-9de6-4155-82d9-178f16ff8b38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Camera">
-      <UniqueIdentifier>{90a4fd83-6b49-4d15-8a02-53ce43042263}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Light">
-      <UniqueIdentifier>{a2d0b123-e1ee-4e2c-a17b-6c1fbc9bf2b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\etc\Timer">
-      <UniqueIdentifier>{effc61e6-5f38-4375-9cdb-2785919d36e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\Texture">
-      <UniqueIdentifier>{38c0a03f-2e85-4fc5-af56-d40a1ab632ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\Mesh">
-      <UniqueIdentifier>{c9872e4d-67fc-49de-b868-069c358599ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\Material">
-      <UniqueIdentifier>{b54c3872-916b-4d2b-a03a-9b846cf9cb20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\etc\FileIO">
-      <UniqueIdentifier>{3039cdb3-d862-4227-aaeb-b83d276ad2d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\Animation">
-      <UniqueIdentifier>{acf69ee2-00be-4fa2-92c0-b2e8b3d0b538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Object\Animation\Mask">
-      <UniqueIdentifier>{e181df4a-4c7c-4a6d-9f16-0bab283289a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component">
+    <Filter Include="Source Files\Components">
       <UniqueIdentifier>{b93c48ed-ad7a-4734-ba59-d143b8a4af95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Collider">
-      <UniqueIdentifier>{ece6963c-f33c-4cc9-81a5-a5ec416c6c4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\MeshRenderer">
-      <UniqueIdentifier>{8ff2f8e0-adb1-41da-86cf-2c3d68640173}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Transform">
-      <UniqueIdentifier>{2e7e23a9-d84c-4123-bc62-0d4a2a2a437f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Animations">
+    <Filter Include="Source Files\Components\Animation">
       <UniqueIdentifier>{505e4e25-7faf-4cb4-91f1-492d0bb1e12e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Animations\SkinnedMeshRenderer">
-      <UniqueIdentifier>{d91ebb9f-3a20-4e1a-83b3-e6137b404b1a}</UniqueIdentifier>
+    <Filter Include="Source Files\Components\Controllers">
+      <UniqueIdentifier>{16485320-095f-441b-870d-173e1ec113e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Animations\Animator">
-      <UniqueIdentifier>{caf9c0f8-1c0c-4ffc-9ed1-064eb01ef669}</UniqueIdentifier>
+    <Filter Include="Source Files\Components\Graphics">
+      <UniqueIdentifier>{8ff2f8e0-adb1-41da-86cf-2c3d68640173}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\InputManager">
-      <UniqueIdentifier>{539cb7db-c497-48dd-b4a2-ffb05cdeb69d}</UniqueIdentifier>
+    <Filter Include="Source Files\Components\Physics">
+      <UniqueIdentifier>{ece6963c-f33c-4cc9-81a5-a5ec416c6c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Scripts">
+      <UniqueIdentifier>{d2d9e744-1eff-47cd-87cb-c99f15dbd1e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\UI">
+      <UniqueIdentifier>{50d86b91-ffd9-4f08-a0ba-54bc3f27dbd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{90a4fd83-6b49-4d15-8a02-53ce43042263}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{38c0a03f-2e85-4fc5-af56-d40a1ab632ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{effc61e6-5f38-4375-9cdb-2785919d36e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IO">
+      <UniqueIdentifier>{3039cdb3-d862-4227-aaeb-b83d276ad2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Character">
+      <UniqueIdentifier>{7f5f145b-814e-4188-96cd-9804c6a9066d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{c42eda4d-34c4-440b-bae0-066ad089088d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data">
       <UniqueIdentifier>{1f78400f-9ce6-4bb8-8cfa-b1089a6e74ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Rigidbody">
-      <UniqueIdentifier>{6e81d655-313f-47a8-9862-06c0238da165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Camera">
-      <UniqueIdentifier>{2b7aa1c5-e0be-46d1-8eb7-fc5cb658d0df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Framework">
-      <UniqueIdentifier>{a0def10a-32da-49e2-93e8-558936b33286}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\ParticleEmitter">
-      <UniqueIdentifier>{9fda0d7a-805d-4e31-8de0-d080ea8f4842}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Effect">
-      <UniqueIdentifier>{fa4c2279-a7d1-4226-9248-c12e48114dd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Particle">
-      <UniqueIdentifier>{a2d141c7-88b6-4595-988a-538544ce667d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Character">
-      <UniqueIdentifier>{7f5f145b-814e-4188-96cd-9804c6a9066d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Controllers">
-      <UniqueIdentifier>{16485320-095f-441b-870d-173e1ec113e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Controllers\HumanoidController">
-      <UniqueIdentifier>{ab2c094a-5b9d-4ad8-8004-0503a8e91cf1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Controllers\TargetBoardController">
-      <UniqueIdentifier>{3d84c707-6f2c-4b18-a53b-7d10f3022f23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Controllers\WeaponController">
-      <UniqueIdentifier>{5a859353-c6c8-426f-8333-a18e34597489}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\TextRenderer">
-      <UniqueIdentifier>{a9eba415-4b08-4224-a8b4-3255261f1aae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts">
-      <UniqueIdentifier>{d2d9e744-1eff-47cd-87cb-c99f15dbd1e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts\EnemyDownCounter">
-      <UniqueIdentifier>{f1496272-7e6f-4a88-8e27-1727bbe0f5d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts\Door">
-      <UniqueIdentifier>{840adcaf-ca63-4fea-aaaf-a47d704469a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts\Event">
-      <UniqueIdentifier>{98b38732-4c5c-45dc-b1ef-422678a41df4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts\UI">
-      <UniqueIdentifier>{50d86b91-ffd9-4f08-a0ba-54bc3f27dbd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Component\Scripts\GameManager">
-      <UniqueIdentifier>{a8349357-e989-40c1-b6d6-9e4441a2d968}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
-      <Filter>소스 파일\etc</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>소스 파일\etc</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsProject1.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="src\Core\Framework.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Framework.h">
-      <Filter>소스 파일\Framework</Filter>
+    <ClInclude Include="src\Core\PipelineStateObject.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="PipelineStateObject.h">
-      <Filter>소스 파일\PipelineStateObject</Filter>
+    <ClInclude Include="src\Core\Object.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>소스 파일\Object</Filter>
+    <ClInclude Include="src\Core\Component.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>소스 파일\Camera</Filter>
+    <ClInclude Include="src\Core\Components.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>소스 파일\Light</Filter>
+    <ClInclude Include="src\Core\Scene.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>소스 파일\etc\Timer</Filter>
+    <ClInclude Include="src\Core\Client.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="MathHelper.h">
-      <Filter>소스 파일\etc</Filter>
+    <ClInclude Include="src\Character\Character.h">
+      <Filter>Source Files\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>소스 파일\Object\Texture</Filter>
+    <ClInclude Include="src\Components\TransformComponent.h">
+      <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>소스 파일\Object\Mesh</Filter>
+    <ClInclude Include="src\Components\InputManagerComponent.h">
+      <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>소스 파일\Object\Mesh</Filter>
+    <ClInclude Include="src\Components\Animation\AnimatorComponent.h">
+      <Filter>Source Files\Components\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureLoader12.h">
-      <Filter>소스 파일\etc\FileIO</Filter>
+    <ClInclude Include="src\Components\Animation\SkinnedMeshRendererComponent.h">
+      <Filter>Source Files\Components\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Importer.h">
-      <Filter>소스 파일\etc\FileIO</Filter>
+    <ClInclude Include="src\Components\Controllers\HumanoidControllerComponent.h">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="d3dUtil.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="src\Components\Controllers\WeaponControllerComponent.h">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>소스 파일\Object\Material</Filter>
+    <ClInclude Include="src\Components\Controllers\TargetBoardControllerComponent.h">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>소스 파일\Object</Filter>
+    <ClInclude Include="src\Components\Graphics\MeshRendererComponent.h">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>소스 파일\Object\Animation</Filter>
+    <ClInclude Include="src\Components\Graphics\CameraComponent.h">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Mask.h">
-      <Filter>소스 파일\Object\Animation\Mask</Filter>
+    <ClInclude Include="src\Components\Graphics\EffectComponent.h">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>소스 파일\Component</Filter>
+    <ClInclude Include="src\Components\Graphics\ParticleComponent.h">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="TransformComponent.h">
-      <Filter>소스 파일\Component\Transform</Filter>
+    <ClInclude Include="src\Components\Graphics\ParticleEmitterComponent.h">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="MeshRendererComponent.h">
-      <Filter>소스 파일\Component\MeshRenderer</Filter>
+    <ClInclude Include="src\Components\Physics\ColliderComponent.h">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>소스 파일\Component</Filter>
+    <ClInclude Include="src\Components\Physics\RigidbodyComponent.h">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="InputManagerComponent.h">
-      <Filter>소스 파일\Component\InputManager</Filter>
+    <ClInclude Include="src\Components\Scripts\GameManagerComponent.h">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="ColliderComponent.h">
-      <Filter>소스 파일\Component\Collider</Filter>
+    <ClInclude Include="src\Components\Scripts\DoorComponent.h">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="SkinnedMeshRendererComponent.h">
-      <Filter>소스 파일\Component\Animations\SkinnedMeshRenderer</Filter>
+    <ClInclude Include="src\Components\Scripts\EventComponent.h">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="AnimatorComponent.h">
-      <Filter>소스 파일\Component\Animations\Animator</Filter>
+    <ClInclude Include="src\Components\Scripts\EnemyDownCounter.h">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="HumanoidControllerComponent.h">
-      <Filter>소스 파일\Component\Controllers\HumanoidController</Filter>
+    <ClInclude Include="src\Components\UI\TextRendererComponent.h">
+      <Filter>Source Files\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponControllerComponent.h">
-      <Filter>소스 파일\Component\Controllers\WeaponController</Filter>
+    <ClInclude Include="src\Components\UI\TextUI.h">
+      <Filter>Source Files\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="RigidbodyComponent.h">
-      <Filter>소스 파일\Component\Rigidbody</Filter>
+    <ClInclude Include="src\Graphics\Camera.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>소스 파일\Component\Camera</Filter>
+    <ClInclude Include="src\Graphics\Light.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleEmitterComponent.h">
-      <Filter>소스 파일\Component\ParticleEmitter</Filter>
+    <ClInclude Include="src\Graphics\Material.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="EffectComponent.h">
-      <Filter>소스 파일\Component\Effect</Filter>
+    <ClInclude Include="src\Graphics\Mesh.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleComponent.h">
-      <Filter>소스 파일\Component\Particle</Filter>
+    <ClInclude Include="src\Graphics\Vertex.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="TargetBoardControllerComponent.h">
-      <Filter>소스 파일\Component\Controllers\TargetBoardController</Filter>
+    <ClInclude Include="src\Resources\Texture.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>소스 파일\Character</Filter>
+    <ClInclude Include="src\Resources\Model.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="TextRendererComponent.h">
-      <Filter>소스 파일\Component\TextRenderer</Filter>
+    <ClInclude Include="src\Resources\Animation.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyDownCounter.h">
-      <Filter>소스 파일\Component\Scripts\EnemyDownCounter</Filter>
+    <ClInclude Include="src\Resources\Mask.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="DoorComponent.h">
-      <Filter>소스 파일\Component\Scripts\Door</Filter>
+    <ClInclude Include="src\Utils\Timer.h">
+      <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="EventComponent.h">
-      <Filter>소스 파일\Component\Scripts\Event</Filter>
+    <ClInclude Include="src\Utils\MathHelper.h">
+      <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="TextUI.h">
-      <Filter>소스 파일\Component\Scripts\UI</Filter>
+    <ClInclude Include="src\Utils\d3dUtil.h">
+      <Filter>Source Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>소스 파일\Scene</Filter>
+    <ClInclude Include="src\IO\DDSTextureLoader12.h">
+      <Filter>Source Files\IO</Filter>
     </ClInclude>
-    <ClInclude Include="GameManagerComponent.h">
-      <Filter>소스 파일\Component\Scripts\GameManager</Filter>
+    <ClInclude Include="src\IO\Importer.h">
+      <Filter>Source Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils\d3dx12.h">
+      <Filter>Source Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\IComponent.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="fontReader\FontReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WindowsProject1.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Client.pch" />
+    <ClCompile Include="src\Core\Framework.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Framework.cpp">
-      <Filter>소스 파일\Framework</Filter>
+    <ClCompile Include="src\Core\PipelineStateObject.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="PipelineStateObject.cpp">
-      <Filter>소스 파일\PipelineStateObject</Filter>
+    <ClCompile Include="src\Core\Object.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>소스 파일\Object</Filter>
+    <ClCompile Include="src\Core\Component.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Camera</Filter>
+    <ClCompile Include="src\Core\Scene.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>소스 파일\Light</Filter>
+    <ClCompile Include="src\Core\Client.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>소스 파일\etc\Timer</Filter>
+    <ClCompile Include="src\Character\Character.cpp">
+      <Filter>Source Files\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>소스 파일\Object\Texture</Filter>
+    <ClCompile Include="src\Components\TransformComponent.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>소스 파일\Object\Mesh</Filter>
+    <ClCompile Include="src\Components\InputManagerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>소스 파일\Object\Mesh</Filter>
+    <ClCompile Include="src\Components\Animation\AnimatorComponent.cpp">
+      <Filter>Source Files\Components\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader12.cpp">
-      <Filter>소스 파일\etc\FileIO</Filter>
+    <ClCompile Include="src\Components\Animation\SkinnedMeshRendererComponent.cpp">
+      <Filter>Source Files\Components\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Importer.cpp">
-      <Filter>소스 파일\etc\FileIO</Filter>
+    <ClCompile Include="src\Components\Controllers\HumanoidControllerComponent.cpp">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="d3dUtil.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="src\Components\Controllers\WeaponControllerComponent.cpp">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>소스 파일\Object\Material</Filter>
+    <ClCompile Include="src\Components\Controllers\TargetBoardControllerComponent.cpp">
+      <Filter>Source Files\Components\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>소스 파일\Object</Filter>
+    <ClCompile Include="src\Components\Graphics\MeshRendererComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>소스 파일\Object\Animation</Filter>
+    <ClCompile Include="src\Components\Graphics\CameraComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Mask.cpp">
-      <Filter>소스 파일\Object\Animation\Mask</Filter>
+    <ClCompile Include="src\Components\Graphics\EffectComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>소스 파일\Component</Filter>
+    <ClCompile Include="src\Components\Graphics\ParticleComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="TransformComponent.cpp">
-      <Filter>소스 파일\Component\Transform</Filter>
+    <ClCompile Include="src\Components\Graphics\ParticleEmitterComponent.cpp">
+      <Filter>Source Files\Components\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="MeshRendererComponent.cpp">
-      <Filter>소스 파일\Component\MeshRenderer</Filter>
+    <ClCompile Include="src\Components\Physics\ColliderComponent.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="InputManagerComponent.cpp">
-      <Filter>소스 파일\Component\InputManager</Filter>
+    <ClCompile Include="src\Components\Physics\RigidbodyComponent.cpp">
+      <Filter>Source Files\Components\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="ColliderComponent.cpp">
-      <Filter>소스 파일\Component\Collider</Filter>
+    <ClCompile Include="src\Components\Scripts\GameManagerComponent.cpp">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="SkinnedMeshRendererComponent.cpp">
-      <Filter>소스 파일\Component\Animations\SkinnedMeshRenderer</Filter>
+    <ClCompile Include="src\Components\Scripts\DoorComponent.cpp">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="AnimatorComponent.cpp">
-      <Filter>소스 파일\Component\Animations\Animator</Filter>
+    <ClCompile Include="src\Components\Scripts\EventComponent.cpp">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="HumanoidControllerComponent.cpp">
-      <Filter>소스 파일\Component\Controllers\HumanoidController</Filter>
+    <ClCompile Include="src\Components\Scripts\EnemyDownCounter.cpp">
+      <Filter>Source Files\Components\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponControllerComponent.cpp">
-      <Filter>소스 파일\Component\Controllers\WeaponController</Filter>
+    <ClCompile Include="src\Components\UI\TextRendererComponent.cpp">
+      <Filter>Source Files\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="RigidbodyComponent.cpp">
-      <Filter>소스 파일\Component\Rigidbody</Filter>
+    <ClCompile Include="src\Components\UI\TextUI.cpp">
+      <Filter>Source Files\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>소스 파일\Component\Camera</Filter>
+    <ClCompile Include="src\Graphics\Camera.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleEmitterComponent.cpp">
-      <Filter>소스 파일\Component\ParticleEmitter</Filter>
+    <ClCompile Include="src\Graphics\Light.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="EffectComponent.cpp">
-      <Filter>소스 파일\Component\Effect</Filter>
+    <ClCompile Include="src\Graphics\Material.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleComponent.cpp">
-      <Filter>소스 파일\Component\Particle</Filter>
+    <ClCompile Include="src\Graphics\Mesh.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="TargetBoardControllerComponent.cpp">
-      <Filter>소스 파일\Component\Controllers\TargetBoardController</Filter>
+    <ClCompile Include="src\Graphics\Vertex.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>소스 파일\Character</Filter>
+    <ClCompile Include="src\Resources\Texture.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="TextRendererComponent.cpp">
-      <Filter>소스 파일\Component\TextRenderer</Filter>
+    <ClCompile Include="src\Resources\Model.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyDownCounter.cpp">
-      <Filter>소스 파일\Component\Scripts\EnemyDownCounter</Filter>
+    <ClCompile Include="src\Resources\Animation.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="DoorComponent.cpp">
-      <Filter>소스 파일\Component\Scripts\Door</Filter>
+    <ClCompile Include="src\Resources\Mask.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="EventComponent.cpp">
-      <Filter>소스 파일\Component\Scripts\Event</Filter>
+    <ClCompile Include="src\Utils\Timer.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="TextUI.cpp">
-      <Filter>소스 파일\Component\Scripts\UI</Filter>
+    <ClCompile Include="src\Utils\d3dUtil.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>소스 파일\Scene</Filter>
+    <ClCompile Include="src\IO\DDSTextureLoader12.cpp">
+      <Filter>Source Files\IO</Filter>
     </ClCompile>
-    <ClCompile Include="GameManagerComponent.cpp">
-      <Filter>소스 파일\Component\Scripts\GameManager</Filter>
+    <ClCompile Include="src\IO\Importer.cpp">
+      <Filter>Source Files\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\IComponent.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="fontReader\FontReader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WindowsProject1.rc">
-      <Filter>리소스 파일</Filter>
+      <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="WindowsProject1.ico">
-      <Filter>리소스 파일</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>소스 파일\HLSL</Filter>
+    <FxCompile Include="shaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>소스 파일\HLSL</Filter>
+    <FxCompile Include="shaders\PixelShader.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="GeometryShader.hlsl">
-      <Filter>소스 파일\HLSL</Filter>
+    <FxCompile Include="shaders\GeometryShader.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ComputeShader.hlsl">
-      <Filter>소스 파일\HLSL</Filter>
+    <FxCompile Include="shaders\ComputeShader.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Header.hlsli">
-      <Filter>소스 파일\HLSL</Filter>
+    <None Include="shaders\Header.hlsli">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="Light.hlsli">
-      <Filter>소스 파일\HLSL</Filter>
+    <None Include="shaders\Light.hlsli">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
