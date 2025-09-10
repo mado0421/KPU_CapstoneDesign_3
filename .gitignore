@@ -1,11 +1,81 @@
-# Prerequisites
-*.d
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Visual Studio Code
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+
+# TFS 2012 Local Workspace
+$tf/
+
+# Guidance Automation Toolkit
+*.gpState
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# CodeRush
+.cr/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Node.js
+node_modules/
+npm-debug.log*
 
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
+*.lo
+*.slo
 
 # Precompiled Headers
 *.gch
@@ -27,63 +97,140 @@
 *.lib
 
 # Executables
+*.exe
 *.out
 *.app
 
-# x64/Debug 나 Debug 폴더 안 보고 싶어서
+# Build logs and intermediate files
 *.tlog
 *.recipe
 *.log
-*.res
 *.idb
 *.pdb
+*.ilk
+*.res
+*.lastbuildstate
 *.vcxproj.FileListAbsolute.txt
 
-# Visual C++ cache files
-ipch/
-*.ipch
-*.aps
-*.ncb
-*.opendb
-*.opensdf
-*.sdf
-*.cachefile
-*.VC.db
+# DirectX Shader Cache
+*.cso
+*.fxo
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-[Xx]64/
-[Xx]86/
-[Bb]uild/
-bld/
-[Bb]in/
+# Game Development specific
+Assets/StreamingAssets.meta
+[Tt]emp/
 [Oo]bj/
-.vs/TPSLongTermProject/v17/.suo
-.vs/TPSLongTermProject/v16/.suo
-.vs/TPSLongTermProject/v16/Browse.VC.db
-.vs/TPSLongTermProject/v16/Browse.VC.db-shm
-.vs/TPSLongTermProject/v16/Browse.VC.db-wal
-Client/x64/Debug/WindowsProject1.ilk
-Server/serverFrame/.vs/serverFrame/v16/.suo
-Server/serverFrame/.vs/serverFrame/v16/Browse.VC.db-shm
-Server/serverFrame/.vs/serverFrame/v16/Browse.VC.db-wal
-x64/Debug/WindowsProject1.exe
-.vs/TPSLongTermProject/v16/.suo
-.vs/TPSLongTermProject/v16/Browse.VC.db
-Client/x64/Debug/WindowsProject1.ilk
-Server/serverFrame/.vs/serverFrame/v16/.suo
-x64/Debug/WindowsProject1.exe
-.vs/TPSLongTermProject/v16/.suo
-.vs/TPSLongTermProject/v16/Browse.VC.db
-Client/x64/Debug/WindowsProject1.ilk
-Server/serverFrame/.vs/serverFrame/v16/.suo
-x64/Debug/WindowsProject1.exe
-*.vsidx
-.vs/TPSLongTermProject/v17/Browse.VC.db-shm
-.vs/TPSLongTermProject/FileContentIndex/read.lock
-.vs/TPSLongTermProject/v17/Browse.VC.db-wal
-.vs/TPSLongTermProject/v17/.suo
-.vs/TPSLongTermProject/v17/.suo
+[Bb]uild/
+[Bb]uilds/
+[Ll]ibrary/
+sysinfo.txt
+*.stackdump
+
+# FBX cache files
+*.fbm/
+
+# Autodesk files
+*.max
+*.3ds
+
+# Blender backup files
+*.blend1
+*.blend2
+
+# Audio files (if not needed in repo)
+# *.wav
+# *.mp3
+# *.ogg
+
+# Texture backup files
+*.dds.meta
+*.tga.meta
+
+# User-specific files
+*.rsuser
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Backup files
+*.bak
+*.tmp
+*.temp
+*~
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+*.stackdump
+
+# Application specific
+config.json
+settings.ini
+
+# Documentation build
+docs/_build/
+
+# Claude Code
+.claude/
+**/.claude/

@@ -1,6 +1,6 @@
 #pragma once
 
-// ¶óÀÌºê·¯¸®
+// ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -17,10 +17,10 @@
 
 
 #include "targetver.h"
-#define WIN32_LEAN_AND_MEAN             // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀ» Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
-// Windows Çì´õ ÆÄÀÏ
+#define WIN32_LEAN_AND_MEAN             // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Windows ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+// Windows ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 #include <windows.h>
-// C ·±Å¸ÀÓ Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
+// C ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½.
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -138,7 +138,8 @@ enum KeyCode {
 	_Z = 90,
 };
 
-class TextureManager;
+#include "Texture.h"
+
 class ModelManager;
 class MaterialManager;
 class AnimationManager;
@@ -266,7 +267,7 @@ inline ID3D12Resource* CreateTextureResourceFromFile(ID3D12Device* pd3dDevice, I
 
 	D3D12_RESOURCE_DESC d3dBufferResourceDesc;
 	::ZeroMemory(&d3dBufferResourceDesc, sizeof(D3D12_RESOURCE_DESC));
-	d3dBufferResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER; //Upload Heap¿¡´Â ÅØ½ºÃÄ¸¦ »ý¼ºÇÒ ¼ö ¾øÀ½
+	d3dBufferResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER; //Upload Heapï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½ï¿½Ä¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	d3dBufferResourceDesc.Alignment = 0;
 	d3dBufferResourceDesc.Width = nBytes;
 	d3dBufferResourceDesc.Height = 1;
