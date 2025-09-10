@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "framework.h"
-#include "WindowsProject1.h"
+#include "Client.h"
 
 #define MAX_LOADSTRING 100
 
