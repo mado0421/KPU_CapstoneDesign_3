@@ -4,7 +4,6 @@
 #include "../Renderer/Elements/Animation.h"
 #include "../Renderer/Elements/Model.h"
 
-#include "src/Graphics/Vertex.h"
 #include "src/Renderer/Elements/Mesh.h"
 
 
@@ -390,18 +389,18 @@ vector<MeshData> MeshDataImporter::FBXLoad(const char* filePath)
             v = pVertex[iV];
             Vertex temp;
 
-            temp.m_xmf3Pos           = vecCP[v.ctrlPointIndex].position;
-            temp.m_xmf3Normal        = v.normal;
-            temp.m_xmf3Tangent       = v.tangent;
-            temp.m_xmf2UV            = v.uv;
-            temp.m_xmi4BoneIndices.x = vecCP[v.ctrlPointIndex].boneIndices[0];
-            temp.m_xmi4BoneIndices.y = vecCP[v.ctrlPointIndex].boneIndices[1];
-            temp.m_xmi4BoneIndices.z = vecCP[v.ctrlPointIndex].boneIndices[2];
-            temp.m_xmi4BoneIndices.w = vecCP[v.ctrlPointIndex].boneIndices[3];
-            temp.m_xmi4BoneWeights.x = vecCP[v.ctrlPointIndex].weights[0];
-            temp.m_xmi4BoneWeights.y = vecCP[v.ctrlPointIndex].weights[1];
-            temp.m_xmi4BoneWeights.z = vecCP[v.ctrlPointIndex].weights[2];
-            temp.m_xmi4BoneWeights.w = vecCP[v.ctrlPointIndex].weights[3];
+            temp.position           = vecCP[v.ctrlPointIndex].position;
+            temp.normal        = v.normal;
+            temp.tangent       = v.tangent;
+            temp.uv            = v.uv;
+            temp.bone_indices.x = vecCP[v.ctrlPointIndex].boneIndices[0];
+            temp.bone_indices.y = vecCP[v.ctrlPointIndex].boneIndices[1];
+            temp.bone_indices.z = vecCP[v.ctrlPointIndex].boneIndices[2];
+            temp.bone_indices.w = vecCP[v.ctrlPointIndex].boneIndices[3];
+            temp.bone_weights.x = vecCP[v.ctrlPointIndex].weights[0];
+            temp.bone_weights.y = vecCP[v.ctrlPointIndex].weights[1];
+            temp.bone_weights.z = vecCP[v.ctrlPointIndex].weights[2];
+            temp.bone_weights.w = vecCP[v.ctrlPointIndex].weights[3];
             tempMesh.vertices.push_back(temp);
         }
 

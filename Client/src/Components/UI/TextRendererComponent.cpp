@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "../../Core/Components.h"
 #include "../../Graphics/Material.h"
-#include "../../Graphics/Vertex.h"
+
+#include "src/Renderer/Elements/Vertex.h"
 
 vector<string> FontFunc::Split(string str, char delimiter)
 {
@@ -65,7 +66,7 @@ LetterRenderer::LetterRenderer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandLi
 {
     auto pVertices = new Vertex();
 
-    pVertices->m_xmf3Pos = XMFLOAT3(0, 0, 0);
+    pVertices->position = XMFLOAT3(0, 0, 0);
 
     m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, sizeof(Vertex), D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 

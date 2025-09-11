@@ -1,5 +1,5 @@
 #pragma once
-#include "src/Graphics/Vertex.h"
+#include "Vertex.h"
 
 class MeshData
 {
