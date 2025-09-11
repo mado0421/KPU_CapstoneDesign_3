@@ -7,7 +7,7 @@ struct CB_OBJECT_INFO
 };
 
 class Mesh;
-class MESH_DATA;
+class MeshData;
 
 class Object
 {

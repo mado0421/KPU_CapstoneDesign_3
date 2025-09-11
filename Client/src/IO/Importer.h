@@ -1,18 +1,10 @@
 #pragma once
 #include "../Graphics/Light.h"
-#include "../Graphics/Vertex.h"
-
-using SHAPE = vector<Vertex>;
 
 class Object;
 class Material;
 
-class MESH_DATA
-{
-public:
-    string name;
-    SHAPE  shape;
-};
+class MeshData;
 
 struct VertexIdx
 {
@@ -29,7 +21,7 @@ struct OBJECT_DESC
     bool     isAnimated = false;
 };
 
-struct Keyframe;
+struct Key;
 
 class IImporter
 {
@@ -42,7 +34,7 @@ protected:
     VertexIdx GetIdx(stringstream& ss);
 
     XMFLOAT4X4 GetMatrix(const float* fIn, int& offset);
-    Keyframe   GetKeyframe(const float* fIn, int& offset);
+    Key   GetKeyframe(const float* fIn, int& offset);
 };
 
 
@@ -61,8 +53,8 @@ public:
 class MeshDataImporter : public IImporter
 {
 public:
-    vector<MESH_DATA> Load(const char* filePath);
-    vector<MESH_DATA> FBXLoad(const char* filePath);
+    vector<MeshData> Load(const char* filePath);
+    vector<MeshData> FBXLoad(const char* filePath);
 };
 
 class MaterialDataImporter : public IImporter
@@ -77,10 +69,10 @@ public:
     void Load(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& srvCpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE& srvGpuHandle);
 };
 
-struct AnimClip;
+struct AnimationClip;
 
 class AnimClipDataImporter : public IImporter
 {
 public:
-    AnimClip Load(const char* filePath);
+    AnimationClip Load(const char* filePath);
 };

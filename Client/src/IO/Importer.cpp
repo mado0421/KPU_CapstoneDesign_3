@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "Importer.h"
-#include "../Graphics/Material.h"
 #include "../Renderer/Elements/Animation.h"
 #include "../Renderer/Elements/Model.h"
+
+#include "src/Renderer/AnimationManager.h"
+#include "src/Renderer/MaterialManager.h"
+#include "src/Renderer/Elements/Mesh.h"
 
 
 XMFLOAT3 IImporter::GetFloat3(stringstream& ss)
@@ -98,17 +101,17 @@ XMFLOAT4X4 IImporter::GetMatrix(const float* fIn, int& offset)
     return result;
 }
 
-Keyframe IImporter::GetKeyframe(const float* fIn, int& offset)
+Key IImporter::GetKeyframe(const float* fIn, int& offset)
 {
-    Keyframe result;
+    Key result;
     int      i                = 0;
-    result.xmf4QuatRotation.x = fIn[offset + i++];
-    result.xmf4QuatRotation.y = fIn[offset + i++];
-    result.xmf4QuatRotation.z = fIn[offset + i++];
-    result.xmf4QuatRotation.w = fIn[offset + i++];
-    result.xmf3Translation.x  = fIn[offset + i++];
-    result.xmf3Translation.y  = fIn[offset + i++];
-    result.xmf3Translation.z  = fIn[offset + i++];
+    result.rotation.x = fIn[offset + i++];
+    result.rotation.y = fIn[offset + i++];
+    result.rotation.z = fIn[offset + i++];
+    result.rotation.w = fIn[offset + i++];
+    result.translation.x  = fIn[offset + i++];
+    result.translation.y  = fIn[offset + i++];
+    result.translation.z  = fIn[offset + i++];
     offset += i;
     return result;
 }
@@ -210,9 +213,9 @@ vector<LIGHT_DESC> LightDataImporter::Load(const char* filePath)
     return vecLightDesc;
 }
 
-vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
+vector<MeshData> MeshDataImporter::Load(const char* filePath)
 {
-    vector<MESH_DATA> vecMeshData;
+    vector<MeshData> vecMeshData;
     vector<XMFLOAT3>  vecControlPoint;
     vector<XMFLOAT3>  vecNormal;
     vector<XMFLOAT2>  vecTexCoord;
@@ -251,7 +254,7 @@ vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
             s.replace(0, 2, empty);
             stringstream ss(s);
 
-            MESH_DATA temp;
+            MeshData temp;
             temp.name = GetPath(ss);
             vecMeshData.push_back(temp);
             nObject++;
@@ -289,13 +292,13 @@ vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
             stringstream ss(s);
             VertexIdx    verIdx;
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
 
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
 
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
         }
     }
 
@@ -334,9 +337,9 @@ struct VertexForImport
     VertexForImport() : ctrlPointIndex(0), normal(XMFLOAT3(0, 0, 0)), binormal(XMFLOAT3(0, 0, 0)), tangent(XMFLOAT3(0, 0, 0)), uv(XMFLOAT2(0, 0)) {}
 };
 
-vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
+vector<MeshData> MeshDataImporter::FBXLoad(const char* filePath)
 {
-    vector<MESH_DATA> vecMeshData;
+    vector<MeshData> vecMeshData;
 
     string ultimateOfPerfectFilePath;
 
@@ -357,7 +360,7 @@ vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
         string name = "fbxMesh.";
         string num  = to_string(iMesh);
 
-        MESH_DATA tempMesh;
+        MeshData tempMesh;
         tempMesh.name = name + num;
 
         int nCtrlPoint;
@@ -387,19 +390,19 @@ vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
             v = pVertex[iV];
             Vertex temp;
 
-            temp.m_xmf3Pos           = vecCP[v.ctrlPointIndex].position;
-            temp.m_xmf3Normal        = v.normal;
-            temp.m_xmf3Tangent       = v.tangent;
-            temp.m_xmf2UV            = v.uv;
-            temp.m_xmi4BoneIndices.x = vecCP[v.ctrlPointIndex].boneIndices[0];
-            temp.m_xmi4BoneIndices.y = vecCP[v.ctrlPointIndex].boneIndices[1];
-            temp.m_xmi4BoneIndices.z = vecCP[v.ctrlPointIndex].boneIndices[2];
-            temp.m_xmi4BoneIndices.w = vecCP[v.ctrlPointIndex].boneIndices[3];
-            temp.m_xmi4BoneWeights.x = vecCP[v.ctrlPointIndex].weights[0];
-            temp.m_xmi4BoneWeights.y = vecCP[v.ctrlPointIndex].weights[1];
-            temp.m_xmi4BoneWeights.z = vecCP[v.ctrlPointIndex].weights[2];
-            temp.m_xmi4BoneWeights.w = vecCP[v.ctrlPointIndex].weights[3];
-            tempMesh.shape.push_back(temp);
+            temp.position           = vecCP[v.ctrlPointIndex].position;
+            temp.normal        = v.normal;
+            temp.tangent       = v.tangent;
+            temp.uv            = v.uv;
+            temp.bone_indices.x = vecCP[v.ctrlPointIndex].boneIndices[0];
+            temp.bone_indices.y = vecCP[v.ctrlPointIndex].boneIndices[1];
+            temp.bone_indices.z = vecCP[v.ctrlPointIndex].boneIndices[2];
+            temp.bone_indices.w = vecCP[v.ctrlPointIndex].boneIndices[3];
+            temp.bone_weights.x = vecCP[v.ctrlPointIndex].weights[0];
+            temp.bone_weights.y = vecCP[v.ctrlPointIndex].weights[1];
+            temp.bone_weights.z = vecCP[v.ctrlPointIndex].weights[2];
+            temp.bone_weights.w = vecCP[v.ctrlPointIndex].weights[3];
+            tempMesh.vertices.push_back(temp);
         }
 
         vecMeshData.push_back(tempMesh);
@@ -437,11 +440,11 @@ void MaterialDataImporter::Load(const char* filePath)
             {
                 getline(ss, token, ' ');
 
-                if (token.compare("name") == 0) temp.matName = GetPath(ss);
-                else if (token.compare("d") == 0) temp.diffuseMap = GetPath(ss);
-                else if (token.compare("n") == 0) temp.normalMap = GetPath(ss);
-                else if (token.compare("s") == 0) temp.specularMap = GetPath(ss);
-                else if (token.compare("f") == 0) temp.fresnelFactor = GetFloat3(ss);
+                if (token.compare("name") == 0) temp.name = GetPath(ss);
+                else if (token.compare("d") == 0) temp.diffuse_map_name = GetPath(ss);
+                else if (token.compare("n") == 0) temp.normal_map_name = GetPath(ss);
+                else if (token.compare("s") == 0) temp.specular_map_name = GetPath(ss);
+                else if (token.compare("f") == 0) temp.fresnel_factor = GetFloat3(ss);
             }
             g_MaterialMng.AddMaterial(temp);
         }
@@ -486,8 +489,8 @@ void AssetListDataImporter::Load(ID3D12Device* pd3dDevice, ID3D12GraphicsCommand
         }
         if (type.compare("mac") == 0)
         {
-            if (g_AnimMng.IsAleadyExist(name.c_str())) continue;
-            g_AnimMng.AddAnimClip(name.c_str(), pd3dDevice, pd3dCommandList);
+            if (g_AnimMng.IsExist(name.c_str())) continue;
+            g_AnimMng.AddAnimationClip(name.c_str());
         }
     }
 }
@@ -497,11 +500,11 @@ struct TransformForImport
     float RotationTranslation[8];
 };
 
-AnimClip AnimClipDataImporter::Load(const char* filePath)
+AnimationClip AnimClipDataImporter::Load(const char* filePath)
 {
-    AnimClip animClip;
+    AnimationClip animClip;
 
-    animClip.strClipName = filePath;
+    animClip.name = filePath;
 
     string ultimateOfPerfectFilePath;
 
@@ -522,10 +525,10 @@ AnimClip AnimClipDataImporter::Load(const char* filePath)
     pKeytimes = new double[nKeys];
     in.read((char*)pKeytimes, sizeof(double) * nKeys);
 
-    for (int i = 0; i < nKeys; i++) animClip.vecTimes.push_back(pKeytimes[i]);
-    animClip.fClipLength = animClip.vecTimes.back();
+    for (int i = 0; i < nKeys; i++) animClip.times.push_back(pKeytimes[i]);
+    animClip.length = animClip.times.back();
 
-    animClip.vecBone.resize(nBone);
+    animClip.bones.resize(nBone);
 
     for (int iBone = 0; iBone < nBone; iBone++)
     {
@@ -540,15 +543,15 @@ AnimClip AnimClipDataImporter::Load(const char* filePath)
         //}
 
         // toDresspose + toParent + local * nKey
-        in.read((char*)&animClip.vecBone[iBone].parentIdx, sizeof(int));
+        in.read((char*)&animClip.bones[iBone].parent_idx, sizeof(int));
 
         int  nFloat = 7 * (nKeys + 2);
         auto fIn    = new float[nFloat];
         in.read((char*)fIn, sizeof(float) * nFloat);
         int offset                             = 0;
-        animClip.vecBone[iBone].toDressposeInv = GetMatrix(fIn, offset);
-        animClip.vecBone[iBone].toParent       = GetMatrix(fIn, offset);
-        for (int iKeys = 0; iKeys < nKeys; iKeys++) animClip.vecBone[iBone].keys.push_back(GetKeyframe(fIn, offset));
+        animClip.bones[iBone].to_dressed_pose_inv = GetMatrix(fIn, offset);
+        animClip.bones[iBone].to_parent       = GetMatrix(fIn, offset);
+        for (int iKeys = 0; iKeys < nKeys; iKeys++) animClip.bones[iBone].keys.push_back(GetKeyframe(fIn, offset));
     }
 
     in.close();

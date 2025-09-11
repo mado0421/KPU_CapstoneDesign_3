@@ -1,28 +1,29 @@
 #include "pch.h"
 #include "../../Core/Components.h"
 #include "../../Core/Scene.h"
-#include "../../Graphics/Material.h"
+
+#include "src/Renderer/MaterialManager.h"
 
 ParticleEmitterComponent::ParticleEmitterComponent(Object* pObject) : Component(pObject),
-                                                                      m_fDuration(5.0f),
-                                                                      m_bLooping(true),
-                                                                      m_bPrewarm(false),
-                                                                      m_fStartDelay(0),
-                                                                      m_fStartLifetime(fRange(0.5, 1)),
-                                                                      m_fStartSpeed(fRange(1, 1)),
-                                                                      m_fStartSize(fRange(0.1f, 0.5f)),
-                                                                      m_xmf3StartRotation(XMFLOAT3(0, 0, 1)),
-                                                                      m_fRotationAngle(5),
-                                                                      m_fFlipRotation(0),
-                                                                      m_fGravityModifier(0.1f),
-                                                                      m_RateOverTime(1),
-                                                                      m_StopAction(ParticleStopAction::None),
-                                                                      m_bIsBilboard(true),
-                                                                      m_nMaxParticles(30),
-                                                                      m_fCreateCooltime(1.0f / m_RateOverTime),
-                                                                      m_fCurrCooltime(0),
-                                                                      m_fTime(0.0f),
-                                                                      m_pSceneParticlePool(&g_pCurrScene->m_vecParticlePool)
+																	  m_fDuration(5.0f),
+																	  m_bLooping(true),
+																	  m_bPrewarm(false),
+																	  m_fStartDelay(0),
+																	  m_fStartLifetime(fRange(0.5, 1)),
+																	  m_fStartSpeed(fRange(1, 1)),
+																	  m_fStartSize(fRange(0.1f, 0.5f)),
+																	  m_xmf3StartRotation(XMFLOAT3(0, 0, 1)),
+																	  m_fRotationAngle(5),
+																	  m_fFlipRotation(0),
+																	  m_fGravityModifier(0.1f),
+																	  m_RateOverTime(1),
+																	  m_StopAction(ParticleStopAction::None),
+																	  m_bIsBilboard(true),
+																	  m_nMaxParticles(30),
+																	  m_fCreateCooltime(1.0f / m_RateOverTime),
+																	  m_fCurrCooltime(0),
+																	  m_fTime(0.0f),
+																	  m_pSceneParticlePool(&g_pCurrScene->m_vecParticlePool)
 {
     ParticleBurstInfo pb = {};
     m_emissionBurst      = pb;

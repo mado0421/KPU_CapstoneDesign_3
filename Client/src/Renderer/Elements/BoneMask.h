@@ -5,17 +5,17 @@ class BoneMask
 public:
     enum class PreDefined
     {
-        eUpperBody = 0,
-        eLowerBody = 1,
-        eNone
+        kUpperBody = 0,
+        kLowerBody = 1,
+        kNone
     };
 
-    BoneMask(PreDefined option = PreDefined::eNone)
+    BoneMask(const PreDefined option = PreDefined::kNone)
     {
         memset(weight, 0, sizeof(float) * 64);
         switch (option)
         {
-        case PreDefined::eUpperBody:
+        case PreDefined::kUpperBody:
             //weight[1]  = 0.9f;	// Pelvis
             weight[2] = 0.1f;  // Spine
             weight[3]  = 0.5f; // Spine1
@@ -52,7 +52,7 @@ public:
             weight[44] = 1.0f; // Head
 
             break;
-        case PreDefined::eLowerBody: weight[1] = 0.9f; // Pelvis
+        case PreDefined::kLowerBody: weight[1] = 0.9f; // Pelvis
             weight[2]  = 0.4f;                         // Spine
             weight[3]  = 0.1f;                         // Spine1
             weight[46] = 1.0f;                         // L Thigh
