@@ -3,7 +3,7 @@
 #include "../../Core/Components.h"
 #include "../../Core/Object.h"
 #include "../../Renderer/Elements/Animation.h"
-#include "../../Renderer/Elements/Mask.h"
+#include "../../Renderer/Elements/BoneMask.h"
 
 #include "src/Renderer/AnimationManager.h"
 
@@ -80,7 +80,7 @@ void AnimatorComponent::CalcToWorld()
 
 HumanoidAnimatorComponent::HumanoidAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy),
-	  m_pAimingMask(new BoneMask(BoneMask::PreDefined::eUpperBody))
+	  m_pAimingMask(new BoneMask(BoneMask::PreDefined::kUpperBody))
 {
 	l_HCC = m_pObject->FindComponent<HumanoidControllerComponent>();
 }

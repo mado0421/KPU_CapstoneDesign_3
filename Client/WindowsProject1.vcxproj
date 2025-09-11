@@ -175,7 +175,7 @@
         <ClInclude Include="src\Renderer\Elements\Animation.h">
           <ExcludedFromBuild>false</ExcludedFromBuild>
         </ClInclude>
-        <ClInclude Include="src\Renderer\Elements\Mask.h">
+        <ClInclude Include="src\Renderer\Elements\BoneMask.h">
           <ExcludedFromBuild>false</ExcludedFromBuild>
         </ClInclude>
         <ClInclude Include="src\Renderer\Elements\Material.h" />
@@ -323,7 +323,7 @@
         <ClCompile Include="src\Components\Scripts\EventComponent.cpp" />
         <ClCompile Include="src\Components\Scripts\GameManagerComponent.cpp" />
         <ClCompile Include="src\Components\InputManagerComponent.cpp" />
-        <ClCompile Include="src\Renderer\Elements\Mask.cpp">
+        <ClCompile Include="src\Renderer\Elements\BoneMask.cpp">
           <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
           <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
           <Optimization>Disabled</Optimization>
