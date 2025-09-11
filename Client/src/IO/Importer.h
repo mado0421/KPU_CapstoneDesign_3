@@ -1,18 +1,10 @@
 #pragma once
 #include "../Graphics/Light.h"
-#include "../Graphics/Vertex.h"
-
-using SHAPE = vector<Vertex>;
 
 class Object;
 class Material;
 
-class MESH_DATA
-{
-public:
-    string name;
-    SHAPE  shape;
-};
+class MeshData;
 
 struct VertexIdx
 {
@@ -61,8 +53,8 @@ public:
 class MeshDataImporter : public IImporter
 {
 public:
-    vector<MESH_DATA> Load(const char* filePath);
-    vector<MESH_DATA> FBXLoad(const char* filePath);
+    vector<MeshData> Load(const char* filePath);
+    vector<MeshData> FBXLoad(const char* filePath);
 };
 
 class MaterialDataImporter : public IImporter

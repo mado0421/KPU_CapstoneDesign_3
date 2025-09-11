@@ -4,6 +4,9 @@
 #include "../Renderer/Elements/Animation.h"
 #include "../Renderer/Elements/Model.h"
 
+#include "src/Graphics/Vertex.h"
+#include "src/Renderer/Elements/Mesh.h"
+
 
 XMFLOAT3 IImporter::GetFloat3(stringstream& ss)
 {
@@ -210,9 +213,9 @@ vector<LIGHT_DESC> LightDataImporter::Load(const char* filePath)
     return vecLightDesc;
 }
 
-vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
+vector<MeshData> MeshDataImporter::Load(const char* filePath)
 {
-    vector<MESH_DATA> vecMeshData;
+    vector<MeshData> vecMeshData;
     vector<XMFLOAT3>  vecControlPoint;
     vector<XMFLOAT3>  vecNormal;
     vector<XMFLOAT2>  vecTexCoord;
@@ -251,7 +254,7 @@ vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
             s.replace(0, 2, empty);
             stringstream ss(s);
 
-            MESH_DATA temp;
+            MeshData temp;
             temp.name = GetPath(ss);
             vecMeshData.push_back(temp);
             nObject++;
@@ -289,13 +292,13 @@ vector<MESH_DATA> MeshDataImporter::Load(const char* filePath)
             stringstream ss(s);
             VertexIdx    verIdx;
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
 
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
 
             verIdx = GetIdx(ss);
-            vecMeshData[nObject].shape.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
+            vecMeshData[nObject].vertices.push_back(Vertex(vecControlPoint[verIdx.vid], vecNormal[verIdx.vnid], vecTexCoord[verIdx.vtid]));
         }
     }
 
@@ -334,9 +337,9 @@ struct VertexForImport
     VertexForImport() : ctrlPointIndex(0), normal(XMFLOAT3(0, 0, 0)), binormal(XMFLOAT3(0, 0, 0)), tangent(XMFLOAT3(0, 0, 0)), uv(XMFLOAT2(0, 0)) {}
 };
 
-vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
+vector<MeshData> MeshDataImporter::FBXLoad(const char* filePath)
 {
-    vector<MESH_DATA> vecMeshData;
+    vector<MeshData> vecMeshData;
 
     string ultimateOfPerfectFilePath;
 
@@ -357,7 +360,7 @@ vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
         string name = "fbxMesh.";
         string num  = to_string(iMesh);
 
-        MESH_DATA tempMesh;
+        MeshData tempMesh;
         tempMesh.name = name + num;
 
         int nCtrlPoint;
@@ -399,7 +402,7 @@ vector<MESH_DATA> MeshDataImporter::FBXLoad(const char* filePath)
             temp.m_xmi4BoneWeights.y = vecCP[v.ctrlPointIndex].weights[1];
             temp.m_xmi4BoneWeights.z = vecCP[v.ctrlPointIndex].weights[2];
             temp.m_xmi4BoneWeights.w = vecCP[v.ctrlPointIndex].weights[3];
-            tempMesh.shape.push_back(temp);
+            tempMesh.vertices.push_back(temp);
         }
 
         vecMeshData.push_back(tempMesh);
