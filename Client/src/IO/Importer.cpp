@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Importer.h"
-#include "../Graphics/Material.h"
 #include "../Renderer/Elements/Animation.h"
 #include "../Renderer/Elements/Model.h"
 
+#include "src/Renderer/MaterialManager.h"
 #include "src/Renderer/Elements/Mesh.h"
 
 
@@ -439,11 +439,11 @@ void MaterialDataImporter::Load(const char* filePath)
             {
                 getline(ss, token, ' ');
 
-                if (token.compare("name") == 0) temp.matName = GetPath(ss);
-                else if (token.compare("d") == 0) temp.diffuseMap = GetPath(ss);
-                else if (token.compare("n") == 0) temp.normalMap = GetPath(ss);
-                else if (token.compare("s") == 0) temp.specularMap = GetPath(ss);
-                else if (token.compare("f") == 0) temp.fresnelFactor = GetFloat3(ss);
+                if (token.compare("name") == 0) temp.name = GetPath(ss);
+                else if (token.compare("d") == 0) temp.diffuse_map_name = GetPath(ss);
+                else if (token.compare("n") == 0) temp.normal_map_name = GetPath(ss);
+                else if (token.compare("s") == 0) temp.specular_map_name = GetPath(ss);
+                else if (token.compare("f") == 0) temp.fresnel_factor = GetFloat3(ss);
             }
             g_MaterialMng.AddMaterial(temp);
         }

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "src/Core/Scene.h"
-#include "src/Graphics/Material.h"
+#include "src/Renderer/MaterialManager.h"
 #include "src/Renderer/Elements/Animation.h"
 #include "src/Renderer/Elements/Model.h"
 #include "src/Renderer/Elements/Texture.h"

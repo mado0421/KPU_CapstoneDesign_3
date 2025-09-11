@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "../../Core/Components.h"
-#include "../../Graphics/Material.h"
 
+#include "src/Renderer/MaterialManager.h"
 #include "src/Renderer/Elements/Vertex.h"
 
 vector<string> FontFunc::Split(string str, char delimiter)
