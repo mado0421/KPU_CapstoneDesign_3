@@ -21,7 +21,7 @@ struct OBJECT_DESC
     bool     isAnimated = false;
 };
 
-struct Keyframe;
+struct Key;
 
 class IImporter
 {
@@ -34,7 +34,7 @@ protected:
     VertexIdx GetIdx(stringstream& ss);
 
     XMFLOAT4X4 GetMatrix(const float* fIn, int& offset);
-    Keyframe   GetKeyframe(const float* fIn, int& offset);
+    Key   GetKeyframe(const float* fIn, int& offset);
 };
 
 
@@ -69,10 +69,10 @@ public:
     void Load(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& srvCpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE& srvGpuHandle);
 };
 
-struct AnimClip;
+struct AnimationClip;
 
 class AnimClipDataImporter : public IImporter
 {
 public:
-    AnimClip Load(const char* filePath);
+    AnimationClip Load(const char* filePath);
 };

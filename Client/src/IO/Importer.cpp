@@ -3,6 +3,7 @@
 #include "../Renderer/Elements/Animation.h"
 #include "../Renderer/Elements/Model.h"
 
+#include "src/Renderer/AnimationManager.h"
 #include "src/Renderer/MaterialManager.h"
 #include "src/Renderer/Elements/Mesh.h"
 
@@ -100,17 +101,17 @@ XMFLOAT4X4 IImporter::GetMatrix(const float* fIn, int& offset)
     return result;
 }
 
-Keyframe IImporter::GetKeyframe(const float* fIn, int& offset)
+Key IImporter::GetKeyframe(const float* fIn, int& offset)
 {
-    Keyframe result;
+    Key result;
     int      i                = 0;
-    result.xmf4QuatRotation.x = fIn[offset + i++];
-    result.xmf4QuatRotation.y = fIn[offset + i++];
-    result.xmf4QuatRotation.z = fIn[offset + i++];
-    result.xmf4QuatRotation.w = fIn[offset + i++];
-    result.xmf3Translation.x  = fIn[offset + i++];
-    result.xmf3Translation.y  = fIn[offset + i++];
-    result.xmf3Translation.z  = fIn[offset + i++];
+    result.rotation.x = fIn[offset + i++];
+    result.rotation.y = fIn[offset + i++];
+    result.rotation.z = fIn[offset + i++];
+    result.rotation.w = fIn[offset + i++];
+    result.translation.x  = fIn[offset + i++];
+    result.translation.y  = fIn[offset + i++];
+    result.translation.z  = fIn[offset + i++];
     offset += i;
     return result;
 }
@@ -488,8 +489,8 @@ void AssetListDataImporter::Load(ID3D12Device* pd3dDevice, ID3D12GraphicsCommand
         }
         if (type.compare("mac") == 0)
         {
-            if (g_AnimMng.IsAleadyExist(name.c_str())) continue;
-            g_AnimMng.AddAnimClip(name.c_str(), pd3dDevice, pd3dCommandList);
+            if (g_AnimMng.IsExist(name.c_str())) continue;
+            g_AnimMng.AddAnimationClip(name.c_str());
         }
     }
 }
@@ -499,11 +500,11 @@ struct TransformForImport
     float RotationTranslation[8];
 };
 
-AnimClip AnimClipDataImporter::Load(const char* filePath)
+AnimationClip AnimClipDataImporter::Load(const char* filePath)
 {
-    AnimClip animClip;
+    AnimationClip animClip;
 
-    animClip.strClipName = filePath;
+    animClip.name = filePath;
 
     string ultimateOfPerfectFilePath;
 
@@ -524,10 +525,10 @@ AnimClip AnimClipDataImporter::Load(const char* filePath)
     pKeytimes = new double[nKeys];
     in.read((char*)pKeytimes, sizeof(double) * nKeys);
 
-    for (int i = 0; i < nKeys; i++) animClip.vecTimes.push_back(pKeytimes[i]);
-    animClip.fClipLength = animClip.vecTimes.back();
+    for (int i = 0; i < nKeys; i++) animClip.times.push_back(pKeytimes[i]);
+    animClip.length = animClip.times.back();
 
-    animClip.vecBone.resize(nBone);
+    animClip.bones.resize(nBone);
 
     for (int iBone = 0; iBone < nBone; iBone++)
     {
@@ -542,15 +543,15 @@ AnimClip AnimClipDataImporter::Load(const char* filePath)
         //}
 
         // toDresspose + toParent + local * nKey
-        in.read((char*)&animClip.vecBone[iBone].parentIdx, sizeof(int));
+        in.read((char*)&animClip.bones[iBone].parent_idx, sizeof(int));
 
         int  nFloat = 7 * (nKeys + 2);
         auto fIn    = new float[nFloat];
         in.read((char*)fIn, sizeof(float) * nFloat);
         int offset                             = 0;
-        animClip.vecBone[iBone].toDressposeInv = GetMatrix(fIn, offset);
-        animClip.vecBone[iBone].toParent       = GetMatrix(fIn, offset);
-        for (int iKeys = 0; iKeys < nKeys; iKeys++) animClip.vecBone[iBone].keys.push_back(GetKeyframe(fIn, offset));
+        animClip.bones[iBone].to_dressed_pose_inv = GetMatrix(fIn, offset);
+        animClip.bones[iBone].to_parent       = GetMatrix(fIn, offset);
+        for (int iKeys = 0; iKeys < nKeys; iKeys++) animClip.bones[iBone].keys.push_back(GetKeyframe(fIn, offset));
     }
 
     in.close();

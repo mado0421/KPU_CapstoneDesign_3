@@ -171,6 +171,7 @@
     </ItemDefinitionGroup>
     <ItemGroup>
         <ClInclude Include="src\Game\Input\KeyCode.h" />
+        <ClInclude Include="src\Renderer\AnimationManager.h" />
         <ClInclude Include="src\Renderer\Elements\Animation.h">
           <ExcludedFromBuild>false</ExcludedFromBuild>
         </ClInclude>
@@ -229,6 +230,7 @@
     <ItemGroup>
         <ClCompile Include="fontReader\FontReader.cpp" />
         <ClCompile Include="src\Core\IComponent.cpp" />
+        <ClCompile Include="src\Renderer\AnimationManager.cpp" />
         <ClCompile Include="src\Renderer\Elements\Animation.cpp">
           <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
           <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
