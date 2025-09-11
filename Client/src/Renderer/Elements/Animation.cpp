@@ -1,76 +1,36 @@
 #include "pch.h"
 #include "Animation.h"
-#include "../../IO/Importer.h"
 
-//==================================================================
-// Animation Manager
-//==================================================================
-void AnimationManager::Initialize() { m_uomAnimClip.clear(); }
-
-void AnimationManager::AddAnimClip(const char* fileName, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+void animation::GetFrameIdxAndNormalizedTime(const AnimationClip* clip, const double       elapsed_time,
+											 double&              normalized_time, XMINT4& key_indices)
 {
-    AnimClipDataImporter importer;
-    auto                 animClip = new AnimClip();
-    *animClip                     = importer.Load(fileName);
+	const double time = fmod(elapsed_time, clip->length);
 
-    m_uomAnimClip[fileName] = animClip;
+	for (int time_idx = 0; time_idx < clip->times.size(); time_idx++)
+	{
+		if (clip->times[time_idx] <= time && time <= clip->times[time_idx + 1])
+		{
+			key_indices.y = time_idx;
+			key_indices.z = time_idx + 1;
+
+			if (time_idx != 0) key_indices.x = key_indices.y - 1;
+			else key_indices.x               = 0;
+
+			if (key_indices.z != clip->times.size() - 1) key_indices.w = key_indices.z + 1;
+			else key_indices.w                                         = key_indices.z;
+
+			normalized_time = (time - clip->times[key_indices.y]) / (clip->times[key_indices.z] - clip->times[
+				key_indices.y]);
+			return;
+		}
+	}
 }
 
-bool AnimationManager::IsAleadyExist(const char* name) { return m_uomAnimClip.contains(name); }
-
-AnimClip* AnimationManager::GetAnimClip(const char* name) { return m_uomAnimClip[name]; }
-
-//==================================================================
-// Animation Calculator
-//==================================================================
-void AnimationCalculate::GetFrameIdxAndNormalizedTime(AnimClip* clip, const float fTime, float& OutfNormalizedTime, XMINT4& OutIdx)
+XMVECTOR animation::GetLocalTransform(const AnimationClip* clip, const int bone_idx, const double normalized_time,
+									  const XMINT4         key_indices)
 {
-    float time = fTime;
-    while (time > clip->fClipLength) time -= clip->fClipLength;
+	if (0 == normalized_time) return XMLoadFloat4(&clip->bones[bone_idx].keys[key_indices.x].rotation);
 
-    for (int timeIdx = 0; timeIdx < clip->vecTimes.size(); timeIdx++)
-    {
-        if (time == clip->vecTimes[timeIdx])
-        {
-            OutfNormalizedTime = 0;
-            OutIdx.x           = OutIdx.y = OutIdx.z = OutIdx.w = timeIdx;
-            return;
-        }
-        if (clip->vecTimes[timeIdx] < time && time <= clip->vecTimes[timeIdx + 1])
-        {
-            OutIdx.y = timeIdx;
-            OutIdx.z = timeIdx + 1;
-
-            if (timeIdx != 0) OutIdx.x = OutIdx.y - 1;
-            else OutIdx.x              = 0;
-            if (OutIdx.z != clip->vecTimes.size() - 1) OutIdx.w = OutIdx.z + 1;
-            else OutIdx.w                                       = OutIdx.z;
-            // KeySelect End
-
-            OutfNormalizedTime = (time - clip->vecTimes[OutIdx.y]) / (clip->vecTimes[OutIdx.z] - clip->vecTimes[OutIdx.y]);
-            return;
-        }
-    }
-}
-
-XMVECTOR AnimationCalculate::GetLocalTransform(AnimClip* clip, const int boneIdx, const float fNormalizedTime, const XMINT4 frameIdx)
-{
-    if (0 == fNormalizedTime) return XMLoadFloat4(&clip->vecBone[boneIdx].keys[frameIdx.x].xmf4QuatRotation);
-
-    return XMQuaternionSlerp(XMLoadFloat4(&clip->vecBone[boneIdx].keys[frameIdx.y].xmf4QuatRotation), XMLoadFloat4(&clip->vecBone[boneIdx].keys[frameIdx.z].xmf4QuatRotation), fNormalizedTime);
-}
-
-void AnimationCalculate::InterpolateKeyframe(Keyframe k0, Keyframe k1, Keyframe k2, Keyframe k3, float t, Keyframe& out)
-{
-    XMStoreFloat4(&out.xmf4QuatRotation, XMQuaternionSlerp(XMLoadFloat4(&k1.xmf4QuatRotation), XMLoadFloat4(&k2.xmf4QuatRotation), t));
-    out.xmf3Translation = Interpolate(k0.xmf3Translation, k1.xmf3Translation, k2.xmf3Translation, k3.xmf3Translation, t);
-}
-
-XMFLOAT3 AnimationCalculate::Interpolate(const XMFLOAT3 v0, const XMFLOAT3 v1, const XMFLOAT3 v2, const XMFLOAT3 v3, float t)
-{
-    XMVECTOR resultV = XMVectorCatmullRom(XMLoadFloat3(&v0), XMLoadFloat3(&v1), XMLoadFloat3(&v2), XMLoadFloat3(&v3), t);
-    XMFLOAT3 result;
-
-    XMStoreFloat3(&result, resultV);
-    return result;
+	return XMQuaternionSlerp(XMLoadFloat4(&clip->bones[bone_idx].keys[key_indices.y].rotation),
+							 XMLoadFloat4(&clip->bones[bone_idx].keys[key_indices.z].rotation), normalized_time);
 }

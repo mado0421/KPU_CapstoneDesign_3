@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Model.h"
-#include "../../Graphics/Mesh.h"
+
+#include "Mesh.h"
+
 #include "../../IO/Importer.h"
 
 void ModelManager::Initialize() { m_uomModel.clear(); }
@@ -8,7 +10,7 @@ void ModelManager::Initialize() { m_uomModel.clear(); }
 void ModelManager::AddModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
     MeshDataImporter  meshDataImporter;
-    vector<MESH_DATA> vecMeshData = meshDataImporter.Load(fileName);
+    vector<MeshData> vecMeshData = meshDataImporter.Load(fileName);
     Model             model;
 
     for (int i = 0; i < vecMeshData.size(); i++)
@@ -23,7 +25,7 @@ void ModelManager::AddModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D
 void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
     MeshDataImporter  meshDataImporter;
-    vector<MESH_DATA> vecMeshData = meshDataImporter.FBXLoad(fileName);
+    vector<MeshData> vecMeshData = meshDataImporter.FBXLoad(fileName);
     Model             model;
 
     for (int i = 0; i < vecMeshData.size(); i++)

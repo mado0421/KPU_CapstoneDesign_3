@@ -1,16 +1,17 @@
 #include "pch.h"
 #include "../../Core/Components.h"
-#include "../../Graphics/Vertex.h"
+
+#include "src/Renderer/Elements/Vertex.h"
 
 ParticleComponent::ParticleComponent(Object*                      pObject,
-                                     ID3D12Device*                pd3dDevice,
-                                     ID3D12GraphicsCommandList*   pd3dCommandList,
-                                     D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
-                                     D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle) : Component(pObject)
+									 ID3D12Device*                pd3dDevice,
+									 ID3D12GraphicsCommandList*   pd3dCommandList,
+									 D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
+									 D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle) : Component(pObject)
 {
     auto pVertices = new Vertex();
 
-    pVertices->m_xmf3Pos = XMFLOAT3(0, 0, 0);
+    pVertices->position = XMFLOAT3(0, 0, 0);
 
     m_pd3dVertexBuffer = CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, sizeof(Vertex), D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 

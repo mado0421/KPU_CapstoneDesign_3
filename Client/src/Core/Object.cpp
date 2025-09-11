@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "Object.h"
 #include "Components.h"
-#include "../Graphics/Mesh.h"
+
+#include "src/Renderer/Elements/Mesh.h"
 
 Object::Object() : m_strName(""), m_bEnable(true), m_fTime(0.0f), m_pParent(nullptr) {}
 
