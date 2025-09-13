@@ -170,6 +170,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="src\Game\Input\KeyCode.h" />
     <ClInclude Include="src\Renderer\AnimationManager.h" />
     <ClInclude Include="src\Renderer\DirectX\d3dUtil.h" />
@@ -214,22 +215,27 @@
     <ClInclude Include="src\Components\Graphics\ParticleComponent.h" />
     <ClInclude Include="src\Components\Graphics\ParticleEmitterComponent.h" />
     <ClInclude Include="src\Core\PipelineStateObject.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="src\Components\Physics\RigidbodyComponent.h" />
     <ClInclude Include="src\Core\Scene.h" />
     <ClInclude Include="src\Components\Animation\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="src\Components\Controllers\TargetBoardControllerComponent.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="src\Components\UI\TextRendererComponent.h" />
     <ClInclude Include="src\Components\UI\TextUI.h" />
     <ClInclude Include="src\Utils\Timer.h" />
     <ClInclude Include="src\Components\TransformComponent.h" />
     <ClInclude Include="src\Components\Controllers\WeaponControllerComponent.h" />
     <ClInclude Include="src\Core\Client.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fontReader\FontReader.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Core\IComponent.cpp" />
     <ClCompile Include="src\Renderer\AnimationManager.cpp" />
     <ClCompile Include="src\Renderer\DirectX\d3dUtil.cpp">
@@ -894,12 +900,6 @@
     <ClCompile Include="src\Components\Physics\RigidbodyComponent.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />
     <ClCompile Include="src\Components\Animation\SkinnedMeshRendererComponent.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\Components\Controllers\TargetBoardControllerComponent.cpp" />
     <ClCompile Include="src\Components\UI\TextRendererComponent.cpp" />
     <ClCompile Include="src\Components\UI\TextUI.cpp" />
