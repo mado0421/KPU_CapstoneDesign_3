@@ -1,18 +1,20 @@
 #include "pch.h"
 #include "Light.h"
 
+#include "src/Renderer/DirectX/DirectXMethods.h"
+
 
 Light::Light(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle) : m_uLightType(LIGHT_NONE),
-    m_bIsEnable(true),
-    m_xmf3Color(XMFLOAT3(1.0f, 1.0f, 1.0f)),
-    m_xmf3Position(XMFLOAT3(0, 0, 0)),
-    m_xmf3Direction(XMFLOAT3(0, 0, 1)),
-    m_fFalloffStart(300.0f),
-    m_fFalloffEnd(500.0f),
-    m_fSpotPower(1.0f),
-    m_bIsShadow(false),
-    m_pd3dCBResource(nullptr),
-    m_pCBMappedLight(nullptr)
+																																														 m_bIsEnable(true),
+																																														 m_xmf3Color(XMFLOAT3(1.0f, 1.0f, 1.0f)),
+																																														 m_xmf3Position(XMFLOAT3(0, 0, 0)),
+																																														 m_xmf3Direction(XMFLOAT3(0, 0, 1)),
+																																														 m_fFalloffStart(300.0f),
+																																														 m_fFalloffEnd(500.0f),
+																																														 m_fSpotPower(1.0f),
+																																														 m_bIsShadow(false),
+																																														 m_pd3dCBResource(nullptr),
+																																														 m_pCBMappedLight(nullptr)
 {
     for (int i = 0; i < 6; i++) m_xmf4x4ViewProj[i] = Matrix4x4::Identity();
 
