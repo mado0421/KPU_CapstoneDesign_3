@@ -25,7 +25,7 @@ void ModelManager::AddModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D
 void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
     MeshDataImporter  meshDataImporter;
-    vector<MeshData> vecMeshData = meshDataImporter.FBXLoad(fileName);
+    vector<MeshData> vecMeshData = meshDataImporter.FbxLoad(fileName);
     Model             model;
 
     for (int i = 0; i < vecMeshData.size(); i++)

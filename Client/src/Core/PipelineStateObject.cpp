@@ -192,7 +192,7 @@ D3D12_SHADER_BYTECODE PipelineStateObject::CreateGeometryShader(ID3DBlob** ppd3d
 
 D3D12_SHADER_BYTECODE PipelineStateObject::CompileShaderFromFile(const WCHAR* psz_file_name, LPCSTR psz_shader_name, LPCSTR psz_shader_profile, ID3DBlob** ppd3d_shader_blob)
 {
-    wstring shader_path = L"shaders/";
+    wstring shader_path = L"Resources/Shaders/";
     shader_path += psz_file_name;
 
 
@@ -1171,7 +1171,7 @@ D3D12_SHADER_BYTECODE ComputePipelineStateObject::CreateComputeShader(ID3DBlob**
 
 D3D12_SHADER_BYTECODE ComputePipelineStateObject::CompileShaderFromFile(const WCHAR* pszFileName, LPCSTR pszShaderName, LPCSTR pszShaderProfile, ID3DBlob** ppd3dShaderBlob)
 {
-    wstring shaderPath = L"shaders/";
+    wstring shaderPath = L"Resources/Shaders/";
     shaderPath += pszFileName;
 
 

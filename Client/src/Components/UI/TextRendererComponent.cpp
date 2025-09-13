@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "../../Core/Components.h"
 
 #include "src/Renderer/MaterialManager.h"
@@ -20,7 +20,7 @@ Font FontFunc::ImportFont(const char* strFontName)
 {
     Font   result;
     string fontAddress = strFontName;
-    fontAddress        = "Assets/font_" + fontAddress + ".fnt";
+    fontAddress        = "Resources/Fonts/font_" + fontAddress + ".fnt";
 
     //cout << "Font Address: " << fontAddress << "\n\n";
 

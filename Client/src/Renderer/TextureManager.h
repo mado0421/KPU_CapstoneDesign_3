@@ -58,7 +58,7 @@ private:
 	void CreateRTVDescriptorHeap(ID3D12Device* device);
 	void CreateUAVDescriptorHeap(ID3D12Device* device);
 
-	const std::string file_directory_ = "Assets/";
+	const std::string file_directory_ = "Resources/Images/";
 	const std::string file_extension_ = ".dds";
 	
 	ID3D12DescriptorHeap*       dsv_descriptor_heap_ = nullptr;

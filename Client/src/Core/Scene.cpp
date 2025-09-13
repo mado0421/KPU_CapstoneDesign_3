@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Scene.h"
 #include "Object.h"
 #include "PipelineStateObject.h"
@@ -66,7 +66,7 @@ void Scene::Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsComma
     g_texture_manager.LoadFromFile("victory", m_pd3dDevice, m_pd3dCommandList, m_d3dSrvCPUDescriptorStartHandle, m_d3dSrvGPUDescriptorStartHandle);
 
     MaterialDataImporter matDataImporter;
-    matDataImporter.Load("Data/MaterialData.txt");
+    matDataImporter.Load("MaterialData");
 
 
     g_ModelMng.Initialize();
@@ -82,7 +82,7 @@ void Scene::Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsComma
     m_vecScreenObject.push_back(tempScreen);
 
     LightDataImporter  lightDataImporter;
-    vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Data/LightData.txt");
+    vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Resources/LightData.txt");
     string             shadow("ShadowMap_");
     m_LightMng = new LightManager();
     for (int i = 0; i < vecLightDesc.size(); i++)
@@ -928,7 +928,7 @@ vector<EnvironmentObjectData> LoadMy::LoadEnvMeshList(const char* path)
 {
     vector<EnvironmentObjectData> result;
 
-    string fullPath = path;
+    string fullPath = "Resources/";
     fullPath += "/EnvMeshList.txt";
     std::ifstream ifs(fullPath);
     if (ifs.fail()) cout << "Error\n";
@@ -993,7 +993,7 @@ vector<ColliderObjectData> LoadMy::LoadColliderList(const char* path)
 {
     vector<ColliderObjectData> result;
 
-    string fullPath = path;
+    string fullPath = "Resources/";
     fullPath += "/ColliderList.txt";
     std::ifstream ifs(fullPath);
     if (ifs.fail()) cout << "Error\n";
@@ -1742,7 +1742,7 @@ void Scene::BuildObject()
 void Scene::ReloadLight()
 {
     LightDataImporter  lightDataImporter;
-    vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Data/LightData.txt");
+    vector<LIGHT_DESC> vecLightDesc = lightDataImporter.Load("Resources/LightData.txt");
     string             shadow("ShadowMap_");
 
     m_LightMng->DeleteAll();

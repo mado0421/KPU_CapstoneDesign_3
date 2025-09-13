@@ -190,7 +190,7 @@
     <ClInclude Include="src\Renderer\Elements\Vertex.h" />
     <ClInclude Include="src\Renderer\MaterialManager.h" />
     <ClInclude Include="src\Renderer\TextureManager.h" />
-    <ClInclude Include="fontReader\FontReader.h" />
+    <ClInclude Include="Resources\fontReader\FontReader.h" />
     <ClInclude Include="src\Core\IComponent.h" />
     <ClInclude Include="src\Components\Animation\AnimatorComponent.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
@@ -230,7 +230,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fontReader\FontReader.cpp">
+    <ClCompile Include="Resources\fontReader\FontReader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -296,7 +296,7 @@
     <Image Include="WindowsProject1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\ComputeShader.hlsl">
+    <FxCompile Include="Resources\Shaders\ComputeShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
@@ -308,7 +308,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="shaders\GeometryShader.hlsl">
+    <FxCompile Include="Resources\Shaders\GeometryShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
@@ -320,7 +320,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="shaders\PixelShader.hlsl">
+    <FxCompile Include="Resources\Shaders\PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -330,7 +330,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS_PackGBuffer</EntryPointName>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="shaders\VertexShader.hlsl">
+    <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -342,8 +342,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Header.hlsli" />
-    <None Include="shaders\Light.hlsli" />
+    <None Include="Resources\Shaders\Header.hlsli" />
+    <None Include="Resources\Shaders\Light.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\Resources\" />
