@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "../../Core/Components.h"
 
+#include "src/Renderer/DirectX/DirectXMethods.h"
 #include "src/Renderer/Elements/Vertex.h"
 
 ParticleComponent::ParticleComponent(Object*                      pObject,

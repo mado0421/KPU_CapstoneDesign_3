@@ -9,6 +9,9 @@
 
 #include "Components.h"
 
+#include "src/Renderer/DirectX/DirectXMethods.h"
+#include "src/Renderer/DirectX/d3dx12.h"
+
 bool TEST_MOUSE_USABLE = true;
 
 void Scene::Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list)

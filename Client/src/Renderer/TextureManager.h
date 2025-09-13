@@ -73,3 +73,20 @@ private:
 
 	UnorderedTextureMap unordered_texture_map_;
 };
+
+inline wchar_t* CharToWChar(const char* str)
+{
+	size_t newsize = strlen(str) + 1;
+
+	// The following creates a buffer large enough to contain
+	// the exact number of characters in the original string
+	// in the new format. If you want to add more characters
+	// to the end of the string, increase the value of newsize
+	// to increase the size of the buffer.
+	auto wcstring = new wchar_t[newsize];
+
+	// Convert char* string to a wchar_t* string.
+	size_t convertedChars = 0;
+	mbstowcs_s(&convertedChars, wcstring, newsize, str, _TRUNCATE);
+	return wcstring;
+}
