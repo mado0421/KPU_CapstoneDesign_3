@@ -321,16 +321,6 @@ namespace Matrix4x4
         ToTransform(pOutputMtx, Vector3::Lerp(Vector3::PosFromMtx(mtx0), Vector3::PosFromMtx(mtx1), t), Vector4::QuatSlerp(Vector4::QuatFromMtx(mtx0), Vector4::QuatFromMtx(mtx1), t));
     }
 
-    //inline void InterpolateMtx(XMMATRIX* pOutputMtx, const XMMATRIX& mtx0, const XMMATRIX& mtx1, float t)
-    //{
-    //	XMFLOAT4X4 xmf4x4OutputMtx;
-    //	XMFLOAT4X4 xmf4x4Mtx0;
-    //	XMFLOAT4X4 xmf4x4Mtx1;
-    //	XMStoreFloat4x4(&xmf4x4Mtx0, mtx0);
-    //	XMStoreFloat4x4(&xmf4x4Mtx1, mtx1);
-    //	InterpolateMtx(&xmf4x4OutputMtx, xmf4x4Mtx0, xmf4x4Mtx1, t);
-    //	memcpy(pOutputMtx, &XMLoadFloat4x4(&xmf4x4OutputMtx), sizeof(XMMATRIX));
-    //}
     inline XMMATRIX MakeFromXYZAngle(const XMFLOAT3& angle) { return XMMatrixRotationRollPitchYaw(XMConvertToRadians(angle.x), XMConvertToRadians(angle.y), XMConvertToRadians(angle.z)); }
 
     inline XMFLOAT4X4 InverseTranspose(const XMFLOAT4X4& m)
