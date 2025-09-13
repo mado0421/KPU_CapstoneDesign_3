@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Mesh.h"
 
+#include "src/Renderer/DirectX/DirectXMethods.h"
+
 Mesh::Mesh(ID3D12Device* device, ID3D12GraphicsCommandList* command_list, const MeshData& mesh_data)
 {
 	stride_       = sizeof(Vertex);

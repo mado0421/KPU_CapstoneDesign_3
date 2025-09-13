@@ -5,6 +5,7 @@
 #include "../../Renderer/Elements/Model.h"
 
 #include "src/Renderer/MaterialManager.h"
+#include "src/Renderer/DirectX/DirectXMethods.h"
 
 SkinnedMeshRendererComponent::SkinnedMeshRendererComponent(Object*                      pObject,
 														   ID3D12Device*                pd3dDevice,

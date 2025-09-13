@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Texture.h"
 
+#include "src/Renderer/DirectX/DirectXMethods.h"
+
 Texture::Texture() = default;
 
 Texture::~Texture() {
