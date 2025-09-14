@@ -73,19 +73,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -172,61 +172,61 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="src\Game\Input\KeyCode.h" />
-    <ClInclude Include="src\Renderer\AnimationManager.h" />
-    <ClInclude Include="src\Renderer\DirectX\d3dUtil.h" />
-    <ClInclude Include="src\Renderer\DirectX\d3dx12.h" />
-    <ClInclude Include="src\Renderer\DirectX\DirectXMethods.h" />
-    <ClInclude Include="src\Renderer\Elements\Animation.h">
+    <ClInclude Include="Presentation\Game\Input\KeyCode.h" />
+    <ClInclude Include="Presentation\Game\Manager\AnimationManager.h" />
+    <ClInclude Include="Presentation\Renderer\DirectX\d3dUtil.h" />
+    <ClInclude Include="Presentation\Renderer\DirectX\d3dx12.h" />
+    <ClInclude Include="Presentation\Renderer\DirectX\DirectXMethods.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Animation.h">
       <ExcludedFromBuild>false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Elements\BoneMask.h">
+    <ClInclude Include="Presentation\Renderer\Elements\BoneMask.h">
       <ExcludedFromBuild>false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Elements\Material.h" />
-    <ClInclude Include="src\Renderer\Elements\Mesh.h" />
-    <ClInclude Include="src\Renderer\Elements\Model.h" />
-    <ClInclude Include="src\Renderer\Elements\Texture.h" />
-    <ClInclude Include="src\Renderer\Elements\Vertex.h" />
-    <ClInclude Include="src\Renderer\MaterialManager.h" />
-    <ClInclude Include="src\Renderer\TextureManager.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Material.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Mesh.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Model.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Texture.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Vertex.h" />
+    <ClInclude Include="Presentation\Game\Manager\MaterialManager.h" />
+    <ClInclude Include="Presentation\Game\Manager\TextureManager.h" />
     <ClInclude Include="Resources\fontReader\FontReader.h" />
-    <ClInclude Include="src\Core\IComponent.h" />
-    <ClInclude Include="src\Components\Animation\AnimatorComponent.h" />
-    <ClInclude Include="src\Graphics\Camera.h" />
-    <ClInclude Include="src\Components\Graphics\CameraComponent.h" />
-    <ClInclude Include="src\Character\Character.h" />
-    <ClInclude Include="src\Components\Physics\ColliderComponent.h" />
-    <ClInclude Include="src\Core\Component.h" />
-    <ClInclude Include="src\Core\Components.h" />
-    <ClInclude Include="src\Components\Scripts\DoorComponent.h" />
-    <ClInclude Include="src\Components\Graphics\EffectComponent.h" />
-    <ClInclude Include="src\Components\Scripts\EnemyDownCounter.h" />
-    <ClInclude Include="src\Components\Scripts\EventComponent.h" />
-    <ClInclude Include="src\Components\Scripts\GameManagerComponent.h" />
-    <ClInclude Include="src\Components\InputManagerComponent.h" />
-    <ClInclude Include="src\IO\DDSTextureLoader12.h" />
-    <ClInclude Include="src\Core\Framework.h" />
-    <ClInclude Include="src\Components\Controllers\HumanoidControllerComponent.h" />
-    <ClInclude Include="src\IO\Importer.h" />
-    <ClInclude Include="src\Graphics\Light.h" />
-    <ClInclude Include="src\Utils\MathHelper.h" />
-    <ClInclude Include="src\Components\Graphics\MeshRendererComponent.h" />
-    <ClInclude Include="src\Core\Object.h" />
-    <ClInclude Include="src\Components\Graphics\ParticleComponent.h" />
-    <ClInclude Include="src\Components\Graphics\ParticleEmitterComponent.h" />
-    <ClInclude Include="src\Core\PipelineStateObject.h" />
-    <ClInclude Include="src\Components\Physics\RigidbodyComponent.h" />
-    <ClInclude Include="src\Core\Scene.h" />
-    <ClInclude Include="src\Components\Animation\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\IComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\AnimatorComponent.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Camera.h" />
+    <ClInclude Include="Presentation\Game\Component\CameraComponent.h" />
+    <ClInclude Include="Presentation\Game\Character.h" />
+    <ClInclude Include="Presentation\Game\Component\ColliderComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\Component.h" />
+    <ClInclude Include="Presentation\Game\Component\Components.h" />
+    <ClInclude Include="Presentation\Game\Component\DoorComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\EffectComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\EnemyDownCounter.h" />
+    <ClInclude Include="Presentation\Game\Component\EventComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\GameManagerComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\InputManagerComponent.h" />
+    <ClInclude Include="Presentation\ResourceLoader\DDSTextureLoader12.h" />
+    <ClInclude Include="Presentation\Game\Core\Framework.h" />
+    <ClInclude Include="Presentation\Game\Component\HumanoidControllerComponent.h" />
+    <ClInclude Include="Presentation\ResourceLoader\Importer.h" />
+    <ClInclude Include="Presentation\Renderer\Elements\Light.h" />
+    <ClInclude Include="Presentation\MathHelper.h" />
+    <ClInclude Include="Presentation\Game\Component\MeshRendererComponent.h" />
+    <ClInclude Include="Presentation\Game\Object.h" />
+    <ClInclude Include="Presentation\Game\Component\ParticleComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\ParticleEmitterComponent.h" />
+    <ClInclude Include="Presentation\Renderer\PipelineStateObject.h" />
+    <ClInclude Include="Presentation\Game\Component\RigidbodyComponent.h" />
+    <ClInclude Include="Presentation\Game\Core\Scene.h" />
+    <ClInclude Include="Presentation\Game\Component\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="src\Components\Controllers\TargetBoardControllerComponent.h" />
-    <ClInclude Include="src\Components\UI\TextRendererComponent.h" />
-    <ClInclude Include="src\Components\UI\TextUI.h" />
-    <ClInclude Include="src\Utils\Timer.h" />
-    <ClInclude Include="src\Components\TransformComponent.h" />
-    <ClInclude Include="src\Components\Controllers\WeaponControllerComponent.h" />
-    <ClInclude Include="src\Core\Client.h" />
+    <ClInclude Include="Presentation\Game\Component\TargetBoardControllerComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\TextRendererComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\TextUI.h" />
+    <ClInclude Include="Presentation\Game\Utility\Timer.h" />
+    <ClInclude Include="Presentation\Game\Component\TransformComponent.h" />
+    <ClInclude Include="Presentation\Game\Component\WeaponControllerComponent.h" />
+    <ClInclude Include="Presentation\Game\Core\Client.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -242,51 +242,51 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Core\IComponent.cpp" />
-    <ClCompile Include="src\Renderer\AnimationManager.cpp" />
-    <ClCompile Include="src\Renderer\DirectX\d3dUtil.cpp" />
-    <ClCompile Include="src\Renderer\DirectX\DirectXMethods.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Animation.cpp" />
-    <ClCompile Include="src\Components\Animation\AnimatorComponent.cpp" />
-    <ClCompile Include="src\Graphics\Camera.cpp" />
-    <ClCompile Include="src\Components\Graphics\CameraComponent.cpp" />
-    <ClCompile Include="src\Character\Character.cpp" />
-    <ClCompile Include="src\Components\Physics\ColliderComponent.cpp" />
-    <ClCompile Include="src\Core\Component.cpp" />
-    <ClCompile Include="src\Components\Scripts\DoorComponent.cpp" />
-    <ClCompile Include="src\Components\Graphics\EffectComponent.cpp" />
-    <ClCompile Include="src\Components\Scripts\EnemyDownCounter.cpp" />
-    <ClCompile Include="src\Components\Scripts\EventComponent.cpp" />
-    <ClCompile Include="src\Components\Scripts\GameManagerComponent.cpp" />
-    <ClCompile Include="src\Components\InputManagerComponent.cpp" />
-    <ClCompile Include="src\Renderer\Elements\BoneMask.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Material.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Mesh.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Model.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Texture.cpp" />
-    <ClCompile Include="src\Renderer\Elements\Vertex.cpp" />
-    <ClCompile Include="src\Renderer\MaterialManager.cpp" />
-    <ClCompile Include="src\Renderer\TextureManager.cpp" />
-    <ClCompile Include="src\IO\DDSTextureLoader12.cpp" />
-    <ClCompile Include="src\Core\Framework.cpp" />
-    <ClCompile Include="src\Components\Controllers\HumanoidControllerComponent.cpp" />
-    <ClCompile Include="src\IO\Importer.cpp" />
-    <ClCompile Include="src\Graphics\Light.cpp" />
-    <ClCompile Include="src\Components\Graphics\MeshRendererComponent.cpp" />
-    <ClCompile Include="src\Core\Object.cpp" />
-    <ClCompile Include="src\Components\Graphics\ParticleComponent.cpp" />
-    <ClCompile Include="src\Components\Graphics\ParticleEmitterComponent.cpp" />
-    <ClCompile Include="src\Core\PipelineStateObject.cpp" />
-    <ClCompile Include="src\Components\Physics\RigidbodyComponent.cpp" />
-    <ClCompile Include="src\Core\Scene.cpp" />
-    <ClCompile Include="src\Components\Animation\SkinnedMeshRendererComponent.cpp" />
-    <ClCompile Include="src\Components\Controllers\TargetBoardControllerComponent.cpp" />
-    <ClCompile Include="src\Components\UI\TextRendererComponent.cpp" />
-    <ClCompile Include="src\Components\UI\TextUI.cpp" />
-    <ClCompile Include="src\Utils\Timer.cpp" />
-    <ClCompile Include="src\Components\TransformComponent.cpp" />
-    <ClCompile Include="src\Components\Controllers\WeaponControllerComponent.cpp" />
-    <ClCompile Include="src\Core\Client.cpp" />
+    <ClCompile Include="Presentation\Game\Component\IComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Manager\AnimationManager.cpp" />
+    <ClCompile Include="Presentation\Renderer\DirectX\d3dUtil.cpp" />
+    <ClCompile Include="Presentation\Renderer\DirectX\DirectXMethods.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Animation.cpp" />
+    <ClCompile Include="Presentation\Game\Component\AnimatorComponent.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Camera.cpp" />
+    <ClCompile Include="Presentation\Game\Component\CameraComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Character.cpp" />
+    <ClCompile Include="Presentation\Game\Component\ColliderComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\Component.cpp" />
+    <ClCompile Include="Presentation\Game\Component\DoorComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\EffectComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\EnemyDownCounter.cpp" />
+    <ClCompile Include="Presentation\Game\Component\EventComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\GameManagerComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\InputManagerComponent.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\BoneMask.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Material.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Mesh.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Model.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Texture.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Vertex.cpp" />
+    <ClCompile Include="Presentation\Game\Manager\MaterialManager.cpp" />
+    <ClCompile Include="Presentation\Game\Manager\TextureManager.cpp" />
+    <ClCompile Include="Presentation\ResourceLoader\DDSTextureLoader12.cpp" />
+    <ClCompile Include="Presentation\Game\Core\Framework.cpp" />
+    <ClCompile Include="Presentation\Game\Component\HumanoidControllerComponent.cpp" />
+    <ClCompile Include="Presentation\ResourceLoader\Importer.cpp" />
+    <ClCompile Include="Presentation\Renderer\Elements\Light.cpp" />
+    <ClCompile Include="Presentation\Game\Component\MeshRendererComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Object.cpp" />
+    <ClCompile Include="Presentation\Game\Component\ParticleComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\ParticleEmitterComponent.cpp" />
+    <ClCompile Include="Presentation\Renderer\PipelineStateObject.cpp" />
+    <ClCompile Include="Presentation\Game\Component\RigidbodyComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Core\Scene.cpp" />
+    <ClCompile Include="Presentation\Game\Component\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\TargetBoardControllerComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\TextRendererComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\TextUI.cpp" />
+    <ClCompile Include="Presentation\Game\Utility\Timer.cpp" />
+    <ClCompile Include="Presentation\Game\Component\TransformComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Component\WeaponControllerComponent.cpp" />
+    <ClCompile Include="Presentation\Game\Core\Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WindowsProject1.rc" />

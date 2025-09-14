@@ -1,10 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-#include "src/Renderer/TextureManager.h"
-#include "src/Renderer/Elements/Texture.h"
+#include "Presentation/Game/Manager/TextureManager.h"
 
 #ifdef DEBUG
 #ifdef UNICODE
@@ -37,10 +36,8 @@
 #include <vector>
 #include <windows.h>
 #include "targetver.h"
-#include "src/IO/DDSTextureLoader12.h"
-#include "src/Utils/MathHelper.h"
 
-
+#include "Presentation/MathHelper.h"
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;

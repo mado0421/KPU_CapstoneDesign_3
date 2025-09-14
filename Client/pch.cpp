@@ -1,10 +1,9 @@
-#include "pch.h"
-#include "src/Core/Scene.h"
-#include "src/Renderer/AnimationManager.h"
-#include "src/Renderer/MaterialManager.h"
-#include "src/Renderer/Elements/Animation.h"
-#include "src/Renderer/Elements/Model.h"
-#include "src/Renderer/Elements/Texture.h"
+﻿#include "pch.h"
+
+#include "Presentation/Game/Manager/AnimationManager.h"
+#include "Presentation/Game/Manager/MaterialManager.h"
+#include "Presentation/Game/Manager/TextureManager.h"
+#include "Presentation/Renderer/Elements/Model.h"
 
 AnimationManager g_AnimMng;
 MaterialManager  g_MaterialMng;
