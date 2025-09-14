@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Presentation\Renderer\Screen.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Presentation\Game\Input\KeyCode.h" />
     <ClInclude Include="Presentation\Game\Manager\AnimationManager.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Presentation\Renderer\Screen.cpp" />
     <ClCompile Include="Resources\fontReader\FontReader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>

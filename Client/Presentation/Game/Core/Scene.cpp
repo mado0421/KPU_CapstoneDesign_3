@@ -1,11 +1,13 @@
 ﻿#include "pch.h"
 #include "Scene.h"
+
 #include "Presentation/Renderer/Elements/Light.h"
 #include "Presentation/ResourceLoader/Importer.h"
 #include "Presentation/Renderer/Elements/Model.h"
 
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Renderer/PipelineStateObject.h"
+#include "Presentation/Renderer/Screen.h"
 
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
 #include "Presentation/Renderer/DirectX/d3dx12.h"
