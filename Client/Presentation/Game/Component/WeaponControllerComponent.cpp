@@ -16,8 +16,8 @@ WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pM
                                                                                                           camTransform(nullptr),
                                                                                                           cam(nullptr)
 {
-    myTransform     = object->FindComponent<TransformComponent>();
-    muzzleTransform = m_pMuzzle->FindComponent<TransformComponent>();
+    myTransform     = object->GetComponent<TransformComponent>();
+    muzzleTransform = m_pMuzzle->GetComponent<TransformComponent>();
 }
 
 WeaponControllerComponent::~WeaponControllerComponent() {}
@@ -119,7 +119,7 @@ void WeaponControllerComponent::SolveConstraint()
         m_fMinLength  = FLT_MAX;
         if (m_pCollided)
         {
-            TempCharacter* enemy = m_pCollided->object->FindComponent<TempCharacter>();
+            TempCharacter* enemy = m_pCollided->object->GetComponent<TempCharacter>();
 
             if (enemy) enemy->Damage(100);
         }
@@ -134,7 +134,7 @@ void WeaponControllerComponent::SolveConstraint()
             pec->m_bIsBilboard      = false;
             pec->m_fGravityModifier = 0.0f;
 
-            XMFLOAT3 muzzlePos = m_pMuzzle->FindComponent<TransformComponent>()->GetPosition(Space::world);
+            XMFLOAT3 muzzlePos = m_pMuzzle->GetComponent<TransformComponent>()->GetPosition(Space::world);
 
             pec->m_xmf3StartRotation = vector3::Normalize(vector3::Subtract(muzzlePos, m_xmf3CollisionPoint));
 
@@ -177,9 +177,9 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 
     // Move to position of Parent's RHand
-    if (object->m_pParent)
+    if (object->GetParent())
     {
-        XMMATRIX l_xmmtxTransform = object->m_pParent->FindComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
+        XMMATRIX l_xmmtxTransform = object->GetParent()->GetComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
         l_xmmtxTransform          = XMMatrixMultiply(XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(-90), XMConvertToRadians(-90)), l_xmmtxTransform);
 
         TransformComponent* transform = myTransform;
@@ -205,7 +205,7 @@ void WeaponControllerComponent::Fire()
 
     if (0 >= m_fCurrCooltime)
     {
-        m_pMuzzle->FindComponent<EffectComponent>()->TurnOn();
+        m_pMuzzle->GetComponent<EffectComponent>()->TurnOn();
 
         m_fCurrCooltime = m_fCooltime;
         m_fTryRaycast   = true;
@@ -221,6 +221,6 @@ void WeaponControllerComponent::Reload()
 
 void WeaponControllerComponent::SetCam(Object* pCam)
 {
-    camTransform = pCam->FindComponent<TransformComponent>();
-    cam          = pCam->FindComponent<CameraComponent>();
+    camTransform = pCam->GetComponent<TransformComponent>();
+    cam          = pCam->GetComponent<CameraComponent>();
 }

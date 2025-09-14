@@ -35,11 +35,10 @@ ParticleEmitterComponent::~ParticleEmitterComponent() {}
 void ParticleEmitterComponent::Update(float fTimeElapsed)
 {
     // Update Particle
-    // ���⼭ erase() �Ѵٰ� �ؼ� ���� �ּҰ� �������ų� ���� �����Ƿ� �Ƚ��ϰ� erase() �ص� �ȴ�.
     for (auto iter = m_vecParticle.begin(); iter != m_vecParticle.end();)
     {
         (*iter)->Update(fTimeElapsed);
-        if (!(*iter)->m_bEnable) iter = m_vecParticle.erase(iter);
+        if (!(*iter)->IsEnabled()) iter = m_vecParticle.erase(iter);
         else ++iter;
     }
 
@@ -52,7 +51,7 @@ void ParticleEmitterComponent::Update(float fTimeElapsed)
     {
         if (m_fTime > m_fDuration + m_fStartLifetime._max)
         {
-            object->m_bEnable = false;
+            object->SetActive(false);
             is_enable           = false;
             m_vecParticle.clear();
         }
@@ -112,7 +111,7 @@ void ParticleEmitterComponent::AddParticle()
 
 Object* ParticleEmitterComponent::GetUsableParticle()
 {
-    for (int i = 0; i < m_pSceneParticlePool->size(); i++) if (!(*m_pSceneParticlePool)[i]->m_bEnable) return (*m_pSceneParticlePool)[i];
+    for (int i = 0; i < m_pSceneParticlePool->size(); i++) if (!(*m_pSceneParticlePool)[i]->IsEnabled()) return (*m_pSceneParticlePool)[i];
     return nullptr;
 }
 
@@ -140,8 +139,8 @@ XMFLOAT3 GetRandomlyShakenVector(const XMFLOAT3& d, float angle)
 
 void ParticleEmitterComponent::InitializeParticle(Object* pObject)
 {
-    ParticleComponent*     pc = pObject->FindComponent<ParticleComponent>();
-    TransformComponent*    t  = object->FindComponent<TransformComponent>();
+    ParticleComponent*     pc = pObject->GetComponent<ParticleComponent>();
+    TransformComponent*    t  = object->GetComponent<TransformComponent>();
     ParticlePropertiesPack ppp;
 
     ppp.currPos    = t->GetPosition();

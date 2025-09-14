@@ -14,13 +14,13 @@ HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object
                                                                                              m_fTimeForAim(0.2f),
                                                                                              m_pWeaponObject(pWeapon)
 {
-    l_pInput    = object->FindComponent<InputManagerComponent>();
-    l_transform = object->FindComponent<TransformComponent>();
+    l_pInput    = object->GetComponent<InputManagerComponent>();
+    l_transform = object->GetComponent<TransformComponent>();
 }
 
 HumanoidControllerComponent::~HumanoidControllerComponent() {}
 
-void HumanoidControllerComponent::SetLookAt(Object* pObejct) { m_pLookAt = pObejct->FindComponent<TransformComponent>(); }
+void HumanoidControllerComponent::SetLookAt(Object* pObejct) { m_pLookAt = pObejct->GetComponent<TransformComponent>(); }
 
 void HumanoidControllerComponent::Damage(int dmg)
 {
@@ -32,7 +32,7 @@ void HumanoidControllerComponent::Damage(int dmg)
         auto t   = new TransformComponent(pe);
         auto pec = new ParticleEmitterComponent(pe);
 
-        t->Translate(object->FindComponent<TransformComponent>()->GetPosition(Space::world));
+        t->Translate(object->GetComponent<TransformComponent>()->GetPosition(Space::world));
         t->Translate(0, 1.5, 0);
         pec->m_bIsBilboard      = false;
         pec->m_fGravityModifier = 0.3f;
@@ -134,7 +134,7 @@ void HumanoidControllerComponent::Update(float fTimeElapsed)
             if (l_pInput->IsKeyDown(_LMB))
             {
                 if (m_fTimeForAim > m_fAimProgress) m_fAimProgress += fTimeElapsed;
-                else m_pWeaponObject->FindComponent<WeaponControllerComponent>()->Fire();
+                else m_pWeaponObject->GetComponent<WeaponControllerComponent>()->Fire();
             }
             else
             {
@@ -142,7 +142,7 @@ void HumanoidControllerComponent::Update(float fTimeElapsed)
                 if (0 > m_fAimProgress) m_fAimProgress = 0;
             }
 
-            if (l_pInput->IsKeyDown(_R)) m_pWeaponObject->FindComponent<WeaponControllerComponent>()->Reload();
+            if (l_pInput->IsKeyDown(_R)) m_pWeaponObject->GetComponent<WeaponControllerComponent>()->Reload();
         }
     }
 

@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 
-DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->FindComponent<TransformComponent>()->GetPosition())
+DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->GetComponent<TransformComponent>()->GetPosition())
 {
     if (m_bOpen) m_fProgress = 1;
     else m_fProgress         = 0;
 
-    l_transform = object->FindComponent<TransformComponent>();
+    l_transform = object->GetComponent<TransformComponent>();
 }
 
 DoorComponent::~DoorComponent() {}

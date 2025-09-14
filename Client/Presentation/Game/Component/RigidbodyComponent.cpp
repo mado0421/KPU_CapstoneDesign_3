@@ -9,7 +9,7 @@ RigidbodyComponent::~RigidbodyComponent() {}
 
 void RigidbodyComponent::SolveConstraint()
 {
-    vector<ColliderComponent*> l_vecCollider = object->FindComponents<ColliderComponent>();
+    vector<ColliderComponent*> l_vecCollider = object->GetComponents<ColliderComponent>();
 
     for_each(l_vecCollider.begin(), l_vecCollider.end(), [&](ColliderComponent* c)
     {
@@ -20,7 +20,7 @@ void RigidbodyComponent::SolveConstraint()
                 if (c->m_vecpCollided[idx]->isTrigger()) continue;
 
                 // ray direction�� ���Ѵ�.
-                TransformComponent* transform        = object->FindComponent<TransformComponent>();
+                TransformComponent* transform        = object->GetComponent<TransformComponent>();
                 XMFLOAT3            xmf3CurrPosition = transform->GetPosition();
                 XMFLOAT3            xmf3CurrVector   = vector3::Subtract(xmf3CurrPosition, m_xmf3PrevPosition);
                 if (0 == vector3::Length(xmf3CurrVector)) continue;
@@ -144,4 +144,4 @@ void RigidbodyComponent::SolveConstraint()
 }
 
 // Rigidbody::Update()�� �̵��ϴ� ������Ʈ�� ���� ���� ����Ǿ�� ��!!
-void RigidbodyComponent::Update(float fTimeElapsed) { m_xmf3PrevPosition = object->FindComponent<TransformComponent>()->GetPosition(); }
+void RigidbodyComponent::Update(float fTimeElapsed) { m_xmf3PrevPosition = object->GetComponent<TransformComponent>()->GetPosition(); }

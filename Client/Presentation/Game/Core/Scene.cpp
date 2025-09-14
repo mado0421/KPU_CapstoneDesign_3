@@ -161,7 +161,7 @@ void Scene::CheckCollision()
 	}
 	for (int i = 0; i < objects_.size(); i++)
 	{
-		if (!objects_[i]->m_bEnable) continue;
+		if (!objects_[i]->IsEnabled()) continue;
 
 		for (int j = i + 1; j < objects_.size(); j++) objects_[i]->CheckCollision(objects_[j]);
 	}
@@ -169,7 +169,7 @@ void Scene::CheckCollision()
 
 void Scene::SolveConstraint()
 {
-	for (int i = 0; i < objects_.size(); i++) if (objects_[i]->m_bEnable) objects_[i]->SolveConstraint();
+	for (int i = 0; i < objects_.size(); i++) if (objects_[i]->IsEnabled()) objects_[i]->SolveConstraint();
 }
 
 void Scene::Input(UCHAR* key_buffer)
@@ -222,7 +222,7 @@ void Scene::Update(float delta_time)
 	CheckCollision();
 	SolveConstraint();
 
-	for_each(objects_.begin(), objects_.end(), [&delta_time](Object* o) { if (o->m_bEnable) o->Update(delta_time); });
+	for_each(objects_.begin(), objects_.end(), [&delta_time](Object* o) { if (o->IsEnabled()) o->Update(delta_time); });
 }
 
 void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_rtv, D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_dsv)
@@ -231,7 +231,7 @@ void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_rtv, D3D12_CPU_DESCRI
 	command_list_->SetDescriptorHeaps(1, &cbv_srv_descriptor_heap_);
 	command_list_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	CameraComponent* cam = camera_object_->FindComponent<CameraComponent>();
+	CameraComponent* cam = camera_object_->GetComponent<CameraComponent>();
 	cam->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
 	cam->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 	cam->SetViewportsAndScissorRects(command_list_);
@@ -972,7 +972,7 @@ void Scene::CreatePassInfoShaderResource()
 
 void Scene::UpdatePassInfoAboutCamera()
 {
-	CameraComponent* cam = camera_object_->FindComponent<CameraComponent>();
+	CameraComponent* cam = camera_object_->GetComponent<CameraComponent>();
 	XMFLOAT4X4       xmf4x4Temp;
 
 	//xmf4x4Temp = m_pCamera->GetViewMatrix();
@@ -988,7 +988,7 @@ void Scene::UpdatePassInfoAboutCamera()
 	XMStoreFloat4x4(&cb_mapped_pass_info_->m_xmf4x4CameraProjectionInv, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 
 	//::memcpy(&m_pcbMappedPassInfo->m_xmf3CameraPosition, &m_pCamera->GetPosition(), sizeof(XMFLOAT3));
-	XMFLOAT3 xmf3WorldPos = camera_object_->FindComponent<TransformComponent>()->GetPosition(Space::world);
+	XMFLOAT3 xmf3WorldPos = camera_object_->GetComponent<TransformComponent>()->GetPosition(Space::world);
 	memcpy(&cb_mapped_pass_info_->m_xmf3CameraPosition, &xmf3WorldPos, sizeof(XMFLOAT3));
 }
 
@@ -1138,7 +1138,7 @@ vector<ColliderObjectData> LoadMy::LoadColliderList(const char* path)
 
 Object* Scene::FindObjectByName(const char* strName)
 {
-	for (auto iter = objects_.begin(); iter != objects_.end(); ++iter) if (strName == (*iter)->m_strName) return *iter;
+	for (auto iter = objects_.begin(); iter != objects_.end(); ++iter) if (strName == (*iter)->GetName()) return *iter;
 	return nullptr;
 }
 
@@ -1209,7 +1209,7 @@ void Scene::BuildObject()
 
 		objects_.push_back(weapon);
 		non_anim_object_render_group_.push_back(weapon);
-		muzzle->m_pParent = weapon;
+		muzzle->SetParent(weapon);
 	}
 	{
 		// player
@@ -1234,7 +1234,7 @@ void Scene::BuildObject()
 
 		objects_.push_back(player);
 		anim_object_render_group_.push_back(player);
-		FindObjectByName("pistol")->m_pParent = player;
+		FindObjectByName("pistol")->SetParent(player);
 	}
 	{
 		auto head = new Object("head");
@@ -1243,7 +1243,7 @@ void Scene::BuildObject()
 		transform->Translate(0, 1.5f, 0.0f);
 		objects_.push_back(head);
 
-		head->m_pParent = FindObjectByName("player");
+		head->SetParent(FindObjectByName("player"));
 	}
 	{
 		auto look = new Object("lookAt");
@@ -1252,9 +1252,9 @@ void Scene::BuildObject()
 		transform->Translate(0, 1.5f, 5.0f);
 		objects_.push_back(look);
 
-		look->m_pParent = FindObjectByName("player");
+		look->SetParent(FindObjectByName("player"));
 
-		FindObjectByName("player")->FindComponent<HumanoidControllerComponent>()->SetLookAt(look);
+		FindObjectByName("player")->GetComponent<HumanoidControllerComponent>()->SetLookAt(look);
 	}
 	{
 		auto camera = new Object("camera");
@@ -1265,12 +1265,12 @@ void Scene::BuildObject()
 		//transform->Translate(0.6f, 1.8f, -2.2f);
 		cam->SetHeadAndLookAt(FindObjectByName("head"), FindObjectByName("lookAt"), XMFLOAT3(0.6f, 0.3f, -2.2f));
 
-		camera->m_pParent = FindObjectByName("player");
+		camera->SetParent(FindObjectByName("player"));
 
 		camera_object_ = camera;
 		objects_.push_back(camera);
 
-		FindObjectByName("pistol")->FindComponent<WeaponControllerComponent>()->SetCam(camera);
+		FindObjectByName("pistol")->GetComponent<WeaponControllerComponent>()->SetCam(camera);
 	}
 
 	{
@@ -1415,7 +1415,7 @@ void Scene::BuildObject()
 		//	transform->Translate(-1.5, 0, -7.5);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 1.5), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorOpen(FindObjectByName("door00")->FindComponent<DoorComponent>());
+		//	trigEvent->AddDoorOpen(FindObjectByName("door00")->GetComponent<DoorComponent>());
 
 		//	m_vecObject.push_back(trig);
 		//}
@@ -1426,7 +1426,7 @@ void Scene::BuildObject()
 		//	transform->Translate(-1.5, 0, -15);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorOpen(FindObjectByName("door01")->FindComponent<DoorComponent>());
+		//	trigEvent->AddDoorOpen(FindObjectByName("door01")->GetComponent<DoorComponent>());
 
 		//	m_vecObject.push_back(trig);
 		//}
@@ -1437,8 +1437,8 @@ void Scene::BuildObject()
 		//	transform->Translate(-1.5, 0, -20);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB0")->FindComponent<Character>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door02")->GetComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB0")->GetComponent<Character>());
 
 		//	m_vecObject.push_back(trig);
 		//}
@@ -1449,11 +1449,11 @@ void Scene::BuildObject()
 		//	transform->Translate(-7.5, 0, -21);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
-		//	trigEvent->AddDoorClose(FindObjectByName("door02")->FindComponent<DoorComponent>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB1")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB2")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB3")->FindComponent<Character>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door03")->GetComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door02")->GetComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB1")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB2")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB3")->GetComponent<Character>());
 
 		//	m_vecObject.push_back(trig);
 		//}
@@ -1464,12 +1464,12 @@ void Scene::BuildObject()
 		//	transform->Translate(-19, 0, -17);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorClose(FindObjectByName("door03")->FindComponent<DoorComponent>());
-		//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB4")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB5")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB6")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB7")->FindComponent<Character>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door03")->GetComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door04")->GetComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB4")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB5")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB6")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB7")->GetComponent<Character>());
 
 		//	m_vecObject.push_back(trig);
 		//}
@@ -1480,13 +1480,13 @@ void Scene::BuildObject()
 		//	transform->Translate(-27, 0, -11.5);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(1.5, 1.5, 2), XMFLOAT4(0, 0, 0, 1), true);
 		//	EventComponent* trigEvent = new EventComponent(trig);
-		//	trigEvent->AddDoorClose(FindObjectByName("door04")->FindComponent<DoorComponent>());
-		//	trigEvent->AddDoorClose(FindObjectByName("door05")->FindComponent<DoorComponent>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB8")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB9")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB10")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB11")->FindComponent<Character>());
-		//	trigEvent->AddSpawn(FindObjectByName("TB12")->FindComponent<Character>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door04")->GetComponent<DoorComponent>());
+		//	trigEvent->AddDoorClose(FindObjectByName("door05")->GetComponent<DoorComponent>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB8")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB9")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB10")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB11")->GetComponent<Character>());
+		//	trigEvent->AddSpawn(FindObjectByName("TB12")->GetComponent<Character>());
 
 		//	m_vecObject.push_back(trig);
 		//}

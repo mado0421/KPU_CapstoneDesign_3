@@ -4,10 +4,24 @@
 #include "Presentation/Game/Object.h"
 
 
-Component::Component(Object* pObject) : object(pObject) { pObject->AddComponent(this); }
+Component::Component(Object* object) : object(object) { object->AddComponent(this); }
 
-Component::~Component() {}
+Component::~Component() = default;
 
-Component* Component::GetInstance() { return this; }
+void Component::CheckCollision(Component*)
+{
+}
 
-void Component::SetActive(bool bActive) { is_enable = bActive; }
+void Component::SolveConstraint()
+{
+}
+
+void Component::Update(float)
+{
+}
+
+void Component::Render(ID3D12GraphicsCommandList*)
+{
+}
+
+void Component::SetActive(const bool is_active) { is_enable = is_active; }

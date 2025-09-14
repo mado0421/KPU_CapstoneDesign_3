@@ -3,7 +3,7 @@
 
 EnemyDownCounter::EnemyDownCounter(Object* pObject) : Component(pObject)
 {
-    TextRendererComponent* temp = pObject->FindComponent<TextRendererComponent>();
+    TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
 }
 
@@ -11,7 +11,7 @@ EnemyDownCounter::~EnemyDownCounter() {}
 
 void EnemyDownCounter::AddTarget(Object* pObject)
 {
-    TargetBoardControllerComponent* temp = pObject->FindComponent<TargetBoardControllerComponent>();
+    TargetBoardControllerComponent* temp = pObject->GetComponent<TargetBoardControllerComponent>();
 
     if (temp)
     {

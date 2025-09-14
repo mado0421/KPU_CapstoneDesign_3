@@ -84,7 +84,7 @@ HumanoidAnimatorComponent::HumanoidAnimatorComponent(Object* pObject, const char
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy),
 	  m_pAimingMask(new BoneMask(BoneMask::PreDefined::kUpperBody))
 {
-	l_HCC = object->FindComponent<HumanoidControllerComponent>();
+	l_HCC = object->GetComponent<HumanoidControllerComponent>();
 }
 
 HumanoidAnimatorComponent::~HumanoidAnimatorComponent() { delete m_pAimingMask; }
@@ -231,7 +231,7 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 TargetBoardAnimatorComponent::TargetBoardAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy)
 {
-	l_TCC = object->FindComponent<TargetBoardControllerComponent>();
+	l_TCC = object->GetComponent<TargetBoardControllerComponent>();
 	// if (l_TCC->IsAlive()) m_fStandInterpolationValue = 1.0f;
 	// else m_fStandInterpolationValue                  = 0.0f;
 

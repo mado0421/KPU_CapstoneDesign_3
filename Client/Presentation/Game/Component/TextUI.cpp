@@ -3,10 +3,10 @@
 
 TextUIAmmoComponent::TextUIAmmoComponent(Object* pObject, Object* pWeapon) : Component(pObject), m_pTRC(nullptr)
 {
-    TextRendererComponent* temp = pObject->FindComponent<TextRendererComponent>();
+    TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
 
-    m_pWCC = pWeapon->FindComponent<WeaponControllerComponent>();
+    m_pWCC = pWeapon->GetComponent<WeaponControllerComponent>();
 }
 
 TextUIAmmoComponent::~TextUIAmmoComponent() {}
@@ -31,7 +31,7 @@ void TextUIAmmoComponent::Update(float fTimeElapsed)
 
 TextUIScoreComponent::TextUIScoreComponent(Object* pObject) : Component(pObject), m_pTRC(nullptr)
 {
-    TextRendererComponent* temp = pObject->FindComponent<TextRendererComponent>();
+    TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
 }
 
@@ -41,10 +41,10 @@ void TextUIScoreComponent::Update(float fTimeElapsed) {}
 
 TextUIPlayerHPComponent::TextUIPlayerHPComponent(Object* pObject, Object* pPlayer) : Component(pObject), m_pTRC(nullptr), m_pPlayerCharacter(nullptr)
 {
-    TextRendererComponent* temp = pObject->FindComponent<TextRendererComponent>();
+    TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
 
-    m_pPlayerCharacter = pPlayer->FindComponent<TempCharacter>();
+    m_pPlayerCharacter = pPlayer->GetComponent<TempCharacter>();
 }
 
 TextUIPlayerHPComponent::~TextUIPlayerHPComponent() {}

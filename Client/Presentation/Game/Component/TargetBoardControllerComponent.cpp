@@ -47,7 +47,7 @@ void TargetBoardControllerComponent::Awake()
 	ParticleEmitterComponent* particle_emitter    = new ParticleEmitterComponent(particle_emitter_object_);
 	ParticleBurstInfo         particle_burst_info = {};
 
-	transform->Translate(object->FindComponent<TransformComponent>()->GetPosition(Space::world));
+	transform->Translate(object->GetComponent<TransformComponent>()->GetPosition(Space::world));
 	transform->Translate(0, 2.5, 0);
 
 	particle_emitter->m_bIsBilboard      = true;
@@ -83,5 +83,5 @@ void TargetBoardControllerComponent::Die()
 
 void TargetBoardControllerComponent::SetPlayer(Object* object)
 {
-	player_character_ = object->FindComponent<HumanoidControllerComponent>();
+	player_character_ = object->GetComponent<HumanoidControllerComponent>();
 }

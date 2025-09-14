@@ -34,14 +34,14 @@ void SkinnedMeshRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommand
     pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_OBJECTS, m_d3dCbvGPUDescriptorHandleForMesh);
     UINT ncbElementBytes = sizeof(XMFLOAT4X4) + 255 & ~255;
     memset(m_pCBMappedWorldTransform, NULL, ncbElementBytes);
-    XMMATRIX l_xmmtxWorldTransform = object->FindComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX l_xmmtxWorldTransform = object->GetComponent<TransformComponent>()->GetWorldTransform();
     XMStoreFloat4x4(m_pCBMappedWorldTransform, XMMatrixTranspose(l_xmmtxWorldTransform));
 
     pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_ANIMTRANSFORM, m_d3dCbvGPUDescriptorHandleForAnimation);
     ncbElementBytes = sizeof(CB_BONE_INFO) + 255 & ~255;
     memset(m_pCBMappedBonesTransform, NULL, ncbElementBytes);
 
-    XMFLOAT4X4* xmf4x4AnimTransform = object->FindComponent<AnimatorComponent>()->GetFinalResultAnimationTransform();
+    XMFLOAT4X4* xmf4x4AnimTransform = object->GetComponent<AnimatorComponent>()->GetFinalResultAnimationTransform();
     for (int i = 0; i < MAX_BONE_NUM; i++) m_pCBMappedBonesTransform->arrxmf4x4Transform[i] = xmf4x4AnimTransform[i];
 
 

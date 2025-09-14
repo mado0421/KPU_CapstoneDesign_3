@@ -96,7 +96,7 @@ void ParticleComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 
 void ParticleComponent::Initialize(ParticlePropertiesPack& ppp)
 {
-    transform = object->FindComponent<TransformComponent>();
+    transform = object->GetComponent<TransformComponent>();
     transform->SetPosition(ppp.currPos);
     m_xmf3Direction    = ppp.direction;
     m_fLifetime        = ppp.lifetime;

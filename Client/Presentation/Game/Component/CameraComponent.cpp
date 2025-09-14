@@ -19,7 +19,7 @@ CameraComponent::CameraComponent(Object* pObject) : Component(pObject),
     SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 
-    t = object->FindComponent<TransformComponent>();
+    t = object->GetComponent<TransformComponent>();
 }
 
 CameraComponent::~CameraComponent() {}
@@ -64,13 +64,13 @@ void CameraComponent::SetLookAtWorldPos(const float& x, const float& y, const fl
 
 //void CameraComponent::SetFocusObject(Object* pObject)
 //{
-//	m_pLookAtTransform = pObject->FindComponent<TransformComponent>();
+//	m_pLookAtTransform = pObject->GetComponent<TransformComponent>();
 //}
 
 void CameraComponent::SetHeadAndLookAt(Object* pHead, Object* pLookAt, XMFLOAT3 distance)
 {
-    m_pHeadTransform   = pHead->FindComponent<TransformComponent>();
-    m_pLookAtTransform = pLookAt->FindComponent<TransformComponent>();
+    m_pHeadTransform   = pHead->GetComponent<TransformComponent>();
+    m_pLookAtTransform = pLookAt->GetComponent<TransformComponent>();
     m_xmf3Direction    = vector3::Normalize(distance);
     m_fDistance        = vector3::Length(distance);
 }

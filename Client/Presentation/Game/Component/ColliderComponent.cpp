@@ -45,7 +45,7 @@ void BoxColliderComponent::Update(float fTimeElapsed)
         local                     = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = object->FindComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = object->GetComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(local, world);
 
@@ -119,7 +119,7 @@ void SphereColliderComponent::Update(float fTimeElapsed)
         local = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = object->FindComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = object->GetComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(world, local);
 

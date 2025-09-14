@@ -7,23 +7,19 @@ class Object;
 class Component
 {
 public:
-    Component() = delete;
-    Component(Object* pObject);
-    virtual ~Component();
+	Component() = delete;
+	Component(Object*);
+	virtual ~Component();
 
-    virtual Component* GetInstance();
+	virtual void CheckCollision(Component*);
+	virtual void SolveConstraint();
 
-    virtual void CheckCollision(Component* c) {}
+	virtual void Update(float delta_time);
+	virtual void Render(ID3D12GraphicsCommandList*);
 
-    virtual void SolveConstraint() {}
-
-    virtual void Update(float fTimeElapsed) {}
-
-    virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList) {}
-
-    void SetActive(bool bActive);
+	void SetActive(bool);
 
 public:
-    Object* object  = nullptr;
-    bool    is_enable = true;
+	Object* object    = nullptr;
+	bool    is_enable = true;
 };

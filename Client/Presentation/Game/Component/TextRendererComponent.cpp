@@ -161,7 +161,7 @@ void TextRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
     g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
 
-    TransformComponent* transform = object->FindComponent<TransformComponent>();
+    TransformComponent* transform = object->GetComponent<TransformComponent>();
     XMFLOAT2            screenPos;
     screenPos.x = transform->GetPosition().x;
     screenPos.y = transform->GetPosition().y;

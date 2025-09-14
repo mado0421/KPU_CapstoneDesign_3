@@ -2,42 +2,51 @@
 #include "Object.h"
 #include "Presentation/Game/Component/Components.h"
 
-Object::Object() : m_strName(""), m_bEnable(true), m_fTime(0.0f), m_pParent(nullptr) {}
+Object::Object() : is_enable_(true), parent_(nullptr)
+{
+}
 
-Object::Object(const char* strName) : m_strName(strName), m_bEnable(true), m_fTime(0.0f), m_pParent(nullptr) {}
+Object::Object(const char* name) : name_(name), is_enable_(true), parent_(nullptr)
+{
+}
 
-Object::~Object() { for_each(m_vecComponents.begin(), m_vecComponents.end(), [](Component* c) { delete c; }); }
+Object::~Object()
+{
+	ranges::for_each(components_, [](const Component* c) { delete c; });
+}
 
 void Object::CheckCollision(Object* other)
 {
-    for_each(m_vecComponents.begin(), m_vecComponents.end(), [&](Component* c)
-    {
-        vector<ColliderComponent*> colliders = other->FindComponents<ColliderComponent>();
-        for_each(colliders.begin(), colliders.end(), [&](ColliderComponent* collider) { c->CheckCollision(collider); });
-    });
+	ranges::for_each(components_, [&](Component* c)
+	{
+		vector<ColliderComponent*> colliders = other->GetComponents<ColliderComponent>();
+		ranges::for_each(colliders, [&](ColliderComponent* collider) { c->CheckCollision(collider); });
+	});
 }
 
-void Object::SolveConstraint() { for_each(m_vecComponents.begin(), m_vecComponents.end(), [](Component* c) { c->SolveConstraint(); }); }
+void Object::SolveConstraint() { ranges::for_each(components_, [](Component* c) { c->SolveConstraint(); }); }
 
-void Object::Input(UCHAR* pKeyBuffer, XMFLOAT2& xmf2MouseMovement)
+void Object::Input(UCHAR* key_buffer, XMFLOAT2& mouse_movement)
 {
-    InputManagerComponent* l_pInputMng = FindComponent<InputManagerComponent>();
-    if (nullptr != l_pInputMng) l_pInputMng->InputEvent(pKeyBuffer, xmf2MouseMovement);
+	if (InputManagerComponent* input_manager = GetComponent<InputManagerComponent>(); nullptr != input_manager)
+		input_manager->InputEvent(key_buffer, mouse_movement);
 }
 
-void Object::Update(float fTimeElapsed)
+void Object::Update(const float delta_time)
 {
-    m_fTime += fTimeElapsed;
-    for_each(m_vecComponents.begin(), m_vecComponents.end(), [&](Component* c) { c->Update(fTimeElapsed); });
+	ranges::for_each(components_, [&](Component* c) { c->Update(delta_time); });
 }
 
-void Object::Render(ID3D12GraphicsCommandList* pd3dCommandList) { for_each(m_vecComponents.begin(), m_vecComponents.end(), [&](Component* c) { c->Render(pd3dCommandList); }); }
-
-void Object::SetActive(bool state)
+void Object::Render(ID3D12GraphicsCommandList* command_list)
 {
-    m_bEnable = state;
-    for_each(m_vecComponents.begin(), m_vecComponents.end(), [&](Component* c) { c->SetActive(state); });
+	ranges::for_each(components_, [&](Component* c) { c->Render(command_list); });
+}
+
+void Object::SetActive(const bool is_active)
+{
+	is_enable_ = is_active;
+	ranges::for_each(components_, [&](Component* c) { c->SetActive(is_active); });
 }
 
 
-void Object::AddComponent(Component* component) { m_vecComponents.push_back(component); }
+void Object::AddComponent(Component* component) { components_.push_back(component); }

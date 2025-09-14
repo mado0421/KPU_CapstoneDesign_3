@@ -19,7 +19,7 @@ void EffectComponent::SetDuration(float fTime) { m_fDuration = fTime; }
 void EffectComponent::TurnOn()
 {
     SetActive(true);
-    MeshRendererComponent* renderer = object->FindComponent<MeshRendererComponent>();
+    MeshRendererComponent* renderer = object->GetComponent<MeshRendererComponent>();
     renderer->SetActive(true);
     m_fLifetime = m_fDuration;
 }
@@ -27,6 +27,6 @@ void EffectComponent::TurnOn()
 void EffectComponent::TurnOff()
 {
     SetActive(false);
-    MeshRendererComponent* renderer = object->FindComponent<MeshRendererComponent>();
+    MeshRendererComponent* renderer = object->GetComponent<MeshRendererComponent>();
     renderer->SetActive(false);
 }
