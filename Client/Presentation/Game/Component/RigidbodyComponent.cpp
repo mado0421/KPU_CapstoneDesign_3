@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RigidbodyComponent.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
@@ -22,18 +22,18 @@ void RigidbodyComponent::SolveConstraint()
                 // ray direction�� ���Ѵ�.
                 TransformComponent* transform        = m_pObject->FindComponent<TransformComponent>();
                 XMFLOAT3            xmf3CurrPosition = transform->GetPosition();
-                XMFLOAT3            xmf3CurrVector   = Vector3::Subtract(xmf3CurrPosition, m_xmf3PrevPosition);
-                if (0 == Vector3::Length(xmf3CurrVector)) continue;
-                XMFLOAT3 xmf3Direction = Vector3::Normalize(xmf3CurrVector);
+                XMFLOAT3            xmf3CurrVector   = vector3::Subtract(xmf3CurrPosition, m_xmf3PrevPosition);
+                if (0 == vector3::Length(xmf3CurrVector)) continue;
+                XMFLOAT3 xmf3Direction = vector3::Normalize(xmf3CurrVector);
 
                 // ray�� origin�� currPosition�� currPosition +- xmf3Vertical * m_sphere.radius �� ��ǥ��
                 // direction�� UpVector�� ������ ����(direction�� ������ ����)�� +/-0.5��ŭ ��Į����� ���͸� ������� ��.
-                XMFLOAT3 xmf3Vertical   = Vector3::CrossProduct(xmf3Direction, XMFLOAT3(0, 1, 0));
-                XMFLOAT3 xmf3Origins[3] = {Vector3::Add(xmf3CurrPosition, Vector3::Multiply(-0.5f, xmf3Vertical)), xmf3CurrPosition, Vector3::Add(xmf3CurrPosition, Vector3::Multiply(0.5f, xmf3Vertical))};
+                XMFLOAT3 xmf3Vertical   = vector3::CrossProduct(xmf3Direction, XMFLOAT3(0, 1, 0));
+                XMFLOAT3 xmf3Origins[3] = {vector3::Add(xmf3CurrPosition, vector3::Multiply(-0.5f, xmf3Vertical)), xmf3CurrPosition, vector3::Add(xmf3CurrPosition, vector3::Multiply(0.5f, xmf3Vertical))};
 
                 // **** origin�� �浹ü �ȿ� �Ĺ����� ������ ���ܼ� bias ���� �߰��ϱ�� �� ****
                 // **** bias ���� 1�� �ϰ�, direction �������͸� ��� ****
-                for (int i = 0; i < 3; i++) xmf3Origins[i] = Vector3::Add(xmf3Origins[i], Vector3::Multiply(-1, xmf3Direction));
+                for (int i = 0; i < 3; i++) xmf3Origins[i] = vector3::Add(xmf3Origins[i], vector3::Multiply(-1, xmf3Direction));
 
                 XMVECTOR origins[3] = {XMLoadFloat3(&xmf3Origins[0]), XMLoadFloat3(&xmf3Origins[1]), XMLoadFloat3(&xmf3Origins[2])};
                 XMVECTOR direction  = XMLoadFloat3(&xmf3Direction);
@@ -64,7 +64,7 @@ void RigidbodyComponent::SolveConstraint()
                 for (int i = 0; i < 3; i++)
                 {
                     if (1 < lengths[i]) // bias�� 1
-                        xmf3CollsionPoint[collisionCount++] = Vector3::Add(xmf3Origins[i], Vector3::Multiply(lengths[i], xmf3Direction));
+                        xmf3CollsionPoint[collisionCount++] = vector3::Add(xmf3Origins[i], vector3::Multiply(lengths[i], xmf3Direction));
                 }
 
                 // �浹���� �� �� �̻��̸� �浹���� ��� ���͸� ���Ѵ�.
@@ -76,7 +76,7 @@ void RigidbodyComponent::SolveConstraint()
                     // �̷��� �ϸ� XZ��鿡���� ��ֺ��͸� ���� �� �ִ�.
                     if (2 == collisionCount)
                     {
-                        xmf3CollsionPoint[2] = Vector3::Add(xmf3CollsionPoint[0], XMFLOAT3(0, 1, 0));
+                        xmf3CollsionPoint[2] = vector3::Add(xmf3CollsionPoint[0], XMFLOAT3(0, 1, 0));
 
                         // �� ABC�� ����, AB���Ϳ� AC������ ������ �Ͽ� ��ֺ��͸� ���Ѵ�.
                         // ��ֺ��͸� ���Ѵ�.
@@ -107,7 +107,7 @@ void RigidbodyComponent::SolveConstraint()
                             normal = XMVector3Normalize(normal);
 
                             XMStoreFloat3(&test, normal);
-                            transform->SetPosition(Vector3::Add(xmf3CurrPosition, Vector3::Multiply(0.04f, test)));
+                            transform->SetPosition(vector3::Add(xmf3CurrPosition, vector3::Multiply(0.04f, test)));
                             continue;
                         }
                     }
@@ -119,7 +119,7 @@ void RigidbodyComponent::SolveConstraint()
                     XMStoreFloat3(&xmf3CurrVector, adjusted);
 
                     //// ���� ��ġ�� adjusted ���� ���� ���ؼ� ���� �� ��ġ�� ���� ��ġ�� �����Ѵ�.
-                    transform->SetPosition(Vector3::Add(m_xmf3PrevPosition, xmf3CurrVector));
+                    transform->SetPosition(vector3::Add(m_xmf3PrevPosition, xmf3CurrVector));
                 }
 
                 // �浹���� �� ���� �𼭸��� Ȯ���� ��Ȳ.
@@ -130,12 +130,12 @@ void RigidbodyComponent::SolveConstraint()
                     if (1 < lengths[0])
                     {
                         // Ray[0]
-                        transform->SetPosition(Vector3::Add(xmf3CurrPosition, Vector3::Multiply(Vector3::Length(xmf3CurrVector), xmf3Vertical)));
+                        transform->SetPosition(vector3::Add(xmf3CurrPosition, vector3::Multiply(vector3::Length(xmf3CurrVector), xmf3Vertical)));
                     }
                     else if (1 < lengths[2])
                     {
                         // Ray[2]
-                        transform->SetPosition(Vector3::Add(xmf3CurrPosition, Vector3::Multiply(-Vector3::Length(xmf3CurrVector), xmf3Vertical)));
+                        transform->SetPosition(vector3::Add(xmf3CurrPosition, vector3::Multiply(-vector3::Length(xmf3CurrVector), xmf3Vertical)));
                     }
                 }
             }

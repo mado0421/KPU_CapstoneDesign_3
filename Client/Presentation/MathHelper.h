@@ -1,48 +1,24 @@
-#pragma once
+﻿#pragma once
 #include <DirectXMath.h>
 using namespace DirectX;
 
-inline bool  IsZero(float fValue) { return fabsf(fValue) < FLT_EPSILON; }
-inline bool  IsEqual(float fA, float fB) { return IsZero(fA - fB); }
-inline float InverseSqrt(float fValue) { return 1.0f / sqrtf(fValue); }
-
-inline void Swap(float* pfS, float* pfT)
+namespace quaternion
 {
-    float fTemp = *pfS;
-    *pfS        = *pfT;
-    *pfT        = fTemp;
+    inline void quat_2_euler_d3d(const XMFLOAT4& q, float& yaw, float& pitch, float& roll)
+    {
+        float sqw = q.w * q.w;
+        float sqx = q.x * q.x;
+        float sqy = q.y * q.y;
+        float sqz = q.z * q.z;
+        pitch = asinf(2.0f * (q.w * q.x - q.y * q.z));                          // rotation about x-axis
+        yaw = atan2f(2.0f * (q.x * q.z + q.w * q.y), -sqx - sqy + sqz + sqw); // rotation about y-axis
+        roll = atan2f(2.0f * (q.x * q.y + q.w * q.z), -sqx + sqy - sqz + sqw); // rotation about z-axis
+    }
 }
 
-inline bool IsIn(float target, float min, float max)
+namespace vector2
 {
-    if (target < min) return false;
-    if (target > max) return false;
-    return true;
-}
-
-inline void Clamp(float& val, const float min, const float max)
-{
-    val = min(val, max);
-    val = max(val, min);
-}
-
-constexpr auto vector2Epsilon{XMFLOAT2(FLT_EPSILON, FLT_EPSILON)};
-constexpr auto vector3Epsilon{XMFLOAT3(FLT_EPSILON, FLT_EPSILON, FLT_EPSILON)};
-
-inline void quat_2_euler_d3d(const XMFLOAT4& q, float& yaw, float& pitch, float& roll)
-{
-    float sqw = q.w * q.w;
-    float sqx = q.x * q.x;
-    float sqy = q.y * q.y;
-    float sqz = q.z * q.z;
-    pitch     = asinf(2.0f * (q.w * q.x - q.y * q.z));                          // rotation about x-axis
-    yaw       = atan2f(2.0f * (q.x * q.z + q.w * q.y), -sqx - sqy + sqz + sqw); // rotation about y-axis
-    roll      = atan2f(2.0f * (q.x * q.y + q.w * q.z), -sqx + sqy - sqz + sqw); // rotation about z-axis
-}
-
-namespace Vector2
-{
-    inline bool CompareVector2WithEpsilon(const XMFLOAT2& lhs, const XMFLOAT2& rhs) { return XMVector3NearEqual(XMLoadFloat2(&lhs), XMLoadFloat2(&rhs), XMLoadFloat2(&vector2Epsilon)); }
+    // inline bool CompareVector2WithEpsilon(const XMFLOAT2& lhs, const XMFLOAT2& rhs) { return XMVector3NearEqual(XMLoadFloat2(&lhs), XMLoadFloat2(&rhs), XMLoadFloat2(&vector2Epsilon)); }
 
     inline XMFLOAT2 Add(const XMFLOAT2& xmf2Vector1, const XMFLOAT2& xmf2Vector2)
     {
@@ -68,7 +44,7 @@ namespace Vector2
     inline XMFLOAT2 Lerp(const XMFLOAT2& v0, const XMFLOAT2& v1, float t) { return Add(v0, Subtract(v1, v0), t); }
 }
 
-namespace Vector4
+namespace vector4
 {
     inline XMFLOAT4 QuatIdentity()
     {
@@ -122,11 +98,13 @@ namespace Vector4
     inline XMVECTOR QuatFromXYZAngle(const XMFLOAT3& angle) { return XMQuaternionRotationRollPitchYaw(XMConvertToRadians(angle.x), XMConvertToRadians(angle.y), XMConvertToRadians(angle.z)); }
 }
 
-namespace Vector3
+namespace vector3
 {
+    inline bool  IsZero(float fValue) { return fabsf(fValue) < FLT_EPSILON; }
+
     inline bool IsZero(const XMFLOAT3& xmf3Vector)
     {
-        if (::IsZero(xmf3Vector.x) && ::IsZero(xmf3Vector.y) && ::IsZero(xmf3Vector.z)) return true;
+        if (IsZero(xmf3Vector.x) && IsZero(xmf3Vector.y) && IsZero(xmf3Vector.z)) return true;
         return false;
     }
 
@@ -220,7 +198,7 @@ namespace Vector3
 
     inline XMFLOAT3 TransformCoord(const XMFLOAT3& xmf3Vector, const XMFLOAT4X4& xmmtx4x4Matrix) { return TransformCoord(xmf3Vector, XMLoadFloat4x4(&xmmtx4x4Matrix)); }
 
-    inline bool CompareVector3WithEpsilon(const XMFLOAT3& lhs, const XMFLOAT3& rhs) { return XMVector3NearEqual(XMLoadFloat3(&lhs), XMLoadFloat3(&rhs), XMLoadFloat3(&vector3Epsilon)); }
+    // inline bool CompareVector3WithEpsilon(const XMFLOAT3& lhs, const XMFLOAT3& rhs) { return XMVector3NearEqual(XMLoadFloat3(&lhs), XMLoadFloat3(&rhs), XMLoadFloat3(&vector3Epsilon)); }
 
     inline XMFLOAT3 Lerp(const XMFLOAT3& v0, const XMFLOAT3& v1, float t) { return Add(v0, Subtract(v1, v0), t); }
 
@@ -229,7 +207,7 @@ namespace Vector3
     inline XMFLOAT3 AngleFromQuat(const XMFLOAT4& quat)
     {
         XMFLOAT3 tmp;
-        quat_2_euler_d3d(quat, tmp.y, tmp.x, tmp.z);
+        quaternion::quat_2_euler_d3d(quat, tmp.y, tmp.x, tmp.z);
         tmp.x = XMConvertToDegrees(tmp.x);
         tmp.y = XMConvertToDegrees(tmp.y);
         tmp.z = XMConvertToDegrees(tmp.z);
@@ -238,12 +216,12 @@ namespace Vector3
 
     inline XMFLOAT3 AngleFromMtx(const XMFLOAT4X4& mtx)
     {
-        XMFLOAT4 tmp = Vector4::QuatFromMtx(mtx);
+        XMFLOAT4 tmp = vector4::QuatFromMtx(mtx);
         return AngleFromQuat(tmp);
     }
 }
 
-namespace Matrix4x4
+namespace matrix
 {
     inline XMFLOAT4X4 Identity()
     {
@@ -318,7 +296,7 @@ namespace Matrix4x4
 
     inline void InterpolateMtx(XMFLOAT4X4* pOutputMtx, const XMFLOAT4X4& mtx0, const XMFLOAT4X4& mtx1, float t)
     {
-        ToTransform(pOutputMtx, Vector3::Lerp(Vector3::PosFromMtx(mtx0), Vector3::PosFromMtx(mtx1), t), Vector4::QuatSlerp(Vector4::QuatFromMtx(mtx0), Vector4::QuatFromMtx(mtx1), t));
+        ToTransform(pOutputMtx, vector3::Lerp(vector3::PosFromMtx(mtx0), vector3::PosFromMtx(mtx1), t), vector4::QuatSlerp(vector4::QuatFromMtx(mtx0), vector4::QuatFromMtx(mtx1), t));
     }
 
     inline XMMATRIX MakeFromXYZAngle(const XMFLOAT3& angle) { return XMMatrixRotationRollPitchYaw(XMConvertToRadians(angle.x), XMConvertToRadians(angle.y), XMConvertToRadians(angle.z)); }
@@ -335,8 +313,6 @@ namespace Matrix4x4
         XMStoreFloat4x4(&a, XMMatrixTranspose(XMMatrixInverse(&det, XMLoadFloat4x4(&a))));
         return a;
     }
+
+    inline XMMATRIX XMMatrixRotationRollPitchYawDegree(float x, float y, float z) { return XMMatrixRotationRollPitchYaw(XMConvertToRadians(x), XMConvertToRadians(y), XMConvertToRadians(z)); }
 }
-
-inline XMMATRIX XMMatrixRotationRollPitchYawDegree(float x, float y, float z) { return XMMatrixRotationRollPitchYaw(XMConvertToRadians(x), XMConvertToRadians(y), XMConvertToRadians(z)); }
-
-inline float GetDistance(XMFLOAT3 a, XMFLOAT3 b) { return Vector3::Length(Vector3::Subtract(b, a)); }

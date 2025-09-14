@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "HumanoidControllerComponent.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
@@ -90,13 +90,14 @@ void HumanoidControllerComponent::Update(float fTimeElapsed)
             if (l_pInput->IsKeyDown(_S)) l_xmf3Direction.z -= m_fSpeed;
             if (l_pInput->IsKeyDown(_D)) l_xmf3Direction.x += m_fSpeed;
 
-            float fPrevSpd  = Vector3::Length(m_xmf3Velocity);
+            float fPrevSpd  = vector3::Length(m_xmf3Velocity);
             float fSpdLimit = 1.5f;
-            if (!Vector3::IsZero(l_xmf3Direction))
+            if (!vector3::IsZero(l_xmf3Direction))
             {
-                m_xmf3Velocity = Vector3::Add(m_xmf3Velocity, Vector3::Multiply(fTimeElapsed * 2.8, Vector3::Normalize(l_xmf3Direction)));
-                Clamp(m_xmf3Velocity.x, -fSpdLimit, fSpdLimit);
-                Clamp(m_xmf3Velocity.z, -fSpdLimit, fSpdLimit);
+                m_xmf3Velocity = vector3::Add(m_xmf3Velocity, vector3::Multiply(fTimeElapsed * 2.8, vector3::Normalize(l_xmf3Direction)));
+
+                m_xmf3Velocity.x = std::clamp(m_xmf3Velocity.x, -fSpdLimit, fSpdLimit);
+                m_xmf3Velocity.z = std::clamp(m_xmf3Velocity.z, -fSpdLimit, fSpdLimit);
             }
 
             if (0 == l_xmf3Direction.x)
@@ -120,7 +121,7 @@ void HumanoidControllerComponent::Update(float fTimeElapsed)
             velocity                    = XMVector3Rotate(velocity, rotationQuaternion);
             XMStoreFloat3(&xmf3Velocity, velocity);
 
-            l_transform->Translate(Vector3::Multiply(fTimeElapsed, xmf3Velocity));
+            l_transform->Translate(vector3::Multiply(fTimeElapsed, xmf3Velocity));
 
 
             //// for Test

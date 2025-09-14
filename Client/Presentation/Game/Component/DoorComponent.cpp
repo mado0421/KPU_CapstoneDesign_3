@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 
 DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->FindComponent<TransformComponent>()->GetPosition())
@@ -31,6 +31,6 @@ void DoorComponent::Update(float fTimeElapsed)
     }
 
     XMFLOAT3 xmf3Temp = l_transform->GetRightVector();
-    xmf3Temp          = Vector3::Add(m_xmf3OrigPosition, Vector3::Multiply(m_fProgress * 3/*m*/, xmf3Temp));
+    xmf3Temp          = vector3::Add(m_xmf3OrigPosition, vector3::Multiply(m_fProgress * 3/*m*/, xmf3Temp));
     l_transform->SetPosition(xmf3Temp);
 }

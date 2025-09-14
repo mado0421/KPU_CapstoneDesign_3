@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
@@ -46,13 +46,13 @@ void ParticleComponent::Update(float fTimeElapsed)
         SetActive(false);
     }
     m_fGravity += 9.8f * m_fGravityModifier * fTimeElapsed;
-    XMFLOAT3 Velocity = Vector3::Multiply(m_fSpeed, m_xmf3Direction);
-    XMFLOAT3 G        = Vector3::Multiply(m_fGravity, XMFLOAT3(0, -1.0f, 0));
+    XMFLOAT3 Velocity = vector3::Multiply(m_fSpeed, m_xmf3Direction);
+    XMFLOAT3 G        = vector3::Multiply(m_fGravity, XMFLOAT3(0, -1.0f, 0));
 
-    Velocity = Vector3::Add(G, Velocity);
-    Velocity = Vector3::Multiply(fTimeElapsed, Velocity);
+    Velocity = vector3::Add(G, Velocity);
+    Velocity = vector3::Multiply(fTimeElapsed, Velocity);
 
-    transform->SetPosition(Vector3::Add(transform->GetPosition(), Velocity));
+    transform->SetPosition(vector3::Add(transform->GetPosition(), Velocity));
 }
 
 void ParticleComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)

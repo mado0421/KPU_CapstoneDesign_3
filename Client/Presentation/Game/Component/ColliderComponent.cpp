@@ -1,8 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
 
-ColliderComponent::ColliderComponent(Object* pObject, AnimatorComponent* pAnimator, bool bTrigger, int boneIdx) : Component(pObject), m_xmf4x4Local(Matrix4x4::Identity()), m_pAnimator(pAnimator), m_boneIdx(boneIdx), m_bTrigger(bTrigger) {}
+ColliderComponent::ColliderComponent(Object* pObject, AnimatorComponent* pAnimator, bool bTrigger, int boneIdx) : Component(pObject), m_xmf4x4Local(matrix::Identity()), m_pAnimator(pAnimator), m_boneIdx(boneIdx), m_bTrigger(bTrigger) {}
 
 ColliderComponent::~ColliderComponent() {}
 

@@ -171,7 +171,6 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Presentation\Game\Input\KeyCode.h" />
     <ClInclude Include="Presentation\Game\Manager\AnimationManager.h" />
-    <ClInclude Include="Presentation\Renderer\DirectX\d3dUtil.h" />
     <ClInclude Include="Presentation\Renderer\DirectX\d3dx12.h" />
     <ClInclude Include="Presentation\Renderer\DirectX\DirectXMethods.h" />
     <ClInclude Include="Presentation\Renderer\Elements\Animation.h" />
@@ -295,9 +294,6 @@
     <ClCompile Include="Presentation\Game\Manager\AnimationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Presentation\Renderer\DirectX\d3dUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Presentation\Renderer\DirectX\DirectXMethods.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -355,5 +351,6 @@
     <None Include="Resources\Shaders\Header.hlsli" />
     <None Include="Resources\Shaders\Light.hlsli" />
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

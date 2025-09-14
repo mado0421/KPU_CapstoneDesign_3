@@ -1,11 +1,11 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CameraComponent.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
 
 CameraComponent::CameraComponent(Object* pObject) : Component(pObject),
-                                                    m_xmf4x4View(Matrix4x4::Identity()),
-                                                    m_xmf4x4Projection(Matrix4x4::Identity()),
+                                                    m_xmf4x4View(matrix::Identity()),
+                                                    m_xmf4x4Projection(matrix::Identity()),
                                                     m_xmf3Right(1, 0, 0),
                                                     m_xmf3Up(0, 1, 0),
                                                     m_xmf3Look(0, 0, 1),
@@ -52,7 +52,7 @@ void CameraComponent::SetLookAtWorldPos(const XMFLOAT3& xmf3LookAt)
 {
     XMFLOAT3 xmf3Pos = t->GetPosition(Space::world);
 
-    XMFLOAT4X4 xmf4x4New = Matrix4x4::LookAtLH(xmf3Pos, xmf3LookAt, XMFLOAT3(0, 1, 0));
+    XMFLOAT4X4 xmf4x4New = matrix::LookAtLH(xmf3Pos, xmf3LookAt, XMFLOAT3(0, 1, 0));
     //XMFLOAT4X4 xmf4x4New = Matrix4x4::LookAtLH(xmf3Pos, xmf3LookAt, m_xmf3Up);
 
     m_xmf3Right = XMFLOAT3(xmf4x4New._11, xmf4x4New._21, xmf4x4New._31);
@@ -71,8 +71,8 @@ void CameraComponent::SetHeadAndLookAt(Object* pHead, Object* pLookAt, XMFLOAT3 
 {
     m_pHeadTransform   = pHead->FindComponent<TransformComponent>();
     m_pLookAtTransform = pLookAt->FindComponent<TransformComponent>();
-    m_xmf3Direction    = Vector3::Normalize(distance);
-    m_fDistance        = Vector3::Length(distance);
+    m_xmf3Direction    = vector3::Normalize(distance);
+    m_fDistance        = vector3::Length(distance);
 }
 
 void CameraComponent::SetFocusDisable() { m_pLookAtTransform = nullptr; }
@@ -129,8 +129,8 @@ void CameraComponent::CheckCollision(Component* other)
 void CameraComponent::SolveConstraint()
 {
     XMFLOAT3 position = m_pHeadTransform->GetPosition(Space::local);
-    if (m_bIfCollide) position = Vector3::Add(position, Vector3::Multiply(m_fMinLength * 0.8f, m_xmf3Direction));
-    else position              = Vector3::Add(position, Vector3::Multiply(m_fDistance, m_xmf3Direction));
+    if (m_bIfCollide) position = vector3::Add(position, vector3::Multiply(m_fMinLength * 0.8f, m_xmf3Direction));
+    else position              = vector3::Add(position, vector3::Multiply(m_fDistance, m_xmf3Direction));
     t->SetPosition(position);
 
     m_fMinLength = FLT_MAX;
@@ -152,9 +152,9 @@ void CameraComponent::CalculateViewMatrix()
     TransformComponent* transform    = t;
     XMFLOAT3            xmf3Position = transform->GetPosition(Space::world);
 
-    m_xmf3Look  = Vector3::Normalize(m_xmf3Look);
-    m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-    m_xmf3Up    = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+    m_xmf3Look  = vector3::Normalize(m_xmf3Look);
+    m_xmf3Right = vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
+    m_xmf3Up    = vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
     m_xmf4x4View._11 = m_xmf3Right.x;
     m_xmf4x4View._12 = m_xmf3Up.x;
@@ -165,12 +165,12 @@ void CameraComponent::CalculateViewMatrix()
     m_xmf4x4View._31 = m_xmf3Right.z;
     m_xmf4x4View._32 = m_xmf3Up.z;
     m_xmf4x4View._33 = m_xmf3Look.z;
-    m_xmf4x4View._41 = -Vector3::DotProduct(xmf3Position, m_xmf3Right);
-    m_xmf4x4View._42 = -Vector3::DotProduct(xmf3Position, m_xmf3Up);
-    m_xmf4x4View._43 = -Vector3::DotProduct(xmf3Position, m_xmf3Look);
+    m_xmf4x4View._41 = -vector3::DotProduct(xmf3Position, m_xmf3Right);
+    m_xmf4x4View._42 = -vector3::DotProduct(xmf3Position, m_xmf3Up);
+    m_xmf4x4View._43 = -vector3::DotProduct(xmf3Position, m_xmf3Look);
 }
 
 void CameraComponent::CalculateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fAspectRatio, float fFOVAngle)
 {
-    m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
+    m_xmf4x4Projection = matrix::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
 }

@@ -1,9 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TransformComponent.h"
 #include "Presentation/Game/Object.h"
 
 
-TransformComponent::TransformComponent(Object* pObject) : Component(pObject), m_xmf4x4Local(Matrix4x4::Identity()) {}
+TransformComponent::TransformComponent(Object* pObject) : Component(pObject), m_xmf4x4Local(matrix::Identity()) {}
 
 TransformComponent::~TransformComponent() {}
 
@@ -46,12 +46,12 @@ void TransformComponent::RotateXYZDegree(const XMFLOAT3& xmf3Val)
     auto     xmf3Up      = XMFLOAT3(m_xmf4x4Local._21, m_xmf4x4Local._22, m_xmf4x4Local._23);
     auto     xmf3Look    = XMFLOAT3(m_xmf4x4Local._31, m_xmf4x4Local._32, m_xmf4x4Local._33);
 
-    xmf3Look  = Vector3::TransformNormal(xmf3Look, xmmtxRotate);
-    xmf3Right = Vector3::TransformNormal(xmf3Right, xmmtxRotate);
+    xmf3Look  = vector3::TransformNormal(xmf3Look, xmmtxRotate);
+    xmf3Right = vector3::TransformNormal(xmf3Right, xmmtxRotate);
 
-    xmf3Look  = Vector3::Normalize(xmf3Look);
-    xmf3Right = Vector3::CrossProduct(xmf3Up, xmf3Look, true);
-    xmf3Up    = Vector3::CrossProduct(xmf3Look, xmf3Right, true);
+    xmf3Look  = vector3::Normalize(xmf3Look);
+    xmf3Right = vector3::CrossProduct(xmf3Up, xmf3Look, true);
+    xmf3Up    = vector3::CrossProduct(xmf3Look, xmf3Right, true);
 
     m_xmf4x4Local._11 = xmf3Right.x;
     m_xmf4x4Local._12 = xmf3Right.y;
@@ -72,12 +72,12 @@ void TransformComponent::RotateXYZDegree(float fX, float fY, float fZ)
     auto xmf3Up    = XMFLOAT3(m_xmf4x4Local._21, m_xmf4x4Local._22, m_xmf4x4Local._23);
     auto xmf3Look  = XMFLOAT3(m_xmf4x4Local._31, m_xmf4x4Local._32, m_xmf4x4Local._33);
 
-    xmf3Look  = Vector3::TransformNormal(xmf3Look, xmmtxRotate);
-    xmf3Right = Vector3::TransformNormal(xmf3Right, xmmtxRotate);
+    xmf3Look  = vector3::TransformNormal(xmf3Look, xmmtxRotate);
+    xmf3Right = vector3::TransformNormal(xmf3Right, xmmtxRotate);
 
-    xmf3Look  = Vector3::Normalize(xmf3Look);
-    xmf3Right = Vector3::CrossProduct(xmf3Up, xmf3Look, true);
-    xmf3Up    = Vector3::CrossProduct(xmf3Look, xmf3Right, true);
+    xmf3Look  = vector3::Normalize(xmf3Look);
+    xmf3Right = vector3::CrossProduct(xmf3Up, xmf3Look, true);
+    xmf3Up    = vector3::CrossProduct(xmf3Look, xmf3Right, true);
 
     m_xmf4x4Local._11 = xmf3Right.x;
     m_xmf4x4Local._12 = xmf3Right.y;
@@ -98,12 +98,12 @@ void TransformComponent::Rotate(const XMFLOAT4& xmf4Quaternion)
     auto xmf3Up    = XMFLOAT3(m_xmf4x4Local._21, m_xmf4x4Local._22, m_xmf4x4Local._23);
     auto xmf3Look  = XMFLOAT3(m_xmf4x4Local._31, m_xmf4x4Local._32, m_xmf4x4Local._33);
 
-    xmf3Look  = Vector3::TransformNormal(xmf3Look, xmmtxRotate);
-    xmf3Right = Vector3::TransformNormal(xmf3Right, xmmtxRotate);
+    xmf3Look  = vector3::TransformNormal(xmf3Look, xmmtxRotate);
+    xmf3Right = vector3::TransformNormal(xmf3Right, xmmtxRotate);
 
-    xmf3Look  = Vector3::Normalize(xmf3Look);
-    xmf3Right = Vector3::CrossProduct(xmf3Up, xmf3Look, true);
-    xmf3Up    = Vector3::CrossProduct(xmf3Look, xmf3Right, true);
+    xmf3Look  = vector3::Normalize(xmf3Look);
+    xmf3Right = vector3::CrossProduct(xmf3Up, xmf3Look, true);
+    xmf3Up    = vector3::CrossProduct(xmf3Look, xmf3Right, true);
 
     m_xmf4x4Local._11 = xmf3Right.x;
     m_xmf4x4Local._12 = xmf3Right.y;
@@ -132,10 +132,10 @@ const XMFLOAT3 TransformComponent::GetLookVector(Space space)
 {
     switch (space)
     {
-    case Space::local: return Vector3::Normalize(XMFLOAT3(m_xmf4x4Local._31, m_xmf4x4Local._32, m_xmf4x4Local._33));
+    case Space::local: return vector3::Normalize(XMFLOAT3(m_xmf4x4Local._31, m_xmf4x4Local._32, m_xmf4x4Local._33));
     case Space::world: XMFLOAT4X4 worldTransform;
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
-        return Vector3::Normalize(XMFLOAT3(worldTransform._31, worldTransform._32, worldTransform._33));
+        return vector3::Normalize(XMFLOAT3(worldTransform._31, worldTransform._32, worldTransform._33));
     }
 }
 
@@ -143,10 +143,10 @@ const XMFLOAT3 TransformComponent::GetUpVector(Space space)
 {
     switch (space)
     {
-    case Space::local: return Vector3::Normalize(XMFLOAT3(m_xmf4x4Local._21, m_xmf4x4Local._22, m_xmf4x4Local._23));
+    case Space::local: return vector3::Normalize(XMFLOAT3(m_xmf4x4Local._21, m_xmf4x4Local._22, m_xmf4x4Local._23));
     case Space::world: XMFLOAT4X4 worldTransform;
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
-        return Vector3::Normalize(XMFLOAT3(worldTransform._21, worldTransform._22, worldTransform._23));
+        return vector3::Normalize(XMFLOAT3(worldTransform._21, worldTransform._22, worldTransform._23));
     }
 }
 
@@ -154,10 +154,10 @@ const XMFLOAT3 TransformComponent::GetRightVector(Space space)
 {
     switch (space)
     {
-    case Space::local: return Vector3::Normalize(XMFLOAT3(m_xmf4x4Local._11, m_xmf4x4Local._12, m_xmf4x4Local._13));
+    case Space::local: return vector3::Normalize(XMFLOAT3(m_xmf4x4Local._11, m_xmf4x4Local._12, m_xmf4x4Local._13));
     case Space::world: XMFLOAT4X4 worldTransform;
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
-        return Vector3::Normalize(XMFLOAT3(worldTransform._11, worldTransform._12, worldTransform._13));
+        return vector3::Normalize(XMFLOAT3(worldTransform._11, worldTransform._12, worldTransform._13));
     }
 }
 

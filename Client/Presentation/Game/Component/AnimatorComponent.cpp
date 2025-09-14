@@ -92,7 +92,7 @@ HumanoidAnimatorComponent::~HumanoidAnimatorComponent() { delete m_pAimingMask; 
 void AdjustRotationQuaternion(XMVECTOR& src, float x, float y, float z)
 {
 	XMMATRIX originalMtx = XMMatrixRotationQuaternion(src);
-	XMMATRIX adjustMtx   = XMMatrixRotationRollPitchYawDegree(x, y, z);
+	XMMATRIX adjustMtx   = matrix::XMMatrixRotationRollPitchYawDegree(x, y, z);
 	originalMtx          = XMMatrixMultiply(originalMtx, adjustMtx);
 	src                  = XMQuaternionRotationMatrix(originalMtx);
 }
@@ -112,14 +112,14 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 		ClipPair lPair;
 
 		XMFLOAT3 l_xmf3Velocity    = l_HCC->m_xmf3Velocity;
-		float    l_fVelocityLength = Vector3::Length(l_xmf3Velocity);
+		float    l_fVelocityLength = vector3::Length(l_xmf3Velocity);
 		float    l_fidleFactor     = (1.5 - l_fVelocityLength) / 1.5;
 
-		Clamp(l_fidleFactor, 0, 1);
+		l_fidleFactor = std::clamp(l_fidleFactor, 0.0f, 1.0f);
 
 		if (l_fVelocityLength)
 		{
-			XMFLOAT3 normalizedDir = Vector3::Normalize(l_xmf3Velocity);
+			XMFLOAT3 normalizedDir = vector3::Normalize(l_xmf3Velocity);
 			lPair.push_back(pair<string, float>("Humanoid_Idle_NoneMovement", l_fidleFactor));
 			if (!normalizedDir.x)
 			{
@@ -144,8 +144,10 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 				float forward  = normalizedDir.z;
 				float strafe   = 1 - abs(normalizedDir.z);
 				float backward = -normalizedDir.z;
-				Clamp(forward, 0, 1);
-				Clamp(backward, 0, 1);
+
+				forward = std::clamp(forward, 0.0f, 1.0f);
+				backward = std::clamp(backward, 0.0f, 1.0f);
+
 				if (0 < x)
 				{
 					if (forward)
@@ -251,7 +253,7 @@ void TargetBoardAnimatorComponent::Update(float fTimeElapsed)
 	{
 		ClipPair lPair;
 
-		Clamp(m_fStandInterpolationValue, 0, 1);
+		m_fStandInterpolationValue = std::clamp(m_fStandInterpolationValue, 0.0f, 1.0f);
 
 		lPair.push_back(pair<string, float>("targetBoardStand", m_fStandInterpolationValue));
 		lPair.push_back(pair<string, float>("targetBoardDown", 1 - m_fStandInterpolationValue));

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Light.h"
 
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
@@ -16,7 +16,7 @@ Light::Light(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandLis
 																																														 m_pd3dCBResource(nullptr),
 																																														 m_pCBMappedLight(nullptr)
 {
-    for (int i = 0; i < 6; i++) m_xmf4x4ViewProj[i] = Matrix4x4::Identity();
+    for (int i = 0; i < 6; i++) m_xmf4x4ViewProj[i] = matrix::Identity();
 
     CreateResource(pd3dDevice, pd3dCommandList);
     CreateConstantBufferView(pd3dDevice, d3dCbvCPUDescHandle);
@@ -49,7 +49,7 @@ void Light::SetShaderResource(ID3D12GraphicsCommandList* pd3dCommandList)
 void Light::UpdateDirectionalLightOrthographicLH(XMFLOAT4X4 xmf4x4CameraView)
 {
     //���� ���
-    XMFLOAT4X4 xmf4x4CameraViewInv = Matrix4x4::Inverse(xmf4x4CameraView);
+    XMFLOAT4X4 xmf4x4CameraViewInv = matrix::Inverse(xmf4x4CameraView);
     for (int i = 0; i < m_nCascade; i++)
     {
         float minX = FLT_MAX;
@@ -73,12 +73,12 @@ void Light::UpdateDirectionalLightOrthographicLH(XMFLOAT4X4 xmf4x4CameraView)
             maxY = max(maxY, xmf4Temp.y);
             maxZ = max(maxZ, xmf4Temp.z);
         }
-        XMFLOAT4X4 xmf4x4Proj            = Matrix4x4::OrthographicLH(maxX - minX, maxY - minY, -1000.0, 1000.0);
+        XMFLOAT4X4 xmf4x4Proj            = matrix::OrthographicLH(maxX - minX, maxY - minY, -1000.0, 1000.0);
         auto       centerPos             = XMFLOAT3(minX + (maxX - minX) * 0.5f, minY + (maxY - minY) * 0.5f, minZ + (maxZ - minZ) * 0.5f);
-        XMFLOAT4X4 xmf4x4OldLightViewInv = Matrix4x4::Inverse(m_xmf4x4LightView);
+        XMFLOAT4X4 xmf4x4OldLightViewInv = matrix::Inverse(m_xmf4x4LightView);
         XMStoreFloat3(&centerPos, XMVector3Transform(XMLoadFloat3(&centerPos), XMLoadFloat4x4(&xmf4x4OldLightViewInv)));
-        XMFLOAT4X4 xmf4x4LightView = Matrix4x4::LookAtLH(centerPos, Vector3::Add(centerPos, m_xmf3Direction), XMFLOAT3(0, 1, 0));
-        m_xmf4x4ViewProj[i]        = Matrix4x4::Multiply(xmf4x4LightView, xmf4x4Proj);
+        XMFLOAT4X4 xmf4x4LightView = matrix::LookAtLH(centerPos, vector3::Add(centerPos, m_xmf3Direction), XMFLOAT3(0, 1, 0));
+        m_xmf4x4ViewProj[i]        = matrix::Multiply(xmf4x4LightView, xmf4x4Proj);
 
         //XMFLOAT4X4 xmf4x4Proj = Matrix4x4::OrthographicLH(maxX - minX, maxY - minY, -1000.0, /*maxZ - minZ*/1000.0f);
         //XMFLOAT3 newLightPos = Vector3::Multiply(-1,
@@ -151,12 +151,12 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     temp->m_bIsShadow     = desc.bIsShadow;
     temp->m_bIsEnable     = true;
 
-    XMFLOAT4X4 xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1, 0.1f, 1000.0f);
+    XMFLOAT4X4 xmf4x4Projection = matrix::PerspectiveFovLH(XMConvertToRadians(90.0f), 1, 0.1f, 1000.0f);
 
     auto       x            = XMFLOAT3(1, 0, 0);
     auto       y            = XMFLOAT3(0, 1, 0);
     auto       z            = XMFLOAT3(0, 0, 1);
-    XMFLOAT4X4 m_xmf4x4Temp = Matrix4x4::Identity();
+    XMFLOAT4X4 m_xmf4x4Temp = matrix::Identity();
     XMFLOAT3   look, up, right;
 
     int i = 0;
@@ -166,7 +166,7 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
 	*=======================================================================*/
     look  = x;
     up    = y;
-    right = Vector3::Multiply(-1, z);
+    right = vector3::Multiply(-1, z);
 
     m_xmf4x4Temp._11 = right.x;
     m_xmf4x4Temp._12 = up.x;
@@ -177,16 +177,16 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     /*========================================================================
 	* -x
 	*=======================================================================*/
-    look  = Vector3::Multiply(-1, x);
+    look  = vector3::Multiply(-1, x);
     up    = y;
     right = z;
 
@@ -199,17 +199,17 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     /*========================================================================
 	* +y
 	*=======================================================================*/
     look  = y;
-    up    = Vector3::Multiply(-1, z);
+    up    = vector3::Multiply(-1, z);
     right = x;
 
     m_xmf4x4Temp._11 = right.x;
@@ -221,16 +221,16 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     /*========================================================================
 	* -y
 	*=======================================================================*/
-    look  = Vector3::Multiply(-1, y);
+    look  = vector3::Multiply(-1, y);
     up    = z;
     right = x;
 
@@ -243,11 +243,11 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     /*========================================================================
 	* +z
@@ -265,18 +265,18 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     /*========================================================================
 	* -z
 	*=======================================================================*/
-    look  = Vector3::Multiply(-1, z);
+    look  = vector3::Multiply(-1, z);
     up    = y;
-    right = Vector3::Multiply(-1, x);
+    right = vector3::Multiply(-1, x);
 
     m_xmf4x4Temp._11 = right.x;
     m_xmf4x4Temp._12 = up.x;
@@ -287,11 +287,11 @@ UINT LightManager::AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice
     m_xmf4x4Temp._31 = right.z;
     m_xmf4x4Temp._32 = up.z;
     m_xmf4x4Temp._33 = look.z;
-    m_xmf4x4Temp._41 = -Vector3::DotProduct(desc.xmf3Position, right);
-    m_xmf4x4Temp._42 = -Vector3::DotProduct(desc.xmf3Position, up);
-    m_xmf4x4Temp._43 = -Vector3::DotProduct(desc.xmf3Position, look);
+    m_xmf4x4Temp._41 = -vector3::DotProduct(desc.xmf3Position, right);
+    m_xmf4x4Temp._42 = -vector3::DotProduct(desc.xmf3Position, up);
+    m_xmf4x4Temp._43 = -vector3::DotProduct(desc.xmf3Position, look);
 
-    temp->m_xmf4x4ViewProj[i++] = Matrix4x4::Multiply(m_xmf4x4Temp, xmf4x4Projection);
+    temp->m_xmf4x4ViewProj[i++] = matrix::Multiply(m_xmf4x4Temp, xmf4x4Projection);
 
     m_vecLight.push_back(temp);
     return static_cast<UINT>(m_vecLight.size()) - 1;
@@ -301,7 +301,7 @@ UINT LightManager::AddDirectionalLight(LightDescription desc, ID3D12Device* pd3d
 {
     auto temp             = new Light(pd3dDevice, pd3dCommandList, d3dCbvCPUDescHandle, d3dCbvGPUDescHandle);
     temp->m_uLightType    = LIGHT_DIRECTIONAL;
-    temp->m_xmf3Direction = Vector3::Normalize(desc.xmf3Direction);
+    temp->m_xmf3Direction = vector3::Normalize(desc.xmf3Direction);
     temp->m_xmf3Color     = desc.xmf3Color;
     temp->m_bIsShadow     = desc.bIsShadow;
     temp->m_bIsEnable     = true;
@@ -322,8 +322,8 @@ UINT LightManager::AddDirectionalLight(LightDescription desc, ID3D12Device* pd3d
     temp->m_fZ[1]              = 0.006f;
     temp->m_fZ[2]              = 0.02f;
     temp->m_fZ[3]              = 0.06f;
-    temp->m_xmf4x4LightView    = Matrix4x4::LookAtLH(XMFLOAT3(0, 0, 0), temp->m_xmf3Direction, XMFLOAT3(0, 1, 0));
-    temp->m_xmf4x4LightViewInv = Matrix4x4::Inverse(temp->m_xmf4x4LightView);
+    temp->m_xmf4x4LightView    = matrix::LookAtLH(XMFLOAT3(0, 0, 0), temp->m_xmf3Direction, XMFLOAT3(0, 1, 0));
+    temp->m_xmf4x4LightViewInv = matrix::Inverse(temp->m_xmf4x4LightView);
 
     float tanHalfHorizontalFOV = tanf(XMConvertToRadians(60 * ASPECT_RATIO * 0.5f));
     float tanHalfVerticalFOV   = tanf(XMConvertToRadians(60 * 0.5f));
@@ -363,7 +363,7 @@ UINT LightManager::AddSpotLight(LightDescription desc, ID3D12Device* pd3dDevice,
 {
     auto temp             = new Light(pd3dDevice, pd3dCommandList, d3dCbvCPUDescHandle, d3dCbvGPUDescHandle);
     temp->m_uLightType    = LIGHT_SPOT;
-    temp->m_xmf3Direction = Vector3::Normalize(desc.xmf3Direction);
+    temp->m_xmf3Direction = vector3::Normalize(desc.xmf3Direction);
     temp->m_xmf3Position  = desc.xmf3Position;
     temp->m_xmf3Color     = desc.xmf3Color;
     temp->m_fFalloffStart = desc.xmf2Falloff.x;
@@ -372,9 +372,9 @@ UINT LightManager::AddSpotLight(LightDescription desc, ID3D12Device* pd3dDevice,
     temp->m_bIsShadow     = desc.bIsShadow;
     temp->m_bIsEnable     = true;
 
-    XMFLOAT4X4 xmf4x4View       = Matrix4x4::LookAtLH(temp->m_xmf3Position, Vector3::Add(temp->m_xmf3Position, temp->m_xmf3Direction), XMFLOAT3(0, 1, 0));
-    XMFLOAT4X4 xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(120.0f), 1, 0.1f, 1000.0f);
-    temp->m_xmf4x4ViewProj[0]   = Matrix4x4::Multiply(xmf4x4View, xmf4x4Projection);
+    XMFLOAT4X4 xmf4x4View       = matrix::LookAtLH(temp->m_xmf3Position, vector3::Add(temp->m_xmf3Position, temp->m_xmf3Direction), XMFLOAT3(0, 1, 0));
+    XMFLOAT4X4 xmf4x4Projection = matrix::PerspectiveFovLH(XMConvertToRadians(120.0f), 1, 0.1f, 1000.0f);
+    temp->m_xmf4x4ViewProj[0]   = matrix::Multiply(xmf4x4View, xmf4x4Projection);
 
     m_vecLight.push_back(temp);
     return static_cast<UINT>(m_vecLight.size()) - 1;

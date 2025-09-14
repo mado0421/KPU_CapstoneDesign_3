@@ -978,13 +978,13 @@ void Scene::UpdatePassInfoAboutCamera()
 	//xmf4x4Temp = m_pCamera->GetViewMatrix();
 	xmf4x4Temp = cam->GetViewMatrix();
 	XMStoreFloat4x4(&cb_mapped_pass_info_->m_xmf4x4CameraView, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
-	xmf4x4Temp = Matrix4x4::Inverse(xmf4x4Temp);
+	xmf4x4Temp = matrix::Inverse(xmf4x4Temp);
 	XMStoreFloat4x4(&cb_mapped_pass_info_->m_xmf4x4CameraViewInv, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 
 	//xmf4x4Temp = m_pCamera->GetProjectionMatrix();
 	xmf4x4Temp = cam->GetProjectionMatrix();
 	XMStoreFloat4x4(&cb_mapped_pass_info_->m_xmf4x4CameraProjection, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
-	xmf4x4Temp = Matrix4x4::Inverse(xmf4x4Temp);
+	xmf4x4Temp = matrix::Inverse(xmf4x4Temp);
 	XMStoreFloat4x4(&cb_mapped_pass_info_->m_xmf4x4CameraProjectionInv, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4Temp)));
 
 	//::memcpy(&m_pcbMappedPassInfo->m_xmf3CameraPosition, &m_pCamera->GetPosition(), sizeof(XMFLOAT3));

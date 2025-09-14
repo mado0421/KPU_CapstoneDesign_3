@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera.h"
 
 
@@ -10,10 +10,10 @@ Camera::Camera() : m_xmf3Position(XMFLOAT3(0.0f, 0.0f, 0.0f)),
                    m_xmf3LookAtWorld(XMFLOAT3(0.0f, 0.0f, 0.0f)),
                    m_xmf3Offset(XMFLOAT3(0.0f, 0.0f, 0.0f)),
                    m_fTimeLag(0.0f),
-                   m_xmf4x4View(Matrix4x4::Identity()),
-                   m_xmf4x4Projection(Matrix4x4::Identity()),
-                   m_xmf4x4ViewInv(Matrix4x4::Identity()),
-                   m_xmf4x4ProjectionInv(Matrix4x4::Identity()),
+                   m_xmf4x4View(matrix::Identity()),
+                   m_xmf4x4Projection(matrix::Identity()),
+                   m_xmf4x4ViewInv(matrix::Identity()),
+                   m_xmf4x4ProjectionInv(matrix::Identity()),
                    m_d3dViewport({0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f}),
                    m_d3dScissorRect({0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT}) {}
 
@@ -45,8 +45,8 @@ void Camera::SetScissorRect(LONG xLeft, LONG yTop, LONG xRight, LONG yBottom)
 
 void Camera::GenerateViewMatrix()
 {
-    m_xmf4x4View    = Matrix4x4::LookAtLH(m_xmf3Position, m_xmf3LookAtWorld, m_xmf3Up);
-    m_xmf4x4ViewInv = Matrix4x4::Inverse(m_xmf4x4View);
+    m_xmf4x4View    = matrix::LookAtLH(m_xmf3Position, m_xmf3LookAtWorld, m_xmf3Up);
+    m_xmf4x4ViewInv = matrix::Inverse(m_xmf4x4View);
 }
 
 void Camera::GenerateViewMatrix(XMFLOAT3 xmf3Position, XMFLOAT3 xmf3LookAt, XMFLOAT3 xmf3Up)
@@ -60,15 +60,15 @@ void Camera::GenerateViewMatrix(XMFLOAT3 xmf3Position, XMFLOAT3 xmf3LookAt, XMFL
 
 void Camera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fAspectRatio, float fFOVAngle)
 {
-    m_xmf4x4Projection    = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
-    m_xmf4x4ProjectionInv = Matrix4x4::Inverse(m_xmf4x4Projection);
+    m_xmf4x4Projection    = matrix::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
+    m_xmf4x4ProjectionInv = matrix::Inverse(m_xmf4x4Projection);
 }
 
 void Camera::RegenerateViewMatrix()
 {
-    m_xmf3Look  = Vector3::Normalize(m_xmf3Look);
-    m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-    m_xmf3Up    = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+    m_xmf3Look  = vector3::Normalize(m_xmf3Look);
+    m_xmf3Right = vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
+    m_xmf3Up    = vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
     m_xmf4x4View._11 = m_xmf3Right.x;
     m_xmf4x4View._12 = m_xmf3Up.x;
@@ -79,10 +79,10 @@ void Camera::RegenerateViewMatrix()
     m_xmf4x4View._31 = m_xmf3Right.z;
     m_xmf4x4View._32 = m_xmf3Up.z;
     m_xmf4x4View._33 = m_xmf3Look.z;
-    m_xmf4x4View._41 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Right);
-    m_xmf4x4View._42 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Up);
-    m_xmf4x4View._43 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Look);
-    m_xmf4x4ViewInv  = Matrix4x4::Inverse(m_xmf4x4View);
+    m_xmf4x4View._41 = -vector3::DotProduct(m_xmf3Position, m_xmf3Right);
+    m_xmf4x4View._42 = -vector3::DotProduct(m_xmf3Position, m_xmf3Up);
+    m_xmf4x4View._43 = -vector3::DotProduct(m_xmf3Position, m_xmf3Look);
+    m_xmf4x4ViewInv  = matrix::Inverse(m_xmf4x4View);
 }
 
 void Camera::Update(float fTimeElapsed) { RegenerateViewMatrix(); }
@@ -104,7 +104,7 @@ BoardCamera::~BoardCamera() {}
 
 void BoardCamera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance)
 {
-    m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(60.0f), ASPECT_RATIO, fNearPlaneDistance, fFarPlaneDistance);
+    m_xmf4x4Projection = matrix::PerspectiveFovLH(XMConvertToRadians(60.0f), ASPECT_RATIO, fNearPlaneDistance, fFarPlaneDistance);
 
     //	m_xmf4x4Projection = Matrix4x4::OrthographicLH(FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, fNearPlaneDistance, fFarPlaneDistance);
 }
@@ -138,7 +138,7 @@ void FollowCamera::Update(float fTimeElapsed)
 {
     RegenerateViewMatrix();
 
-    Move(Vector3::Multiply(fTimeElapsed, m_xmf3Direction));
+    Move(vector3::Multiply(fTimeElapsed, m_xmf3Direction));
     m_xmf3Direction.x = 0;
     m_xmf3Direction.y = 0;
     m_xmf3Direction.z = 0;
@@ -149,7 +149,7 @@ void FollowCamera::SetLookAt(const XMFLOAT3& xmf3LookAt)
     //XMFLOAT3 up = m_pTarget->GetUp();
     ////���⼭ �������̶� LookAt�̶� ������ EyeDir�� 0, 0, 0�̶�� ���� ��
 
-    XMFLOAT4X4 mtxLookAt = Matrix4x4::LookAtLH(m_xmf3Position, xmf3LookAt, XMFLOAT3(0, 1, 0));
+    XMFLOAT4X4 mtxLookAt = matrix::LookAtLH(m_xmf3Position, xmf3LookAt, XMFLOAT3(0, 1, 0));
     m_xmf3Right          = XMFLOAT3(mtxLookAt._11, mtxLookAt._21, mtxLookAt._31);
     m_xmf3Up             = XMFLOAT3(mtxLookAt._12, mtxLookAt._22, mtxLookAt._32);
     m_xmf3Look           = XMFLOAT3(mtxLookAt._13, mtxLookAt._23, mtxLookAt._33);

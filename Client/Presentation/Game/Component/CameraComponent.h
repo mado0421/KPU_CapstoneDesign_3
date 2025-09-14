@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Presentation/Game/Component/Component.h"
 
 class TransformComponent;
@@ -22,7 +22,7 @@ public:
     const XMFLOAT4X4 GetViewMatrix();
     const XMFLOAT4X4 GetProjectionMatrix();
 
-    const XMFLOAT3 GetLookVector() { return Vector3::Normalize(m_xmf3Look); }
+    const XMFLOAT3 GetLookVector() { return vector3::Normalize(m_xmf3Look); }
 
     void CheckCollision(Component* other) override;
     void SolveConstraint() override;

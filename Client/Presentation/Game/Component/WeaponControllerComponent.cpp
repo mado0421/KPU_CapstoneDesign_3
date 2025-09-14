@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "WeaponControllerComponent.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
@@ -136,7 +136,7 @@ void WeaponControllerComponent::SolveConstraint()
 
             XMFLOAT3 muzzlePos = m_pMuzzle->FindComponent<TransformComponent>()->GetPosition(Space::world);
 
-            pec->m_xmf3StartRotation = Vector3::Normalize(Vector3::Subtract(muzzlePos, m_xmf3CollisionPoint));
+            pec->m_xmf3StartRotation = vector3::Normalize(vector3::Subtract(muzzlePos, m_xmf3CollisionPoint));
 
             t->Translate(m_xmf3CollisionPoint);
             //pec->SetMaterialByName("ParticleTestMat");
@@ -186,8 +186,8 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
         transform->SetLocalTransform(l_xmmtxTransform);
 
         XMFLOAT3 xmf3Adjust(0, 0, 0);
-        xmf3Adjust = Vector3::Add(xmf3Adjust, Vector3::Multiply(-0.028f, transform->GetRightVector()));
-        xmf3Adjust = Vector3::Add(xmf3Adjust, Vector3::Multiply(0.08f, transform->GetLookVector()));
+        xmf3Adjust = vector3::Add(xmf3Adjust, vector3::Multiply(-0.028f, transform->GetRightVector()));
+        xmf3Adjust = vector3::Add(xmf3Adjust, vector3::Multiply(0.08f, transform->GetLookVector()));
         transform->Translate(xmf3Adjust);
     }
 }

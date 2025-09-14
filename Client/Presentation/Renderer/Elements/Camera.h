@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //#define ASPECT_RATIO				(float(FRAME_BUFFER_WIDTH) / float(FRAME_BUFFER_HEIGHT))
 #define CAM_MOVE_SPEED		3
@@ -72,7 +72,7 @@ public:
     void SetOffset(const XMFLOAT3& xmf3Offset, const XMFLOAT3& objPos)
     {
         m_xmf3Offset   = xmf3Offset;
-        m_xmf3Position = Vector3::Add(objPos, xmf3Offset);
+        m_xmf3Position = vector3::Add(objPos, xmf3Offset);
     }
 
     XMFLOAT3& GetOffset() { return m_xmf3Offset; }
@@ -93,28 +93,28 @@ public:
     virtual void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f)
     {
         XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), XMConvertToRadians(fYaw));
-        m_xmf3Look           = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-        m_xmf3Right          = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
+        m_xmf3Look           = vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
+        m_xmf3Right          = vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
 
-        m_xmf3Look  = Vector3::Normalize(m_xmf3Look);
-        m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-        m_xmf3Up    = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+        m_xmf3Look  = vector3::Normalize(m_xmf3Look);
+        m_xmf3Right = vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
+        m_xmf3Up    = vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
         xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), XMConvertToRadians(fPitch));
-        m_xmf3Look  = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-        m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
+        m_xmf3Look  = vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
+        m_xmf3Right = vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
 
-        m_xmf3Look  = Vector3::Normalize(m_xmf3Look);
-        m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-        m_xmf3Up    = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+        m_xmf3Look  = vector3::Normalize(m_xmf3Look);
+        m_xmf3Right = vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
+        m_xmf3Up    = vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
         xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Look), XMConvertToRadians(fRoll));
-        m_xmf3Look  = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-        m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
+        m_xmf3Look  = vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
+        m_xmf3Right = vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
 
-        m_xmf3Look  = Vector3::Normalize(m_xmf3Look);
-        m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-        m_xmf3Up    = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
+        m_xmf3Look  = vector3::Normalize(m_xmf3Look);
+        m_xmf3Right = vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
+        m_xmf3Up    = vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
 
         //m_xmf4x4World._11 = xmf3Right.x;	m_xmf4x4World._12 = xmf3Right.y;	m_xmf4x4World._13 = m_xmf3Right.z;
         //m_xmf4x4World._21 = xmf3Up.x;		m_xmf4x4World._22 = xmf3Up.y;		m_xmf4x4World._23 = m_xmf3Up.z;
@@ -125,17 +125,17 @@ public:
 
     virtual void SetLookAt(const XMFLOAT3& xmf3LookAt) {}
 
-    void MoveForward(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, m_xmf3Look)); }
+    void MoveForward(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, m_xmf3Look)); }
 
-    void MoveRight(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, m_xmf3Right)); }
+    void MoveRight(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, m_xmf3Right)); }
 
-    void MoveUp(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, m_xmf3Up)); }
+    void MoveUp(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, m_xmf3Up)); }
 
-    void MoveLeft(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, Vector3::Multiply(-1, m_xmf3Right))); }
+    void MoveLeft(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, vector3::Multiply(-1, m_xmf3Right))); }
 
-    void MoveBackward(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, Vector3::Multiply(-1, m_xmf3Look))); }
+    void MoveBackward(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, vector3::Multiply(-1, m_xmf3Look))); }
 
-    void MoveDown(float speed) { m_xmf3Direction = Vector3::Add(m_xmf3Direction, Vector3::Multiply(speed, Vector3::Multiply(-1, m_xmf3Up))); }
+    void MoveDown(float speed) { m_xmf3Direction = vector3::Add(m_xmf3Direction, vector3::Multiply(speed, vector3::Multiply(-1, m_xmf3Up))); }
 
 protected:
     virtual void Move(const XMFLOAT3& xmf3Shift)

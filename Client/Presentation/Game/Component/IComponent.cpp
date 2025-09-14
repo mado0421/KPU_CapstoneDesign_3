@@ -1,7 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "IComponent.h"
 
-ITransform::ITransform() : m_xmf4x4world(Matrix4x4::Identity()) {}
+ITransform::ITransform() : m_xmf4x4world(matrix::Identity()) {}
 
 void ITransform::Move(XMFLOAT3 value)
 {
@@ -17,12 +17,12 @@ void ITransform::Rotate(XMFLOAT3 angle)
     auto     xmf3Up      = XMFLOAT3(m_xmf4x4world._21, m_xmf4x4world._22, m_xmf4x4world._23);
     auto     xmf3Look    = XMFLOAT3(m_xmf4x4world._31, m_xmf4x4world._32, m_xmf4x4world._33);
 
-    xmf3Look  = Vector3::TransformNormal(xmf3Look, xmmtxRotate);
-    xmf3Right = Vector3::TransformNormal(xmf3Right, xmmtxRotate);
+    xmf3Look  = vector3::TransformNormal(xmf3Look, xmmtxRotate);
+    xmf3Right = vector3::TransformNormal(xmf3Right, xmmtxRotate);
 
-    xmf3Look  = Vector3::Normalize(xmf3Look);
-    xmf3Right = Vector3::CrossProduct(xmf3Up, xmf3Look, true);
-    xmf3Up    = Vector3::CrossProduct(xmf3Look, xmf3Right, true);
+    xmf3Look  = vector3::Normalize(xmf3Look);
+    xmf3Right = vector3::CrossProduct(xmf3Up, xmf3Look, true);
+    xmf3Up    = vector3::CrossProduct(xmf3Look, xmf3Right, true);
 
     m_xmf4x4world._11 = xmf3Right.x;
     m_xmf4x4world._12 = xmf3Right.y;
