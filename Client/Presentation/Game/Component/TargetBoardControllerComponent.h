@@ -1,28 +1,27 @@
-#pragma once
-#include "Presentation/Game/Character.h"
+﻿#pragma once
 #include "Presentation/Game/Component/Component.h"
 
 class Object;
 class ParticleEmitterComponent;
 
-class TargetBoardControllerComponent : public Component, public Character
+class TargetBoardControllerComponent : public TempCharacter
 {
 public:
-    TargetBoardControllerComponent() = delete;
-    TargetBoardControllerComponent(Object* pObject, bool bAutoRevive = false);
-    ~TargetBoardControllerComponent() override;
+	TargetBoardControllerComponent() = delete;
+	TargetBoardControllerComponent(Object* object);
+	~TargetBoardControllerComponent() override;
 
-    void Update(float fTimeElapsed) override;
-    void Revive() override;
-    void Die() override;
+	void Update(float delta_time) override;
+	void Awake();
+	void Die();
 
-    void SetPlayer(Object* pO);
+	void SetPlayer(Object* object);
 
 private:
-    float m_fTime         = 0.0f;
-    float m_fAttackPeriod = 5.0f;
+	float total_elapsed_time_   = 0.0f;
+	float attack_delay_seconds_ = 5.0f;
 
-    Character*                m_pPlayerCharacter = nullptr;
-    Object*                   pe                 = nullptr;
-    ParticleEmitterComponent* lpec               = nullptr;
+	TempCharacter*            player_character_           = nullptr;
+	Object*                   particle_emitter_object_    = nullptr;
+	ParticleEmitterComponent* particle_emitter_component_ = nullptr;
 };

@@ -24,13 +24,13 @@ MeshRendererComponent::~MeshRendererComponent() {}
 
 void MeshRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_OBJECTS, m_d3dCbvGPUDescriptorHandle);
     UINT ncbElementBytes = sizeof(XMFLOAT4X4) + 255 & ~255;
     memset(m_pCBMappedWorldTransform, NULL, ncbElementBytes);
 
-    XMStoreFloat4x4(m_pCBMappedWorldTransform, XMMatrixTranspose(m_pObject->FindComponent<TransformComponent>()->GetWorldTransform()));
+    XMStoreFloat4x4(m_pCBMappedWorldTransform, XMMatrixTranspose(object->FindComponent<TransformComponent>()->GetWorldTransform()));
 
     g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
     g_ModelMng.Render(m_strModelName.c_str(), pd3dCommandList);

@@ -184,6 +184,7 @@
     <ClInclude Include="Presentation\Game\Manager\TextureManager.h" />
     <ClInclude Include="Resources\fontReader\FontReader.h" />
     <ClInclude Include="Presentation\Renderer\Screen.h" />
+    <ClInclude Include="Presentation\Game\Component\TempCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Presentation\Game\Core\Framework.cpp">
@@ -325,6 +326,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Presentation\Game\Component\TempCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

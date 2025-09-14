@@ -47,32 +47,32 @@ void EventComponent::SetEvent()
 
     for_each(vecDoorToClose.begin(), vecDoorToClose.end(), [&](Object* o) { o->FindComponent<DoorComponent>()->Close(); });
 
-    for_each(vecEnemyToWake.begin(), vecEnemyToWake.end(), [&](Object* o) { o->FindComponent<Character>()->Revive(); });
+    for_each(vecEnemyToWake.begin(), vecEnemyToWake.end(), [&](Object* o) { o->FindComponent<TargetBoardControllerComponent>()->Awake(); });
 
     if (isEventForVictory) g_pCurrScene->Victory();
     if (isEventForDefeat) g_pCurrScene->Defeat();
 
     // ���������� ���� ����
-    m_pObject->SetActive(false);
-    m_bEnabled = false;
+    object->SetActive(false);
+    is_enable = false;
 }
 
 
 void EventComponent::SolveConstraint()
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     if (g_pCurrScene->event_count >= targetCount)
     {
         if (isTriggerReady)
         {
-            vector<ColliderComponent*> l_vecCollider = m_pObject->FindComponents<ColliderComponent>();
+            vector<ColliderComponent*> l_vecCollider = object->FindComponents<ColliderComponent>();
 
             for_each(l_vecCollider.begin(), l_vecCollider.end(), [&](ColliderComponent* c)
             {
                 for (int i = 0; i < c->m_vecpCollided.size(); i++)
                 {
-                    HumanoidControllerComponent* hcc = c->m_vecpCollided[i]->m_pObject->FindComponent<HumanoidControllerComponent>();
+                    HumanoidControllerComponent* hcc = c->m_vecpCollided[i]->object->FindComponent<HumanoidControllerComponent>();
                     if (hcc) SetEvent();
                 }
             });
@@ -86,13 +86,13 @@ void EventComponent::Update(float fTimeElapsed)
     �� �ݶ��̴�(Ʈ����)�� �����ų�, ���� �� �װų�, �ٸ� �̺�Ʈ�� �Ѱų�
     */
 
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     if (g_pCurrScene->event_count >= targetCount)
     {
         if (isWatchingEnemy)
         {
-            for_each(vecEnemyToWatch.begin(), vecEnemyToWatch.end(), [&](Object* o) { if (o->FindComponent<Character>()->isAlive()) return; });
+            for_each(vecEnemyToWatch.begin(), vecEnemyToWatch.end(), [&](Object* o) { if (o->FindComponent<TempCharacter>()->IsAlive()) return; });
 
             SetEvent();
         }

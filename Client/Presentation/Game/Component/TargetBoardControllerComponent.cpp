@@ -3,82 +3,85 @@
 #include "Presentation/Game/Object.h"
 #include "Presentation/Game/Core/Scene.h"
 
-TargetBoardControllerComponent::TargetBoardControllerComponent(Object* pObject, bool bAutoRevive) : Component(pObject), Character(10, bAutoRevive) {}
-
-TargetBoardControllerComponent::~TargetBoardControllerComponent() {}
-
-void TargetBoardControllerComponent::Update(float fTimeElapsed)
+TargetBoardControllerComponent::TargetBoardControllerComponent(Object* object) : TempCharacter(object, 10)
 {
-    if (!m_bEnabled) return;
-    if (!this->isAlive()) return;
-
-    float temp = floor(m_fTime);
-    if (pe)
-    {
-        if (0 == temp) lpec->SetMaterialByName("p5");
-        else if (1 == temp) lpec->SetMaterialByName("p4");
-        else if (2 == temp) lpec->SetMaterialByName("p3");
-        else if (3 == temp) lpec->SetMaterialByName("p2");
-        else if (4 == temp) lpec->SetMaterialByName("p1");
-    }
-
-    if (m_fTime > m_fAttackPeriod)
-    {
-        m_pPlayerCharacter->Damage(10);
-        Revive();
-    }
-    m_fTime += fTimeElapsed;
-
-    Character::Update(fTimeElapsed);
 }
 
-void TargetBoardControllerComponent::Revive()
+TargetBoardControllerComponent::~TargetBoardControllerComponent()
+= default;
+
+void TargetBoardControllerComponent::Update(const float delta_time)
 {
-    Character::Revive();
-    m_fTime = 0;
+	if (!is_enable) return;
+	if (!IsAlive()) return;
 
-    {
-        pe = new Object("particleEmitter");
+	float temp = floor(total_elapsed_time_);
+	if (particle_emitter_object_)
+	{
+		if (0 == temp) particle_emitter_component_->SetMaterialByName("p5");
+		else if (1 == temp) particle_emitter_component_->SetMaterialByName("p4");
+		else if (2 == temp) particle_emitter_component_->SetMaterialByName("p3");
+		else if (3 == temp) particle_emitter_component_->SetMaterialByName("p2");
+		else if (4 == temp) particle_emitter_component_->SetMaterialByName("p1");
+	}
 
-        auto t   = new TransformComponent(pe);
-        auto pec = new ParticleEmitterComponent(pe);
+	if (total_elapsed_time_ > attack_delay_seconds_)
+	{
+		player_character_->Damage(10);
+		total_elapsed_time_ = 0;
+	}
+	total_elapsed_time_ += delta_time;
 
-        t->Translate(m_pObject->FindComponent<TransformComponent>()->GetPosition(Space::world));
-        t->Translate(0, 2.5, 0);
-        pec->m_bIsBilboard      = true;
-        pec->m_fGravityModifier = 0.0f;
-        pec->SetMaterialByName("p5");
-        pec->m_fStartSpeed     = fRange(0, 0);
-        pec->m_nMaxParticles   = 6;
-        pec->m_fDuration       = 5.0f;
-        pec->m_fStartSize      = fRange(1, 1);
-        pec->m_fCreateCooltime = 1.0f;
-        pec->m_fStartLifetime  = fRange(1, 1);
+	TempCharacter::Update(delta_time);
+}
 
-        ParticleBurstInfo pb = {};
-        pec->SetBurst(pb);
+void TargetBoardControllerComponent::Awake()
+{
+	total_elapsed_time_ = 0;
 
-        g_pCurrScene->AddObject(pe, RenderGroup::PARTICLE);
+	is_enable = true;
 
-        lpec = pec;
-    }
+	particle_emitter_object_ = new Object("particleEmitter");
+
+	TransformComponent*       transform           = new TransformComponent(particle_emitter_object_);
+	ParticleEmitterComponent* particle_emitter    = new ParticleEmitterComponent(particle_emitter_object_);
+	ParticleBurstInfo         particle_burst_info = {};
+
+	transform->Translate(object->FindComponent<TransformComponent>()->GetPosition(Space::world));
+	transform->Translate(0, 2.5, 0);
+
+	particle_emitter->m_bIsBilboard      = true;
+	particle_emitter->m_fGravityModifier = 0.0f;
+	particle_emitter->SetMaterialByName("p5");
+	particle_emitter->m_fStartSpeed     = fRange(0, 0);
+	particle_emitter->m_nMaxParticles   = 6;
+	particle_emitter->m_fDuration       = 5.0f;
+	particle_emitter->m_fStartSize      = fRange(1, 1);
+	particle_emitter->m_fCreateCooltime = 1.0f;
+	particle_emitter->m_fStartLifetime  = fRange(1, 1);
+	particle_emitter->SetBurst(particle_burst_info);
+
+	g_pCurrScene->AddObject(particle_emitter_object_, RenderGroup::PARTICLE);
+
+	particle_emitter_component_ = particle_emitter;
 }
 
 void TargetBoardControllerComponent::Die()
 {
-    Character::Die();
+	g_pCurrScene->event_count++;
 
-    g_pCurrScene->event_count++;
+	TempCharacter::Die();
 
+	if (particle_emitter_object_)
+	{
+		particle_emitter_component_->is_enable = false;
 
-    if (pe)
-    {
-        //pe->m_bEnable = false;	// �̰� ���� ��ƼŬ�� ��� ����
-        lpec->m_bEnabled = false;
-
-        pe   = nullptr;
-        lpec = nullptr;
-    }
+		particle_emitter_object_    = nullptr;
+		particle_emitter_component_ = nullptr;
+	}
 }
 
-void TargetBoardControllerComponent::SetPlayer(Object* pO) { m_pPlayerCharacter = pO->FindComponent<HumanoidControllerComponent>(); }
+void TargetBoardControllerComponent::SetPlayer(Object* object)
+{
+	player_character_ = object->FindComponent<HumanoidControllerComponent>();
+}

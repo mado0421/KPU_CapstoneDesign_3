@@ -29,7 +29,7 @@ BoxColliderComponent::~BoxColliderComponent() {}
 
 void BoxColliderComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     m_vecpCollided.clear();
 
@@ -45,7 +45,7 @@ void BoxColliderComponent::Update(float fTimeElapsed)
         local                     = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = m_pObject->FindComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = object->FindComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(local, world);
 
@@ -64,12 +64,12 @@ void BoxColliderComponent::Update(float fTimeElapsed)
 
 void BoxColliderComponent::CheckCollision(Component* other)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     auto otherBox = dynamic_cast<BoxColliderComponent*>(other);
     if (otherBox)
     {
-        if (otherBox->m_bEnabled && m_box.Intersects(otherBox->m_box))
+        if (otherBox->is_enable && m_box.Intersects(otherBox->m_box))
         {
             m_vecpCollided.push_back(otherBox);
             otherBox->m_vecpCollided.push_back(this);
@@ -78,7 +78,7 @@ void BoxColliderComponent::CheckCollision(Component* other)
     auto otherSphere = dynamic_cast<SphereColliderComponent*>(other);
     if (otherSphere)
     {
-        if (otherSphere->m_bEnabled && m_box.Intersects(otherSphere->m_sphere))
+        if (otherSphere->is_enable && m_box.Intersects(otherSphere->m_sphere))
         {
             m_vecpCollided.push_back(otherSphere);
             otherSphere->m_vecpCollided.push_back(this);
@@ -103,7 +103,7 @@ SphereColliderComponent::~SphereColliderComponent() {}
 
 void SphereColliderComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     m_vecpCollided.clear();
 
@@ -119,7 +119,7 @@ void SphereColliderComponent::Update(float fTimeElapsed)
         local = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = m_pObject->FindComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = object->FindComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(world, local);
 
@@ -132,12 +132,12 @@ void SphereColliderComponent::Update(float fTimeElapsed)
 
 void SphereColliderComponent::CheckCollision(Component* other)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     auto otherBox = dynamic_cast<BoxColliderComponent*>(other);
     if (otherBox)
     {
-        if (otherBox->m_bEnabled && m_sphere.Intersects(otherBox->m_box))
+        if (otherBox->is_enable && m_sphere.Intersects(otherBox->m_box))
         {
             m_vecpCollided.push_back(otherBox);
             otherBox->m_vecpCollided.push_back(this);
@@ -146,7 +146,7 @@ void SphereColliderComponent::CheckCollision(Component* other)
     auto otherSphere = dynamic_cast<SphereColliderComponent*>(other);
     if (otherSphere)
     {
-        if (otherSphere->m_bEnabled && m_sphere.Intersects(otherSphere->m_sphere))
+        if (otherSphere->is_enable && m_sphere.Intersects(otherSphere->m_sphere))
         {
             m_vecpCollided.push_back(otherSphere);
             otherSphere->m_vecpCollided.push_back(this);

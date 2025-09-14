@@ -6,7 +6,7 @@ DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), 
     if (m_bOpen) m_fProgress = 1;
     else m_fProgress         = 0;
 
-    l_transform = m_pObject->FindComponent<TransformComponent>();
+    l_transform = object->FindComponent<TransformComponent>();
 }
 
 DoorComponent::~DoorComponent() {}
@@ -17,7 +17,7 @@ void DoorComponent::Close() { m_bOpen = false; }
 
 void DoorComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     if (m_bOpen)
     {

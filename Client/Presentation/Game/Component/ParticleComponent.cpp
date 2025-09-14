@@ -37,12 +37,12 @@ ParticleComponent::~ParticleComponent()
 
 void ParticleComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     m_fLifetime -= fTimeElapsed;
     if (0 >= m_fLifetime)
     {
-        m_pObject->SetActive(false);
+        object->SetActive(false);
         SetActive(false);
     }
     m_fGravity += 9.8f * m_fGravityModifier * fTimeElapsed;
@@ -96,7 +96,7 @@ void ParticleComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 
 void ParticleComponent::Initialize(ParticlePropertiesPack& ppp)
 {
-    transform = m_pObject->FindComponent<TransformComponent>();
+    transform = object->FindComponent<TransformComponent>();
     transform->SetPosition(ppp.currPos);
     m_xmf3Direction    = ppp.direction;
     m_fLifetime        = ppp.lifetime;
@@ -105,7 +105,7 @@ void ParticleComponent::Initialize(ParticlePropertiesPack& ppp)
     m_fSize            = ppp.size;
     m_fGravity         = 0;
     m_bIsBilboard      = ppp.isBilboard;
-    m_pObject->SetActive(true);
+    object->SetActive(true);
     SetActive(true);
 }
 

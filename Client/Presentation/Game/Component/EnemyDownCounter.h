@@ -1,5 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
+
+class TempCharacter;
 
 class EnemyDownCounter : public Component
 {
@@ -14,7 +16,7 @@ public:
     void Update(float fTimeElapsed) override;
 
 private:
-    vector<pair<Character*, bool>> m_vecTargetCharacter;
+    vector<pair<TempCharacter*, bool>> m_vecTargetCharacter;
     TextRendererComponent*         m_pTRC  = nullptr;
     int                            m_count = 0;
 };

@@ -1,11 +1,11 @@
-#pragma once
-#include "Presentation/Game/Character.h"
+﻿#pragma once
+#include "TempCharacter.h"
 #include "Presentation/Game/Component/Component.h"
 
 class TransformComponent;
 class InputManagerComponent;
 
-class HumanoidControllerComponent : public Component, public Character
+class HumanoidControllerComponent : public TempCharacter
 {
 public:
     HumanoidControllerComponent() = delete;

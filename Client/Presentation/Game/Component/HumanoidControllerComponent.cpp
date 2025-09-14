@@ -4,8 +4,8 @@
 #include "Presentation/Game/Object.h"
 #include "Presentation/Game/Core/Scene.h"
 
-HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object* pWeapon) : Component(pObject),
-                                                                                             Character(100, true, false),
+HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object* pWeapon) : TempCharacter(pObject, 100),
+                                                                                             // Character(100, true, false),
                                                                                              m_fTime(0),
                                                                                              m_xmf3Velocity(0, 0, 0),
                                                                                              m_fSpeed(1.0f),
@@ -14,8 +14,8 @@ HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object
                                                                                              m_fTimeForAim(0.2f),
                                                                                              m_pWeaponObject(pWeapon)
 {
-    l_pInput    = m_pObject->FindComponent<InputManagerComponent>();
-    l_transform = m_pObject->FindComponent<TransformComponent>();
+    l_pInput    = object->FindComponent<InputManagerComponent>();
+    l_transform = object->FindComponent<TransformComponent>();
 }
 
 HumanoidControllerComponent::~HumanoidControllerComponent() {}
@@ -24,7 +24,7 @@ void HumanoidControllerComponent::SetLookAt(Object* pObejct) { m_pLookAt = pObej
 
 void HumanoidControllerComponent::Damage(int dmg)
 {
-    Character::Damage(dmg);
+    TempCharacter::Damage(dmg);
 
     {
         auto pe = new Object("particleEmitter");
@@ -32,7 +32,7 @@ void HumanoidControllerComponent::Damage(int dmg)
         auto t   = new TransformComponent(pe);
         auto pec = new ParticleEmitterComponent(pe);
 
-        t->Translate(m_pObject->FindComponent<TransformComponent>()->GetPosition(Space::world));
+        t->Translate(object->FindComponent<TransformComponent>()->GetPosition(Space::world));
         t->Translate(0, 1.5, 0);
         pec->m_bIsBilboard      = false;
         pec->m_fGravityModifier = 0.3f;
@@ -53,14 +53,14 @@ void HumanoidControllerComponent::Damage(int dmg)
 
 void HumanoidControllerComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     m_fTime += fTimeElapsed;
 
-    if (l_pInput->IsKeyDown(_P)) Character::Damage(100);
+    if (l_pInput->IsKeyDown(_P)) TempCharacter::Damage(100);
 
 
-    if (!this->isAlive()) g_pCurrScene->Clear();
+    if (!IsAlive()) g_pCurrScene->Clear();
     else
     {
         // Movement Part
@@ -146,5 +146,5 @@ void HumanoidControllerComponent::Update(float fTimeElapsed)
         }
     }
 
-    Character::Update(fTimeElapsed);
+    TempCharacter::Update(fTimeElapsed);
 }

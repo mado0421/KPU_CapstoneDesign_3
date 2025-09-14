@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "pch.h"
 
@@ -23,6 +23,7 @@ public:
 
     void SetActive(bool bActive);
 
-    Object* m_pObject  = nullptr;
-    bool    m_bEnabled = true;
+public:
+    Object* object  = nullptr;
+    bool    is_enable = true;
 };

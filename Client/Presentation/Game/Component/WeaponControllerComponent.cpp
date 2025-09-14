@@ -16,7 +16,7 @@ WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pM
                                                                                                           camTransform(nullptr),
                                                                                                           cam(nullptr)
 {
-    myTransform     = m_pObject->FindComponent<TransformComponent>();
+    myTransform     = object->FindComponent<TransformComponent>();
     muzzleTransform = m_pMuzzle->FindComponent<TransformComponent>();
 }
 
@@ -24,7 +24,7 @@ WeaponControllerComponent::~WeaponControllerComponent() {}
 
 void WeaponControllerComponent::CheckCollision(Component* other)
 {
-    if (!m_bEnabled || !other->m_bEnabled) return;
+    if (!is_enable || !other->is_enable) return;
 
     if (m_fTryRaycast)
     {
@@ -119,7 +119,7 @@ void WeaponControllerComponent::SolveConstraint()
         m_fMinLength  = FLT_MAX;
         if (m_pCollided)
         {
-            Character* enemy = m_pCollided->m_pObject->FindComponent<Character>();
+            TempCharacter* enemy = m_pCollided->object->FindComponent<TempCharacter>();
 
             if (enemy) enemy->Damage(100);
         }
@@ -160,7 +160,7 @@ void WeaponControllerComponent::SolveConstraint()
 
 void WeaponControllerComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     m_fCurrCooltime -= fTimeElapsed;
 
@@ -177,9 +177,9 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 
     // Move to position of Parent's RHand
-    if (m_pObject->m_pParent)
+    if (object->m_pParent)
     {
-        XMMATRIX l_xmmtxTransform = m_pObject->m_pParent->FindComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
+        XMMATRIX l_xmmtxTransform = object->m_pParent->FindComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
         l_xmmtxTransform          = XMMatrixMultiply(XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(-90), XMConvertToRadians(-90)), l_xmmtxTransform);
 
         TransformComponent* transform = myTransform;
@@ -194,7 +194,7 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 void WeaponControllerComponent::Fire()
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
     if (m_bReloading) return;
 
     if (0 >= m_curAmmo)

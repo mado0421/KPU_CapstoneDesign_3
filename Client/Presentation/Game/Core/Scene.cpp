@@ -1158,10 +1158,10 @@ void Scene::BuildObject()
 		particle_pool.push_back(ptc);
 	}
 	//{
-	//	Object* pe = new Object("particleEmitter");
+	//	Object* particle_emitter_object_ = new Object("particleEmitter");
 	//	
-	//	TransformComponent* t = new TransformComponent(pe);
-	//	ParticleEmitterComponent* pec = new ParticleEmitterComponent(pe);
+	//	TransformComponent* t = new TransformComponent(particle_emitter_object_);
+	//	ParticleEmitterComponent* pec = new ParticleEmitterComponent(particle_emitter_object_);
 
 	//	pec->m_bIsBilboard = true;
 	//	pec->m_fGravityModifier = 0.0f;
@@ -1174,8 +1174,8 @@ void Scene::BuildObject()
 	//	pec->m_fCreateCooltime = 1.0f / 10;
 	//	pec->m_nMaxParticles = 100;
 
-	//	m_vecObject.push_back(pe);
-	//	m_vecParticleEmitter.push_back(pe);
+	//	m_vecObject.push_back(particle_emitter_object_);
+	//	m_vecParticleEmitter.push_back(particle_emitter_object_);
 	//}
 
 	{
@@ -1941,7 +1941,7 @@ void Scene::CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 r
 	transform->Translate(position);
 	transform->RotateXYZDegree(rotationAngle);
 	if (initialState) TCC->Die();
-	else TCC->Revive();
+	else TCC->Awake();
 
 	TCC->SetPlayer(FindObjectByName("player"));
 

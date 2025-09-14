@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 
 class TextUIAmmoComponent : public Component
@@ -39,5 +39,5 @@ public:
 
 private:
     TextRendererComponent* m_pTRC;
-    Character*             m_pPlayerCharacter;
+    TempCharacter*             m_pPlayerCharacter;
 };

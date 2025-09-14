@@ -19,7 +19,7 @@ CameraComponent::CameraComponent(Object* pObject) : Component(pObject),
     SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 
-    t = m_pObject->FindComponent<TransformComponent>();
+    t = object->FindComponent<TransformComponent>();
 }
 
 CameraComponent::~CameraComponent() {}
@@ -140,7 +140,7 @@ void CameraComponent::SolveConstraint()
 
 void CameraComponent::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
 
     if (m_pLookAtTransform) SetLookAtWorldPos(m_pLookAtTransform->GetPosition(Space::world));

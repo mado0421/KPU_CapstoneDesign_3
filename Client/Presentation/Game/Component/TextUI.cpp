@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 
 TextUIAmmoComponent::TextUIAmmoComponent(Object* pObject, Object* pWeapon) : Component(pObject), m_pTRC(nullptr)
@@ -44,7 +44,7 @@ TextUIPlayerHPComponent::TextUIPlayerHPComponent(Object* pObject, Object* pPlaye
     TextRendererComponent* temp = pObject->FindComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
 
-    m_pPlayerCharacter = pPlayer->FindComponent<Character>();
+    m_pPlayerCharacter = pPlayer->FindComponent<TempCharacter>();
 }
 
 TextUIPlayerHPComponent::~TextUIPlayerHPComponent() {}
@@ -53,7 +53,7 @@ void TextUIPlayerHPComponent::Update(float fTimeElapsed)
 {
     string text = "HP ";
 
-    text += to_string(m_pPlayerCharacter->GetCurrHp());
+    text += to_string(m_pPlayerCharacter->GetCurrentHitPoint());
 
     m_pTRC->SetText(text.c_str());
 }

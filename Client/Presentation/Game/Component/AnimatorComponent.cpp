@@ -84,7 +84,7 @@ HumanoidAnimatorComponent::HumanoidAnimatorComponent(Object* pObject, const char
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy),
 	  m_pAimingMask(new BoneMask(BoneMask::PreDefined::kUpperBody))
 {
-	l_HCC = m_pObject->FindComponent<HumanoidControllerComponent>();
+	l_HCC = object->FindComponent<HumanoidControllerComponent>();
 }
 
 HumanoidAnimatorComponent::~HumanoidAnimatorComponent() { delete m_pAimingMask; }
@@ -99,7 +99,7 @@ void AdjustRotationQuaternion(XMVECTOR& src, float x, float y, float z)
 
 void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 {
-	if (!m_bEnabled) return;
+	if (!is_enable) return;
 
 	memset(m_arrLocalRotation, NULL, sizeof(XMFLOAT4) * MAX_BONE_NUM);
 
@@ -231,18 +231,20 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 TargetBoardAnimatorComponent::TargetBoardAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy)
 {
-	l_TCC = m_pObject->FindComponent<TargetBoardControllerComponent>();
-	if (l_TCC->isAlive()) m_fStandInterpolationValue = 1.0f;
-	else m_fStandInterpolationValue                  = 0.0f;
+	l_TCC = object->FindComponent<TargetBoardControllerComponent>();
+	// if (l_TCC->IsAlive()) m_fStandInterpolationValue = 1.0f;
+	// else m_fStandInterpolationValue                  = 0.0f;
+
+	m_fStandInterpolationValue = 0.0f;
 }
 
 TargetBoardAnimatorComponent::~TargetBoardAnimatorComponent() {}
 
 void TargetBoardAnimatorComponent::Update(float fTimeElapsed)
 {
-	if (!m_bEnabled) return;
+	if (!is_enable) return;
 
-	if (l_TCC->isAlive()) m_fStandInterpolationValue += fTimeElapsed;
+	if (l_TCC->IsAlive()) m_fStandInterpolationValue += fTimeElapsed;
 	else m_fStandInterpolationValue -= fTimeElapsed;
 
 	memset(m_arrLocalRotation, NULL, sizeof(XMFLOAT4) * MAX_BONE_NUM);

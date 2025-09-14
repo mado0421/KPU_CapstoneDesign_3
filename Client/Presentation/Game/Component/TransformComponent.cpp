@@ -120,9 +120,9 @@ XMMATRIX TransformComponent::GetLocalTransform() { return XMLoadFloat4x4(&m_xmf4
 
 XMMATRIX TransformComponent::GetWorldTransform()
 {
-    if (nullptr != m_pObject->m_pParent)
+    if (nullptr != object->m_pParent)
     {
-        TransformComponent* l_pParentTransform = m_pObject->m_pParent->FindComponent<TransformComponent>();
+        TransformComponent* l_pParentTransform = object->m_pParent->FindComponent<TransformComponent>();
         return XMMatrixMultiply(XMLoadFloat4x4(&m_xmf4x4Local), l_pParentTransform->GetWorldTransform());
     }
     return XMLoadFloat4x4(&m_xmf4x4Local);

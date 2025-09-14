@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 
 EnemyDownCounter::EnemyDownCounter(Object* pObject) : Component(pObject)
@@ -15,7 +15,7 @@ void EnemyDownCounter::AddTarget(Object* pObject)
 
     if (temp)
     {
-        pair<Character*, bool> tempPair;
+        pair<TempCharacter*, bool> tempPair;
         tempPair.first  = temp;
         tempPair.second = false;
         m_vecTargetCharacter.push_back(tempPair);
@@ -26,16 +26,16 @@ void EnemyDownCounter::SetTextRenderer(TextRendererComponent* pTRC) { m_pTRC = p
 
 void EnemyDownCounter::Update(float fTimeElapsed)
 {
-    if (!m_bEnabled) return;
+    if (!is_enable) return;
 
     for (int i = 0; i < m_vecTargetCharacter.size(); i++)
     {
-        if (m_vecTargetCharacter[i].second == false && !m_vecTargetCharacter[i].first->isAlive())
+        if (m_vecTargetCharacter[i].second == false && !m_vecTargetCharacter[i].first->IsAlive())
         {
             m_count++;
             m_vecTargetCharacter[i].second = true;
         }
-        else if (m_vecTargetCharacter[i].second == true && m_vecTargetCharacter[i].first->isAlive()) m_vecTargetCharacter[i].second = false;
+        else if (m_vecTargetCharacter[i].second == true && m_vecTargetCharacter[i].first->IsAlive()) m_vecTargetCharacter[i].second = false;
     }
 
     if (m_pTRC)
