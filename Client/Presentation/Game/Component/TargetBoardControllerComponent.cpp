@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
 #include "Presentation/Game/Core/Scene.h"
@@ -68,7 +68,7 @@ void TargetBoardControllerComponent::Die()
 {
     Character::Die();
 
-    g_pCurrScene->eventCount++;
+    g_pCurrScene->event_count++;
 
 
     if (pe)

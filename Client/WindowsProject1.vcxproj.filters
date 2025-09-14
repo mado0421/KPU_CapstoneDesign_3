@@ -350,5 +350,6 @@
   <ItemGroup>
     <None Include="Resources\Shaders\Header.hlsli" />
     <None Include="Resources\Shaders\Light.hlsli" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

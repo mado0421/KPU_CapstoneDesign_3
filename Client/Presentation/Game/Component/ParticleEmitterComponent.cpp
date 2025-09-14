@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Core/Scene.h"
 
@@ -23,7 +23,7 @@ ParticleEmitterComponent::ParticleEmitterComponent(Object* pObject) : Component(
 																	  m_fCreateCooltime(1.0f / m_RateOverTime),
 																	  m_fCurrCooltime(0),
 																	  m_fTime(0.0f),
-																	  m_pSceneParticlePool(&g_pCurrScene->m_vecParticlePool)
+																	  m_pSceneParticlePool(&g_pCurrScene->particle_pool)
 {
     ParticleBurstInfo pb = {};
     m_emissionBurst      = pb;

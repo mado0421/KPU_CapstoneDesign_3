@@ -46,7 +46,7 @@ public:
 class LightDataImporter : public IImporter
 {
 public:
-	static vector<LIGHT_DESC> Load(const char* file_path);
+	static vector<LightDescription> Load(const char* file_path);
 };
 
 class MeshDataImporter : public IImporter

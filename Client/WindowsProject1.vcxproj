@@ -342,6 +342,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Resources\Shaders\Header.hlsli" />
     <None Include="Resources\Shaders\Light.hlsli" />
   </ItemGroup>

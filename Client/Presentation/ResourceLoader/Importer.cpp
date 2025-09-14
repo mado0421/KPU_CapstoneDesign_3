@@ -117,12 +117,12 @@ Key IImporter::GetKeyframe(const float* fIn, int& offset)
 	return result;
 }
 
-vector<LIGHT_DESC> LightDataImporter::Load(const char* file_path)
+vector<LightDescription> LightDataImporter::Load(const char* file_path)
 {
 	ifstream in(file_path);
 	string s;
 	string token;
-	vector<LIGHT_DESC> vecLightDesc;
+	vector<LightDescription> vecLightDesc;
 
 	if (!in.is_open())
 	{
@@ -140,7 +140,7 @@ vector<LIGHT_DESC> LightDataImporter::Load(const char* file_path)
 
 		if (token == "{")
 		{
-			LIGHT_DESC temp;
+			LightDescription temp;
 			while (token != "}")
 			{
 				getline(ss, token, ' ');

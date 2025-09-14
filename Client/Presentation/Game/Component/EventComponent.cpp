@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Object.h"
 #include "Presentation/Game/Core/Scene.h"
@@ -62,7 +62,7 @@ void EventComponent::SolveConstraint()
 {
     if (!m_bEnabled) return;
 
-    if (g_pCurrScene->eventCount >= targetCount)
+    if (g_pCurrScene->event_count >= targetCount)
     {
         if (isTriggerReady)
         {
@@ -88,7 +88,7 @@ void EventComponent::Update(float fTimeElapsed)
 
     if (!m_bEnabled) return;
 
-    if (g_pCurrScene->eventCount >= targetCount)
+    if (g_pCurrScene->event_count >= targetCount)
     {
         if (isWatchingEnemy)
         {

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "pch.h"
 
 class Object;
@@ -6,146 +6,151 @@ class Screen;
 class Camera;
 class RenderToTextureClass;
 class Framework;
-// class Texture;
 class LightManager;
 class TextureManager;
 
 struct ConstantBufferPassInfo
 {
-    XMFLOAT4X4 m_xmf4x4CameraView;
-    XMFLOAT4X4 m_xmf4x4CameraProjection;
-    XMFLOAT4X4 m_xmf4x4CameraViewInv;
-    XMFLOAT4X4 m_xmf4x4CameraProjectionInv;
-    XMFLOAT4X4 m_xmf4x4TextureTransform;
-    XMFLOAT3   m_xmf3CameraPosition;
-    float      m_xmfCurrentTime;
+	XMFLOAT4X4 m_xmf4x4CameraView;
+	XMFLOAT4X4 m_xmf4x4CameraProjection;
+	XMFLOAT4X4 m_xmf4x4CameraViewInv;
+	XMFLOAT4X4 m_xmf4x4CameraProjectionInv;
+	XMFLOAT4X4 m_xmf4x4TextureTransform;
+	XMFLOAT3   m_xmf3CameraPosition;
+	float      m_xmfCurrentTime;
 };
 
 struct EnvironmentObjectData
 {
-    string   strMeshName;
-    string   strMatName;
-    XMFLOAT3 xmf3Position;
-    XMFLOAT4 xmf4Rotation;
+	string   strMeshName;
+	string   strMatName;
+	XMFLOAT3 xmf3Position;
+	XMFLOAT4 xmf4Rotation;
 };
 
 struct ColliderObjectData
 {
-    XMFLOAT3 xmf3Position;
-    XMFLOAT3 xmf3Extents;
-    XMFLOAT4 xmf4Rotation;
+	XMFLOAT3 xmf3Position;
+	XMFLOAT3 xmf3Extents;
+	XMFLOAT4 xmf4Rotation;
 };
 
 namespace LoadMy
 {
-    vector<string>                Split(istringstream& ss, char delim);
-    vector<EnvironmentObjectData> LoadEnvMeshList(const char* path);
-    vector<ColliderObjectData>    LoadColliderList(const char* path);
+	vector<string>                Split(istringstream& ss, char delim);
+	vector<EnvironmentObjectData> LoadEnvMeshList(const char* path);
+	vector<ColliderObjectData>    LoadColliderList(const char* path);
 }
 
 enum class RenderGroup
 {
-    OBJECT,
-    ANIMATED,
-    PARTICLE,
-    EFFECT
+	OBJECT,
+	ANIMATED,
+	PARTICLE,
+	EFFECT
 };
 
 class Scene
 {
 protected:
-    ID3D12RootSignature*       m_pd3dRootSignature;
-    ID3D12Device*              m_pd3dDevice;
-    ID3D12GraphicsCommandList* m_pd3dCommandList;
-    ID3D12DescriptorHeap*      m_pd3dCbvSrvDescriptorHeap;
+	ID3D12RootSignature*       root_signature_          = nullptr;
+	ID3D12Device*              device_                  = nullptr;
+	ID3D12GraphicsCommandList* command_list_            = nullptr;
+	ID3D12DescriptorHeap*      cbv_srv_descriptor_heap_ = nullptr;
 
-    D3D12_CPU_DESCRIPTOR_HANDLE m_d3dCbvCPUDescriptorStartHandle;
-    D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUDescriptorStartHandle;
-    D3D12_CPU_DESCRIPTOR_HANDLE m_d3dSrvCPUDescriptorStartHandle;
-    D3D12_GPU_DESCRIPTOR_HANDLE m_d3dSrvGPUDescriptorStartHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE cbv_cpu_descriptor_start_handle_ = {};
+	D3D12_GPU_DESCRIPTOR_HANDLE cbv_gpu_descriptor_start_handle_ = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE srv_cpu_descriptor_start_handle_ = {};
+	D3D12_GPU_DESCRIPTOR_HANDLE srv_gpu_descriptor_start_handle_ = {};
 
 
-    vector<Object*> m_vecObject;
+	vector<Object*> objects_;
 
-    // for Render
-    vector<Object*> m_vecNonAnimObjectRenderGroup;
-    vector<Object*> m_vecAnimObjectRenderGroup;
-    vector<Object*> m_vecEffectRenderGroup;
-    vector<Object*> m_vecUIRenderGroup;
+	// for Render
+	vector<Object*> non_anim_object_render_group_;
+	vector<Object*> anim_object_render_group_;
+	vector<Object*> effect_render_group_;
+	vector<Object*> ui_render_group_;
 
-    // for Particle
-    vector<Object*> m_vecParticleEmitter;
+	// for Particle
+	vector<Object*> particle_emitters_;
 
-    // for Camera
-    Object* m_pCameraObject = nullptr;
+	// for Camera
+	Object* camera_object_ = nullptr;
 
-    vector<Screen*>                             m_vecScreenObject;
-    unordered_map<string, ID3D12PipelineState*> m_uomPipelineStates;
+	vector<Screen*>                             screens_;
+	unordered_map<string, ID3D12PipelineState*> pipeline_states_;
 
-    LightManager* m_LightMng;
+	LightManager* light_manager_ = nullptr;
 
-    ID3D12Resource*             m_pd3duabHDRAvgLum;
-    D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUuabHDRAvgLumHandle;
-    ID3D12Resource*             m_pd3dcbPassInfo;
-    ConstantBufferPassInfo*     m_pcbMappedPassInfo;
-    D3D12_GPU_DESCRIPTOR_HANDLE m_d3dCbvGPUPassInfoHandle;
+	ID3D12Resource*             uab_hdr_avg_lum_            = nullptr;
+	D3D12_GPU_DESCRIPTOR_HANDLE cbv_gpu_uab_hdr_avg_lum_handle_ = {};
+	ID3D12Resource*             cb_pass_info_              = nullptr;
+	ConstantBufferPassInfo*     cb_mapped_pass_info_           = nullptr;
+	D3D12_GPU_DESCRIPTOR_HANDLE cbv_gpu_pass_info_handle_     = {};
 
-    Framework* m_pFramework;
-    Camera*    m_pCamera;
-    float      m_fCurrentTime = 0;
+	Framework* framework_     = nullptr;
+	Camera*    camera_      = nullptr;
+	float      current_time_ = 0;
+
+	bool test_mouse_usable_ = true;
+
 
 public:
-    vector<Object*> m_vecParticlePool;
+	vector<Object*> particle_pool;
 
-    int          eventCount    = 0; //enemyDown
-    bool         test          = false;
-    int          startEndState = 0; // 0: main, 1: start, 2: end
-    virtual void Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list);
+	int          event_count    = 0; //enemyDown
+	bool         test          = false;
+	int          start_end_state = 0; // 0: main, 1: start, 2: end
+	virtual void Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list);
 
-    virtual void CheckCollsion();
-    virtual void SolveConstraint();
-    virtual void Input(UCHAR* pKeyBuffer);
-    virtual void Update(float fTimeElapsed);
-    virtual void Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_HANDLE hBckBufDsv);
+	virtual void CheckCollision();
+	virtual void SolveConstraint();
+	virtual void Input(UCHAR* key_buffer);
+	virtual void Update(float delta_time);
+	virtual void Render(D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_rtv, D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_dsv);
 
-    virtual void Release();
+	virtual void Release();
 
-    void Clear();
-    void Victory();
-    void Defeat();
+	void Clear();
+	void Victory();
+	void Defeat();
 
-    void    AddObject(Object* pObject, RenderGroup renderGroup);
-    void    DeleteObject(Object* pObject);
-    Object* FindObjectByName(const char*);
+	void    AddObject(Object* object, RenderGroup render_group);
+	void    DeleteObject(Object* object);
+	Object* FindObjectByName(const char*);
 
 protected:
-    virtual ID3D12RootSignature* CreateRootSignature();
-    virtual void                 CreateDescriptorHeap();
+	virtual ID3D12RootSignature* CreateRootSignature();
+	virtual void                 CreateDescriptorHeap();
 
-    virtual void CreateCBV() {}
+	virtual void CreateCBV()
+	{
+	}
 
-    virtual void CreateSRV() {}
+	virtual void CreateSRV()
+	{
+	}
 
-    virtual void CreatePSO();
+	virtual void CreatePSO();
 
-    void CreatePassInfoShaderResource();
-    void UpdatePassInfoAboutCamera();
+	void CreatePassInfoShaderResource();
+	void UpdatePassInfoAboutCamera();
 
-    void BuildObject();
+	void BuildObject();
 
-    /*==============================================================================
-        * For Test!!
-        *
-        ==============================================================================*/
-    void ReloadLight();
+	/// <summary>
+	///		For Test
+	/// </summary>
+	void ReloadLight();	
 
-    void LoadLevelEnvironment();
+	void LoadLevelEnvironment();
 
-    void CreateEnvObject(const char* strModelName, const char* strMaterialName, XMFLOAT3 pos, XMFLOAT4 rot);
-    void CreateEnvObject(EnvironmentObjectData objData);
+	void CreateEnvObject(const char* strModelName, const char* strMaterialName, XMFLOAT3 pos, XMFLOAT4 rot);
+	void CreateEnvObject(EnvironmentObjectData objData);
 
-    void CreateCollider(ColliderObjectData colData);
+	void CreateCollider(ColliderObjectData colData);
 
-    void CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialStateDied);
-    void CreateDoor(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool isOpen);
+	void CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialStateDied);
+	void CreateDoor(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool isOpen);
 };

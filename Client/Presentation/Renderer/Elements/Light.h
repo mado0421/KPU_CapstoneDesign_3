@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 constexpr UINT SpotLightShadowIdxIncrement        = 1;
 constexpr UINT PointLightShadowIdxIncrement       = 6;
@@ -32,7 +32,7 @@ struct CB_LIGHT_INFO
     //XMFLOAT4X4	padding3;
 };
 
-struct LIGHT_DESC
+struct LightDescription
 {
     LightType lightType     = LIGHT_NONE;
     XMFLOAT3  xmf3Color     = XMFLOAT3(0, 0, 0);
@@ -99,9 +99,9 @@ private:
 class LightManager
 {
 public:
-    UINT AddPointLight(LIGHT_DESC desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle);
-    UINT AddDirectionalLight(LIGHT_DESC desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle, UINT nCascade = 3);
-    UINT AddSpotLight(LIGHT_DESC desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle);
+    UINT AddPointLight(LightDescription desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle);
+    UINT AddDirectionalLight(LightDescription desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle, UINT nCascade = 3);
+    UINT AddSpotLight(LightDescription desc, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescHandle);
 
     void TurnOn(UINT i) { m_vecLight[i]->m_bIsEnable = true; }
     void TurnOff(UINT i) { m_vecLight[i]->m_bIsEnable = false; }
