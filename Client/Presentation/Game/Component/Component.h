@@ -2,13 +2,13 @@
 
 #include "pch.h"
 
-class Object;
+class GameObject;
 
 class Component
 {
 public:
 	Component() = delete;
-	Component(Object*);
+	Component(GameObject*);
 	virtual ~Component();
 
 	virtual void CheckCollision(Component*);
@@ -19,7 +19,14 @@ public:
 
 	void SetActive(bool);
 
-public:
-	Object* object    = nullptr;
-	bool    is_enable = true;
+	// Getter/Setter methods
+	GameObject* GetGameObject() const { return game_object_; }
+	void SetGameObject(GameObject* game_object) { game_object_ = game_object; }
+
+	bool IsEnabled() const { return is_enable_; }
+	void SetEnabled(bool enabled) { is_enable_ = enabled; }
+
+private:
+	GameObject* game_object_ = nullptr;
+	bool        is_enable_   = true;
 };

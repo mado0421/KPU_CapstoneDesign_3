@@ -7,7 +7,7 @@ class AnimatorComponent : public Component
 {
 public:
     AnimatorComponent() = delete;
-    AnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy);
+    AnimatorComponent(GameObject* pObject, const char* strClipNameForBoneHierarchy);
     ~AnimatorComponent() override;
 
     XMFLOAT4X4* GetFinalResultAnimationTransform();
@@ -33,7 +33,7 @@ class HumanoidAnimatorComponent : public AnimatorComponent
 {
 public:
     HumanoidAnimatorComponent() = delete;
-    HumanoidAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy);
+    HumanoidAnimatorComponent(GameObject* pObject, const char* strClipNameForBoneHierarchy);
     ~HumanoidAnimatorComponent() override;
 
     void Update(float fTimeElapsed) override;
@@ -51,7 +51,7 @@ class TargetBoardAnimatorComponent : public AnimatorComponent
 {
 public:
     TargetBoardAnimatorComponent() = delete;
-    TargetBoardAnimatorComponent(Object*, const char*);
+    TargetBoardAnimatorComponent(GameObject*, const char*);
     ~TargetBoardAnimatorComponent() override;
 
     void Update(float fTimeElapsed) override;

@@ -132,7 +132,7 @@ void FollowCamera::SetTarget(void* target)
     //SetLookAt(pos);
 }
 
-Object* FollowCamera::GetTarget() { return m_pTarget; }
+GameObject* FollowCamera::GetTarget() { return m_pTarget; }
 
 void FollowCamera::Update(float fTimeElapsed)
 {

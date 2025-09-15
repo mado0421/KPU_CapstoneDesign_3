@@ -1,10 +1,10 @@
 ﻿#include "pch.h"
 #include "WeaponControllerComponent.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Core/Scene.h"
 
-WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pMuzzle, Object* pBullet) : Component(pObject),
+WeaponControllerComponent::WeaponControllerComponent(GameObject* pObject, GameObject* pMuzzle, GameObject* pBullet) : Component(pObject),
                                                                                                           m_maxAmmo(10),
                                                                                                           m_curAmmo(m_maxAmmo),
                                                                                                           m_bReloading(false),
@@ -16,7 +16,7 @@ WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pM
                                                                                                           camTransform(nullptr),
                                                                                                           cam(nullptr)
 {
-    myTransform     = object->GetComponent<TransformComponent>();
+    myTransform     = GetGameObject()->GetComponent<TransformComponent>();
     muzzleTransform = m_pMuzzle->GetComponent<TransformComponent>();
 }
 
@@ -24,7 +24,7 @@ WeaponControllerComponent::~WeaponControllerComponent() {}
 
 void WeaponControllerComponent::CheckCollision(Component* other)
 {
-    if (!is_enable || !other->is_enable) return;
+    if (!IsEnabled() || !other->IsEnabled()) return;
 
     if (m_fTryRaycast)
     {
@@ -119,14 +119,14 @@ void WeaponControllerComponent::SolveConstraint()
         m_fMinLength  = FLT_MAX;
         if (m_pCollided)
         {
-            TempCharacter* enemy = m_pCollided->object->GetComponent<TempCharacter>();
+            TempCharacter* enemy = m_pCollided->GetGameObject()->GetComponent<TempCharacter>();
 
             if (enemy) enemy->Damage(100);
         }
         m_pCollided = nullptr;
 
         {
-            auto pe = new Object("particleEmitter");
+            auto pe = new GameObject("particleEmitter");
 
             auto t   = new TransformComponent(pe);
             auto pec = new ParticleEmitterComponent(pe);
@@ -160,7 +160,7 @@ void WeaponControllerComponent::SolveConstraint()
 
 void WeaponControllerComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     m_fCurrCooltime -= fTimeElapsed;
 
@@ -177,9 +177,9 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 
     // Move to position of Parent's RHand
-    if (object->GetParent())
+    if (GetGameObject()->GetParent())
     {
-        XMMATRIX l_xmmtxTransform = object->GetParent()->GetComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
+        XMMATRIX l_xmmtxTransform = GetGameObject()->GetParent()->GetComponent<HumanoidAnimatorComponent>()->GetToWorldTransform(28);
         l_xmmtxTransform          = XMMatrixMultiply(XMMatrixRotationRollPitchYaw(0, XMConvertToRadians(-90), XMConvertToRadians(-90)), l_xmmtxTransform);
 
         TransformComponent* transform = myTransform;
@@ -194,7 +194,7 @@ void WeaponControllerComponent::Update(float fTimeElapsed)
 
 void WeaponControllerComponent::Fire()
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
     if (m_bReloading) return;
 
     if (0 >= m_curAmmo)
@@ -219,7 +219,7 @@ void WeaponControllerComponent::Reload()
     m_fReloadProgress = m_fReloadTime;
 }
 
-void WeaponControllerComponent::SetCam(Object* pCam)
+void WeaponControllerComponent::SetCam(GameObject* pCam)
 {
     camTransform = pCam->GetComponent<TransformComponent>();
     cam          = pCam->GetComponent<CameraComponent>();

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Scene.h"
 
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Renderer/Elements/Light.h"
 #include "Presentation/ResourceLoader/Importer.h"
 #include "Presentation/Renderer/Elements/Model.h"
@@ -189,7 +190,7 @@ void Scene::Input(UCHAR* key_buffer)
 		xmf2MouseMovement.y = 0;
 	}
 
-	for_each(objects_.begin(), objects_.end(), [&](Object* o) { o->Input(key_buffer, xmf2MouseMovement); });
+	for_each(objects_.begin(), objects_.end(), [&](GameObject* o) { o->Input(key_buffer, xmf2MouseMovement); });
 
 	if (key_buffer[_M] & 0xF0)
 	{
@@ -222,7 +223,7 @@ void Scene::Update(float delta_time)
 	CheckCollision();
 	SolveConstraint();
 
-	for_each(objects_.begin(), objects_.end(), [&delta_time](Object* o) { if (o->IsEnabled()) o->Update(delta_time); });
+	for_each(objects_.begin(), objects_.end(), [&delta_time](GameObject* o) { if (o->IsEnabled()) o->Update(delta_time); });
 }
 
 void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_rtv, D3D12_CPU_DESCRIPTOR_HANDLE back_buffer_dsv)
@@ -646,7 +647,7 @@ void Scene::Defeat()
 {
 }
 
-void Scene::AddObject(Object* object, RenderGroup render_group)
+void Scene::AddObject(GameObject* object, RenderGroup render_group)
 {
 	objects_.push_back(object);
 
@@ -663,7 +664,7 @@ void Scene::AddObject(Object* object, RenderGroup render_group)
 	}
 }
 
-void Scene::DeleteObject(Object* object)
+void Scene::DeleteObject(GameObject* object)
 {
 }
 
@@ -1136,7 +1137,7 @@ vector<ColliderObjectData> LoadMy::LoadColliderList(const char* path)
 	return result;
 }
 
-Object* Scene::FindObjectByName(const char* strName)
+GameObject* Scene::FindObjectByName(const char* strName)
 {
 	for (auto iter = objects_.begin(); iter != objects_.end(); ++iter) if (strName == (*iter)->GetName()) return *iter;
 	return nullptr;
@@ -1147,7 +1148,7 @@ void Scene::BuildObject()
 	// Particle Pool Initialize
 	for (int i = 0; i < MAX_PARTICLE_NUM; i++)
 	{
-		auto ptc = new Object();
+		auto ptc = new GameObject();
 
 		auto t  = new TransformComponent(ptc);
 		auto pc = new ParticleComponent(ptc, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1158,7 +1159,7 @@ void Scene::BuildObject()
 		particle_pool.push_back(ptc);
 	}
 	//{
-	//	Object* particle_emitter_object_ = new Object("particleEmitter");
+	//	GameObject* particle_emitter_object_ = new GameObject("particleEmitter");
 	//	
 	//	TransformComponent* t = new TransformComponent(particle_emitter_object_);
 	//	ParticleEmitterComponent* pec = new ParticleEmitterComponent(particle_emitter_object_);
@@ -1180,7 +1181,7 @@ void Scene::BuildObject()
 
 	{
 		// muzzle, empty object for weapon
-		auto muzzle     = new Object("muzzle");
+		auto muzzle     = new GameObject("muzzle");
 		auto mTransform = new TransformComponent(muzzle);
 		auto effect     = new EffectComponent(muzzle);
 		auto mrcm       = new MeshRendererComponent(muzzle, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1197,7 +1198,7 @@ void Scene::BuildObject()
 		effect_render_group_.push_back(muzzle);
 
 		// weapon
-		auto weapon = new Object("pistol");
+		auto weapon = new GameObject("pistol");
 
 		auto wTransform = new TransformComponent(weapon);
 		auto wcc        = new WeaponControllerComponent(weapon, muzzle, nullptr);
@@ -1213,7 +1214,7 @@ void Scene::BuildObject()
 	}
 	{
 		// player
-		auto player = new Object("player"); //Vector3(-6.78999996,0,15.6700001)
+		auto player = new GameObject("player"); //Vector3(-6.78999996,0,15.6700001)
 
 		auto transform           = new TransformComponent(player);
 		auto controller          = new InputManagerComponent(player);
@@ -1237,7 +1238,7 @@ void Scene::BuildObject()
 		FindObjectByName("pistol")->SetParent(player);
 	}
 	{
-		auto head = new Object("head");
+		auto head = new GameObject("head");
 
 		auto transform = new TransformComponent(head);
 		transform->Translate(0, 1.5f, 0.0f);
@@ -1246,7 +1247,7 @@ void Scene::BuildObject()
 		head->SetParent(FindObjectByName("player"));
 	}
 	{
-		auto look = new Object("lookAt");
+		auto look = new GameObject("lookAt");
 
 		auto transform = new TransformComponent(look);
 		transform->Translate(0, 1.5f, 5.0f);
@@ -1257,7 +1258,7 @@ void Scene::BuildObject()
 		FindObjectByName("player")->GetComponent<HumanoidControllerComponent>()->SetLookAt(look);
 	}
 	{
-		auto camera = new Object("camera");
+		auto camera = new GameObject("camera");
 
 		auto transform = new TransformComponent(camera);
 		auto cam       = new CameraComponent(camera);
@@ -1307,13 +1308,13 @@ void Scene::BuildObject()
 	}
 
 	/*===========================================================================
-	* Env Object
+	* Env GameObject
 	*==========================================================================*/
 	LoadLevelEnvironment();
 	{
 		//// Door
 		//{
-		//	Object* env = new Object("door00");
+		//	GameObject* env = new GameObject("door00");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1328,7 +1329,7 @@ void Scene::BuildObject()
 		//	m_vecNonAnimObjectRenderGroup.push_back(env);
 		//}
 		//{
-		//	Object* env = new Object("door01");
+		//	GameObject* env = new GameObject("door01");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1343,7 +1344,7 @@ void Scene::BuildObject()
 		//	m_vecNonAnimObjectRenderGroup.push_back(env);
 		//}
 		//{
-		//	Object* env = new Object("door02");
+		//	GameObject* env = new GameObject("door02");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1359,7 +1360,7 @@ void Scene::BuildObject()
 		//	m_vecNonAnimObjectRenderGroup.push_back(env);
 		//}
 		//{
-		//	Object* env = new Object("door03");
+		//	GameObject* env = new GameObject("door03");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1375,7 +1376,7 @@ void Scene::BuildObject()
 		//	m_vecNonAnimObjectRenderGroup.push_back(env);
 		//}
 		//{
-		//	Object* env = new Object("door04");
+		//	GameObject* env = new GameObject("door04");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1391,7 +1392,7 @@ void Scene::BuildObject()
 		//	m_vecNonAnimObjectRenderGroup.push_back(env);
 		//}
 		//{
-		//	Object* env = new Object("door05");
+		//	GameObject* env = new GameObject("door05");
 
 		//	TransformComponent* transform = new TransformComponent(env);
 		//	BoxColliderComponent* boxCollider = new BoxColliderComponent(env, XMFLOAT3(0, 1.5f, 0), XMFLOAT3(1.5f, 1.5f, 0.15f), XMFLOAT4(0, 0, 0, 1));
@@ -1409,7 +1410,7 @@ void Scene::BuildObject()
 
 		//// Trigger
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-1.5, 0, -7.5);
@@ -1420,7 +1421,7 @@ void Scene::BuildObject()
 		//	m_vecObject.push_back(trig);
 		//}
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-1.5, 0, -15);
@@ -1431,7 +1432,7 @@ void Scene::BuildObject()
 		//	m_vecObject.push_back(trig);
 		//}
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-1.5, 0, -20);
@@ -1443,7 +1444,7 @@ void Scene::BuildObject()
 		//	m_vecObject.push_back(trig);
 		//}
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-7.5, 0, -21);
@@ -1458,7 +1459,7 @@ void Scene::BuildObject()
 		//	m_vecObject.push_back(trig);
 		//}
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-19, 0, -17);
@@ -1474,7 +1475,7 @@ void Scene::BuildObject()
 		//	m_vecObject.push_back(trig);
 		//}
 		//{
-		//	Object* trig = new Object();
+		//	GameObject* trig = new GameObject();
 
 		//	TransformComponent* transform = new TransformComponent(trig);
 		//	transform->Translate(-27, 0, -11.5);
@@ -1494,7 +1495,7 @@ void Scene::BuildObject()
 
 
 	/*===========================================================================
-	* Interaction Object
+	* Interaction GameObject
 	*==========================================================================*/
 	CreateDoor("d0", XMFLOAT3(-3, 0.0f, 6.2f), XMFLOAT3(0, 0, 0), true);
 	CreateDoor("d1", XMFLOAT3(-16.7180004, 0, 2.38000011), XMFLOAT3(0, 90, 0), false);
@@ -1534,7 +1535,7 @@ void Scene::BuildObject()
 
 	{
 		// ó�� �� �ݱ�
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1543,7 +1544,7 @@ void Scene::BuildObject()
 		transform->Translate(-4.48, 0, 0.7); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("d0"));
 		auto close     = EventInfo(EVENT::DCLOSE, temp);
 		auto triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
@@ -1552,7 +1553,7 @@ void Scene::BuildObject()
 		trigEvent->AddEvent(triggerOn);
 
 
-		//vector<Object*>* temp2 = new vector<Object*>;
+		//vector<GameObject*>* temp2 = new vector<GameObject*>;
 		//EventInfo i = EventInfo(EVENT::VICTORY, temp2);
 		//trigEvent->AddEvent(i);
 
@@ -1560,7 +1561,7 @@ void Scene::BuildObject()
 	}
 	{
 		// ù �������� �� ����
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1569,7 +1570,7 @@ void Scene::BuildObject()
 		transform->Translate(-14.5600004, 0, 0.879999995); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t0"));
 		auto i         = EventInfo(EVENT::EWAKE, temp);
 		auto triggerOn = EventInfo(EVENT::TRIGGER, nullptr);
@@ -1583,19 +1584,19 @@ void Scene::BuildObject()
 
 	{
 		// ù ���� �� ������ ù �� �� ����
-		auto trig      = new Object();
+		auto trig      = new GameObject();
 		auto transform = new TransformComponent(trig);
 		auto trigEvent = new EventComponent(trig, 1);
 
 		transform->Translate(-8.81999969, 0, 39.6100006); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("d1"));
 		auto i = EventInfo(EVENT::DOPEN, temp);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		temp2->push_back(FindObjectByName("t0"));
 		i = EventInfo(EVENT::EDIED, temp2);
 		trigEvent->AddEvent(i);
@@ -1606,7 +1607,7 @@ void Scene::BuildObject()
 
 	{
 		// ù �� ������ �� �� ����
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1615,7 +1616,7 @@ void Scene::BuildObject()
 		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t1"));
 		//temp->push_back(FindObjectByName("t2"));
 		temp->push_back(FindObjectByName("t3"));
@@ -1631,21 +1632,21 @@ void Scene::BuildObject()
 
 	{
 		// �� �� ������ ù �� ������ �� ����
-		auto trig      = new Object();
+		auto trig      = new GameObject();
 		auto transform = new TransformComponent(trig);
 		auto trigEvent = new EventComponent(trig, 3);
 
 		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t1"));
 		//temp->push_back(FindObjectByName("t2"));
 		temp->push_back(FindObjectByName("t3"));
 		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		temp2->push_back(FindObjectByName("d2"));
 		i = EventInfo(EVENT::DOPEN, temp2);
 		trigEvent->AddEvent(i);
@@ -1656,7 +1657,7 @@ void Scene::BuildObject()
 
 	{
 		// �ι�° ���� �����ϸ� �� �� ����
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1664,7 +1665,7 @@ void Scene::BuildObject()
 
 		transform->Translate(-24.0100002, 0.39199999, 10.3000002);
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t4"));
 		temp->push_back(FindObjectByName("t5"));
 		auto i = EventInfo(EVENT::EWAKE, temp);
@@ -1679,20 +1680,20 @@ void Scene::BuildObject()
 
 	{
 		// �� ���� ������ �ι�° ���� ������ �� ����
-		auto trig      = new Object();
+		auto trig      = new GameObject();
 		auto transform = new TransformComponent(trig);
 		auto trigEvent = new EventComponent(trig, 5);
 
 		transform->Translate(-19.2399998, 0.39199999, 0.949999988); //-6.78999996, 0, 15.6700001
 		//transform->Translate(-6.78999996, 0, 15.6700001);//
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t4"));
 		temp->push_back(FindObjectByName("t5"));
 		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		temp2->push_back(FindObjectByName("d3"));
 		i = EventInfo(EVENT::DOPEN, temp2);
 		trigEvent->AddEvent(i);
@@ -1703,7 +1704,7 @@ void Scene::BuildObject()
 
 	{
 		// ������ �� �����ϸ� �� �ݰ� �� ���� ����
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1711,7 +1712,7 @@ void Scene::BuildObject()
 
 		transform->Translate(-8.18999958, 0.39199999, 39.4799995);
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t6"));
 		//temp->push_back(FindObjectByName("t7"));
 		temp->push_back(FindObjectByName("t8"));
@@ -1724,7 +1725,7 @@ void Scene::BuildObject()
 		i = EventInfo(EVENT::TRIGGER, nullptr);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		temp2->push_back(FindObjectByName("d4"));
 		temp2->push_back(FindObjectByName("d5"));
 		auto close = EventInfo(EVENT::DCLOSE, temp2);
@@ -1736,11 +1737,11 @@ void Scene::BuildObject()
 
 	{
 		// �� 12 ������ ������ �� ������ ��, �������� ���� �� ����
-		auto trig      = new Object();
+		auto trig      = new GameObject();
 		auto transform = new TransformComponent(trig);
 		auto trigEvent = new EventComponent(trig, 8);
 
-		auto temp = new vector<Object*>;
+		auto temp = new vector<GameObject*>;
 		temp->push_back(FindObjectByName("t6"));
 		//temp->push_back(FindObjectByName("t7"));
 		temp->push_back(FindObjectByName("t8"));
@@ -1750,7 +1751,7 @@ void Scene::BuildObject()
 		auto i = EventInfo(EVENT::EDIED, temp);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		temp2->push_back(FindObjectByName("d5"));
 		temp2->push_back(FindObjectByName("d6"));
 		i = EventInfo(EVENT::DOPEN, temp2);
@@ -1762,7 +1763,7 @@ void Scene::BuildObject()
 
 	{
 		// ������������ ���ư� �� ������ �¸�
-		auto trig        = new Object();
+		auto trig        = new GameObject();
 		auto transform   = new TransformComponent(trig);
 		auto boxCollider = new BoxColliderComponent(trig, XMFLOAT3(0, 0, 0), XMFLOAT3(3, 1.5, 3), XMFLOAT4(0, 0, 0, 1),
 			true);
@@ -1773,7 +1774,7 @@ void Scene::BuildObject()
 		auto i = EventInfo(EVENT::TRIGGER, nullptr);
 		trigEvent->AddEvent(i);
 
-		auto temp2 = new vector<Object*>;
+		auto temp2 = new vector<GameObject*>;
 		auto close = EventInfo(EVENT::VICTORY, temp2);
 		trigEvent->AddEvent(close);
 
@@ -1781,11 +1782,11 @@ void Scene::BuildObject()
 	}
 
 	/*===========================================================================
-	* UI Object
+	* UI GameObject
 	*==========================================================================*/
 
 	{
-		auto text = new Object("TextHpInfo");
+		auto text = new GameObject("TextHpInfo");
 
 		auto transform = new TransformComponent(text);
 		auto TRC       = new TextRendererComponent(text, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1801,7 +1802,7 @@ void Scene::BuildObject()
 		ui_render_group_.push_back(text);
 	}
 	{
-		auto text = new Object("TextHpInfo");
+		auto text = new GameObject("TextHpInfo");
 
 		auto transform = new TransformComponent(text);
 		auto TRC       = new TextRendererComponent(text, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1817,7 +1818,7 @@ void Scene::BuildObject()
 		ui_render_group_.push_back(text);
 	}
 	{
-		auto text = new Object("TextAmmoInfo");
+		auto text = new GameObject("TextAmmoInfo");
 
 		auto transform = new TransformComponent(text);
 		auto TRC       = new TextRendererComponent(text, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1885,7 +1886,7 @@ void Scene::LoadLevelEnvironment()
 
 void Scene::CreateEnvObject(const char* strModelName, const char* strMaterialName, XMFLOAT3 pos, XMFLOAT4 rot)
 {
-	auto env = new Object();
+	auto env = new GameObject();
 
 	auto transform = new TransformComponent(env);
 	auto mrc       = new MeshRendererComponent(env, device_, command_list_, cbv_cpu_descriptor_start_handle_,
@@ -1909,7 +1910,7 @@ void Scene::CreateEnvObject(EnvironmentObjectData objData)
 
 void Scene::CreateCollider(ColliderObjectData colData)
 {
-	auto box = new Object();
+	auto box = new GameObject();
 
 	XMFLOAT3 extents(colData.xmf3Extents.x * 0.5f, colData.xmf3Extents.y * 0.5f, colData.xmf3Extents.z * 0.5f);
 
@@ -1921,7 +1922,7 @@ void Scene::CreateCollider(ColliderObjectData colData)
 
 void Scene::CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool initialState)
 {
-	auto targetBoard = new Object(strName);
+	auto targetBoard = new GameObject(strName);
 
 	auto transform           = new TransformComponent(targetBoard);
 	auto skinnedMeshRenderer = new SkinnedMeshRendererComponent(targetBoard, device_, command_list_,
@@ -1951,7 +1952,7 @@ void Scene::CreateTargetBoard(const char* strName, XMFLOAT3 position, XMFLOAT3 r
 
 void Scene::CreateDoor(const char* strName, XMFLOAT3 position, XMFLOAT3 rotationAngle, bool isOpen)
 {
-	auto d         = new Object(strName);
+	auto d         = new GameObject(strName);
 	auto transform = new TransformComponent(d);
 	transform->Translate(position);
 	transform->RotateXYZDegree(rotationAngle);

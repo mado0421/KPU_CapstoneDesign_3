@@ -1,15 +1,15 @@
 ﻿#include "pch.h"
 #include "RigidbodyComponent.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
 
-RigidbodyComponent::RigidbodyComponent(Object* pObject) : Component(pObject), m_xmf3PrevPosition(XMFLOAT3(0, 0, 0)) {}
+RigidbodyComponent::RigidbodyComponent(GameObject* pObject) : Component(pObject), m_xmf3PrevPosition(XMFLOAT3(0, 0, 0)) {}
 
 RigidbodyComponent::~RigidbodyComponent() {}
 
 void RigidbodyComponent::SolveConstraint()
 {
-    vector<ColliderComponent*> l_vecCollider = object->GetComponents<ColliderComponent>();
+    vector<ColliderComponent*> l_vecCollider = GetGameObject()->GetComponents<ColliderComponent>();
 
     for_each(l_vecCollider.begin(), l_vecCollider.end(), [&](ColliderComponent* c)
     {
@@ -20,7 +20,7 @@ void RigidbodyComponent::SolveConstraint()
                 if (c->m_vecpCollided[idx]->isTrigger()) continue;
 
                 // ray direction�� ���Ѵ�.
-                TransformComponent* transform        = object->GetComponent<TransformComponent>();
+                TransformComponent* transform        = GetGameObject()->GetComponent<TransformComponent>();
                 XMFLOAT3            xmf3CurrPosition = transform->GetPosition();
                 XMFLOAT3            xmf3CurrVector   = vector3::Subtract(xmf3CurrPosition, m_xmf3PrevPosition);
                 if (0 == vector3::Length(xmf3CurrVector)) continue;
@@ -144,4 +144,4 @@ void RigidbodyComponent::SolveConstraint()
 }
 
 // Rigidbody::Update()�� �̵��ϴ� ������Ʈ�� ���� ���� ����Ǿ�� ��!!
-void RigidbodyComponent::Update(float fTimeElapsed) { m_xmf3PrevPosition = object->GetComponent<TransformComponent>()->GetPosition(); }
+void RigidbodyComponent::Update(float fTimeElapsed) { m_xmf3PrevPosition = GetGameObject()->GetComponent<TransformComponent>()->GetPosition(); }

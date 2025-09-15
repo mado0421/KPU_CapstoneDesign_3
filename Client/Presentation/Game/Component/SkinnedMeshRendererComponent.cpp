@@ -1,13 +1,13 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkinnedMeshRendererComponent.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Renderer/Elements/Model.h"
 
 #include "Presentation/Game/Manager/MaterialManager.h"
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
 
-SkinnedMeshRendererComponent::SkinnedMeshRendererComponent(Object*                      pObject,
+SkinnedMeshRendererComponent::SkinnedMeshRendererComponent(GameObject*                      pObject,
 														   ID3D12Device*                pd3dDevice,
 														   ID3D12GraphicsCommandList*   pd3dCommandList,
 														   D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
@@ -29,19 +29,19 @@ SkinnedMeshRendererComponent::~SkinnedMeshRendererComponent() {}
 
 void SkinnedMeshRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_OBJECTS, m_d3dCbvGPUDescriptorHandleForMesh);
     UINT ncbElementBytes = sizeof(XMFLOAT4X4) + 255 & ~255;
     memset(m_pCBMappedWorldTransform, NULL, ncbElementBytes);
-    XMMATRIX l_xmmtxWorldTransform = object->GetComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX l_xmmtxWorldTransform = GetGameObject()->GetComponent<TransformComponent>()->GetWorldTransform();
     XMStoreFloat4x4(m_pCBMappedWorldTransform, XMMatrixTranspose(l_xmmtxWorldTransform));
 
     pd3dCommandList->SetGraphicsRootDescriptorTable(ROOTSIGNATURE_ANIMTRANSFORM, m_d3dCbvGPUDescriptorHandleForAnimation);
     ncbElementBytes = sizeof(CB_BONE_INFO) + 255 & ~255;
     memset(m_pCBMappedBonesTransform, NULL, ncbElementBytes);
 
-    XMFLOAT4X4* xmf4x4AnimTransform = object->GetComponent<AnimatorComponent>()->GetFinalResultAnimationTransform();
+    XMFLOAT4X4* xmf4x4AnimTransform = GetGameObject()->GetComponent<AnimatorComponent>()->GetFinalResultAnimationTransform();
     for (int i = 0; i < MAX_BONE_NUM; i++) m_pCBMappedBonesTransform->arrxmf4x4Transform[i] = xmf4x4AnimTransform[i];
 
 

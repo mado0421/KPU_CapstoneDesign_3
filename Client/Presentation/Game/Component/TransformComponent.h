@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 #include "Presentation/Game/Component/Component.h"
 
 /*
-	TransformComponent Component is Component for Object Coordnation.
+	TransformComponent Component is Component for GameObject Coordnation.
 */
 
 enum class Space
@@ -15,7 +15,7 @@ class TransformComponent : public Component
 {
 public:
     TransformComponent() = delete;
-    TransformComponent(Object* pObject);
+    TransformComponent(GameObject* pObject);
     ~TransformComponent() override;
 
     void SetLocalTransform(const XMMATRIX& xmmtxTransform);

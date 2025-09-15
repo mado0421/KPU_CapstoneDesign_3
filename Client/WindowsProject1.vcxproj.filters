@@ -9,44 +9,41 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Core">
+    <Filter Include="Presentation">
       <UniqueIdentifier>{a0def10a-32da-49e2-93e8-558936b33286}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components">
+    <Filter Include="Presentation\Game">
       <UniqueIdentifier>{b93c48ed-ad7a-4734-ba59-d143b8a4af95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Animation">
+    <Filter Include="Presentation\Game\Component">
       <UniqueIdentifier>{505e4e25-7faf-4cb4-91f1-492d0bb1e12e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Controllers">
+    <Filter Include="Presentation\Game\Core">
       <UniqueIdentifier>{16485320-095f-441b-870d-173e1ec113e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Graphics">
+    <Filter Include="Presentation\Game\Input">
       <UniqueIdentifier>{8ff2f8e0-adb1-41da-86cf-2c3d68640173}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Physics">
+    <Filter Include="Presentation\Game\Manager">
       <UniqueIdentifier>{ece6963c-f33c-4cc9-81a5-a5ec416c6c4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\Scripts">
+    <Filter Include="Presentation\Game\Utility">
       <UniqueIdentifier>{d2d9e744-1eff-47cd-87cb-c99f15dbd1e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components\UI">
+    <Filter Include="Presentation\Renderer">
       <UniqueIdentifier>{50d86b91-ffd9-4f08-a0ba-54bc3f27dbd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics">
+    <Filter Include="Presentation\Renderer\DirectX">
       <UniqueIdentifier>{90a4fd83-6b49-4d15-8a02-53ce43042263}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resources">
+    <Filter Include="Presentation\Renderer\Elements">
       <UniqueIdentifier>{38c0a03f-2e85-4fc5-af56-d40a1ab632ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utils">
+    <Filter Include="Presentation\ResourceLoader">
       <UniqueIdentifier>{effc61e6-5f38-4375-9cdb-2785919d36e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\IO">
+    <Filter Include="Resources">
       <UniqueIdentifier>{3039cdb3-d862-4227-aaeb-b83d276ad2d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Character">
-      <UniqueIdentifier>{7f5f145b-814e-4188-96cd-9804c6a9066d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{c42eda4d-34c4-440b-bae0-066ad089088d}</UniqueIdentifier>
@@ -62,274 +59,305 @@
     <ClInclude Include="targetver.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h" />
     <ClInclude Include="Presentation\Game\Core\Framework.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Renderer\PipelineStateObject.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Presentation\Game\Object.h">
-      <Filter>Source Files\Core</Filter>
+    <ClInclude Include="Presentation\Game\GameObject.h">
+      <Filter>Presentation\Game</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\Component.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\Components.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Core\Scene.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Core\Client.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Character.h">
-      <Filter>Source Files\Character</Filter>
+      <Filter>Presentation\Game</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\TransformComponent.h">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\InputManagerComponent.h">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\AnimatorComponent.h">
-      <Filter>Source Files\Components\Animation</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\SkinnedMeshRendererComponent.h">
-      <Filter>Source Files\Components\Animation</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\HumanoidControllerComponent.h">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\WeaponControllerComponent.h">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\TargetBoardControllerComponent.h">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\MeshRendererComponent.h">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\CameraComponent.h">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\EffectComponent.h">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\ParticleComponent.h">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\ParticleEmitterComponent.h">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\ColliderComponent.h">
-      <Filter>Source Files\Components\Physics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\RigidbodyComponent.h">
-      <Filter>Source Files\Components\Physics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\GameManagerComponent.h">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\DoorComponent.h">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\EventComponent.h">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\EnemyDownCounter.h">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\TextRendererComponent.h">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\TextUI.h">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Renderer\Elements\Camera.h">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Renderer\Elements\Light.h">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Utility\Timer.h">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Presentation\Game\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\MathHelper.h">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Presentation</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\ResourceLoader\DDSTextureLoader12.h">
-      <Filter>Source Files\IO</Filter>
+      <Filter>Presentation\ResourceLoader</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\ResourceLoader\Importer.h">
-      <Filter>Source Files\IO</Filter>
+      <Filter>Presentation\ResourceLoader</Filter>
     </ClInclude>
     <ClInclude Include="Presentation\Game\Component\IComponent.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Presentation\Game\Input\KeyCode.h" />
-    <ClInclude Include="Presentation\Game\Manager\AnimationManager.h" />
-    <ClInclude Include="Presentation\Renderer\DirectX\d3dx12.h" />
-    <ClInclude Include="Presentation\Renderer\DirectX\DirectXMethods.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Animation.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\BoneMask.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Material.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Mesh.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Model.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Texture.h" />
-    <ClInclude Include="Presentation\Renderer\Elements\Vertex.h" />
-    <ClInclude Include="Presentation\Game\Manager\MaterialManager.h" />
-    <ClInclude Include="Presentation\Game\Manager\TextureManager.h" />
-    <ClInclude Include="Resources\fontReader\FontReader.h" />
-    <ClInclude Include="Presentation\Renderer\Screen.h" />
-    <ClInclude Include="Presentation\Game\Component\TempCharacter.h" />
+    <ClInclude Include="Presentation\Game\Input\KeyCode.h">
+      <Filter>Presentation\Game\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Game\Manager\AnimationManager.h">
+      <Filter>Presentation\Game\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\DirectX\d3dx12.h">
+      <Filter>Presentation\Renderer\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\DirectX\DirectXMethods.h">
+      <Filter>Presentation\Renderer\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Animation.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\BoneMask.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Material.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Mesh.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Model.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Texture.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Elements\Vertex.h">
+      <Filter>Presentation\Renderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Game\Manager\MaterialManager.h">
+      <Filter>Presentation\Game\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Game\Manager\TextureManager.h">
+      <Filter>Presentation\Game\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\fontReader\FontReader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Renderer\Screen.h">
+      <Filter>Presentation\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Presentation\Game\Component\TempCharacter.h">
+      <Filter>Presentation\Game\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Presentation\Game\Core\Framework.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\PipelineStateObject.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Presentation\Game\Object.cpp">
-      <Filter>Source Files\Core</Filter>
+    <ClCompile Include="Presentation\Game\GameObject.cpp">
+      <Filter>Presentation\Game</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\Component.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Core\Scene.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Core\Client.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Core</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Character.cpp">
-      <Filter>Source Files\Character</Filter>
+      <Filter>Presentation\Game</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\TransformComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\InputManagerComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\AnimatorComponent.cpp">
-      <Filter>Source Files\Components\Animation</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\SkinnedMeshRendererComponent.cpp">
-      <Filter>Source Files\Components\Animation</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\HumanoidControllerComponent.cpp">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\WeaponControllerComponent.cpp">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\TargetBoardControllerComponent.cpp">
-      <Filter>Source Files\Components\Controllers</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\MeshRendererComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\CameraComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\EffectComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\ParticleComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\ParticleEmitterComponent.cpp">
-      <Filter>Source Files\Components\Graphics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\ColliderComponent.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\RigidbodyComponent.cpp">
-      <Filter>Source Files\Components\Physics</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\GameManagerComponent.cpp">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\DoorComponent.cpp">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\EventComponent.cpp">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\EnemyDownCounter.cpp">
-      <Filter>Source Files\Components\Scripts</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\TextRendererComponent.cpp">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\TextUI.cpp">
-      <Filter>Source Files\Components\UI</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Camera.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Light.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Utility\Timer.cpp">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Presentation\Game\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\ResourceLoader\DDSTextureLoader12.cpp">
-      <Filter>Source Files\IO</Filter>
+      <Filter>Presentation\ResourceLoader</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\ResourceLoader\Importer.cpp">
-      <Filter>Source Files\IO</Filter>
+      <Filter>Presentation\ResourceLoader</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\IComponent.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="Resources\fontReader\FontReader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Manager\AnimationManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Game\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\DirectX\DirectXMethods.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Animation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\BoneMask.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Mesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Model.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Texture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Elements\Vertex.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Manager\MaterialManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Game\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Manager\TextureManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Game\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Renderer\Screen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Presentation\Game\Component\TempCharacter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Presentation\Game\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,15 +374,31 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\ComputeShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\GeometryShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Resources\Shaders\ComputeShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\GeometryShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\Header.hlsli" />
-    <None Include="Resources\Shaders\Light.hlsli" />
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
+    <None Include="Resources\Shaders\Header.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Resources\Shaders\Light.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ClassDiagram.cd">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="ClassDiagram1.cd">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
 </Project>

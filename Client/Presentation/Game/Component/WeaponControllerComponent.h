@@ -8,7 +8,7 @@ class WeaponControllerComponent : public Component
 {
 public:
     WeaponControllerComponent() = delete;
-    WeaponControllerComponent(Object* pObject, Object* pMuzzle, Object* pBullet);
+    WeaponControllerComponent(GameObject* pObject, GameObject* pMuzzle, GameObject* pBullet);
     ~WeaponControllerComponent() override;
 
     void CheckCollision(Component* other) override;
@@ -18,7 +18,7 @@ public:
     void Fire();
     void Reload();
 
-    void SetCam(Object* pCam);
+    void SetCam(GameObject* pCam);
 
     // For Ammo
     int   m_maxAmmo;
@@ -29,8 +29,8 @@ public:
     float m_fReloadTime = 3.0f;
 
 protected:
-    Object* m_pBullet;
-    Object* m_pMuzzle;
+    GameObject* m_pBullet;
+    GameObject* m_pMuzzle;
     float   m_fCooltime;
     float   m_fCurrCooltime;
 

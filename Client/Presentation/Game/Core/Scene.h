@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "pch.h"
 
-class Object;
+class GameObject;
 class Screen;
 class Camera;
 class RenderToTextureClass;
@@ -64,19 +64,19 @@ protected:
 	D3D12_GPU_DESCRIPTOR_HANDLE srv_gpu_descriptor_start_handle_ = {};
 
 
-	vector<Object*> objects_;
+	vector<GameObject*> objects_;
 
 	// for Render
-	vector<Object*> non_anim_object_render_group_;
-	vector<Object*> anim_object_render_group_;
-	vector<Object*> effect_render_group_;
-	vector<Object*> ui_render_group_;
+	vector<GameObject*> non_anim_object_render_group_;
+	vector<GameObject*> anim_object_render_group_;
+	vector<GameObject*> effect_render_group_;
+	vector<GameObject*> ui_render_group_;
 
 	// for Particle
-	vector<Object*> particle_emitters_;
+	vector<GameObject*> particle_emitters_;
 
 	// for Camera
-	Object* camera_object_ = nullptr;
+	GameObject* camera_object_ = nullptr;
 
 	vector<Screen*>                             screens_;
 	unordered_map<string, ID3D12PipelineState*> pipeline_states_;
@@ -97,7 +97,7 @@ protected:
 
 
 public:
-	vector<Object*> particle_pool;
+	vector<GameObject*> particle_pool;
 
 	int          event_count    = 0; //enemyDown
 	bool         test          = false;
@@ -116,9 +116,9 @@ public:
 	void Victory();
 	void Defeat();
 
-	void    AddObject(Object* object, RenderGroup render_group);
-	void    DeleteObject(Object* object);
-	Object* FindObjectByName(const char*);
+	void    AddObject(GameObject* object, RenderGroup render_group);
+	void    DeleteObject(GameObject* object);
+	GameObject* FindObjectByName(const char*);
 
 protected:
 	virtual ID3D12RootSignature* CreateRootSignature();

@@ -7,10 +7,10 @@ class EnemyDownCounter : public Component
 {
 public:
     EnemyDownCounter() = delete;
-    EnemyDownCounter(Object* pObject);
+    EnemyDownCounter(GameObject* pObject);
     ~EnemyDownCounter() override;
 
-    void AddTarget(Object* pObject);
+    void AddTarget(GameObject* pObject);
     void SetTextRenderer(TextRendererComponent* pTRC);
 
     void Update(float fTimeElapsed) override;

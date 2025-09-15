@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
-#include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
 
-ColliderComponent::ColliderComponent(Object* pObject, AnimatorComponent* pAnimator, bool bTrigger, int boneIdx) : Component(pObject), m_xmf4x4Local(matrix::Identity()), m_pAnimator(pAnimator), m_boneIdx(boneIdx), m_bTrigger(bTrigger) {}
+#include "Presentation/Game/GameObject.h"
+#include "Presentation/Game/Component/Components.h"
+
+ColliderComponent::ColliderComponent(GameObject* pObject, AnimatorComponent* pAnimator, bool bTrigger, int boneIdx) : Component(pObject), m_xmf4x4Local(matrix::Identity()), m_pAnimator(pAnimator), m_boneIdx(boneIdx), m_bTrigger(bTrigger) {}
 
 ColliderComponent::~ColliderComponent() {}
 
@@ -10,12 +11,12 @@ void ColliderComponent::Update(float fTimeElapsed) { m_vecpCollided.clear(); }
 
 bool ColliderComponent::isTrigger() { return m_bTrigger; }
 
-BoxColliderComponent::BoxColliderComponent(Object* pObject, const XMFLOAT3& xmf3Extents, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
+BoxColliderComponent::BoxColliderComponent(GameObject* pObject, const XMFLOAT3& xmf3Extents, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
 {
     m_box = BoundingOrientedBox(XMFLOAT3(0, 0, 0), xmf3Extents, XMFLOAT4(0, 0, 0, 1));
 }
 
-BoxColliderComponent::BoxColliderComponent(Object* pObject, const XMFLOAT3& xmf3Center, const XMFLOAT3& xmf3Extents, const XMFLOAT4& xmf4Orientation, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(
+BoxColliderComponent::BoxColliderComponent(GameObject* pObject, const XMFLOAT3& xmf3Center, const XMFLOAT3& xmf3Extents, const XMFLOAT4& xmf4Orientation, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(
     pObject, pAnimator, bTrigger, boneIdx)
 {
     m_box = BoundingOrientedBox(xmf3Center, xmf3Extents, xmf4Orientation);
@@ -29,7 +30,7 @@ BoxColliderComponent::~BoxColliderComponent() {}
 
 void BoxColliderComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     m_vecpCollided.clear();
 
@@ -45,7 +46,7 @@ void BoxColliderComponent::Update(float fTimeElapsed)
         local                     = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = object->GetComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = GetGameObject()->GetComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(local, world);
 
@@ -64,12 +65,12 @@ void BoxColliderComponent::Update(float fTimeElapsed)
 
 void BoxColliderComponent::CheckCollision(Component* other)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     auto otherBox = dynamic_cast<BoxColliderComponent*>(other);
     if (otherBox)
     {
-        if (otherBox->is_enable && m_box.Intersects(otherBox->m_box))
+        if (otherBox->IsEnabled() && m_box.Intersects(otherBox->m_box))
         {
             m_vecpCollided.push_back(otherBox);
             otherBox->m_vecpCollided.push_back(this);
@@ -78,7 +79,7 @@ void BoxColliderComponent::CheckCollision(Component* other)
     auto otherSphere = dynamic_cast<SphereColliderComponent*>(other);
     if (otherSphere)
     {
-        if (otherSphere->is_enable && m_box.Intersects(otherSphere->m_sphere))
+        if (otherSphere->IsEnabled() && m_box.Intersects(otherSphere->m_sphere))
         {
             m_vecpCollided.push_back(otherSphere);
             otherSphere->m_vecpCollided.push_back(this);
@@ -86,12 +87,12 @@ void BoxColliderComponent::CheckCollision(Component* other)
     }
 }
 
-SphereColliderComponent::SphereColliderComponent(Object* pObject, const float& fRadius, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
+SphereColliderComponent::SphereColliderComponent(GameObject* pObject, const float& fRadius, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
 {
     m_sphere = BoundingSphere(XMFLOAT3(0, 0, 0), fRadius);
 }
 
-SphereColliderComponent::SphereColliderComponent(Object* pObject, const XMFLOAT3& xmf3Center, const float& fRadius, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
+SphereColliderComponent::SphereColliderComponent(GameObject* pObject, const XMFLOAT3& xmf3Center, const float& fRadius, bool bTrigger, AnimatorComponent* pAnimator, int boneIdx) : ColliderComponent(pObject, pAnimator, bTrigger, boneIdx)
 {
     m_sphere          = BoundingSphere(xmf3Center, fRadius);
     m_xmf4x4Local._41 = xmf3Center.x;
@@ -103,7 +104,7 @@ SphereColliderComponent::~SphereColliderComponent() {}
 
 void SphereColliderComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     m_vecpCollided.clear();
 
@@ -119,7 +120,7 @@ void SphereColliderComponent::Update(float fTimeElapsed)
         local = l_xmmtxTransform;
     }
     else local = XMLoadFloat4x4(&m_xmf4x4Local);
-    XMMATRIX world = object->GetComponent<TransformComponent>()->GetWorldTransform();
+    XMMATRIX world = GetGameObject()->GetComponent<TransformComponent>()->GetWorldTransform();
 
     local = XMMatrixMultiply(world, local);
 
@@ -132,12 +133,12 @@ void SphereColliderComponent::Update(float fTimeElapsed)
 
 void SphereColliderComponent::CheckCollision(Component* other)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     auto otherBox = dynamic_cast<BoxColliderComponent*>(other);
     if (otherBox)
     {
-        if (otherBox->is_enable && m_sphere.Intersects(otherBox->m_box))
+        if (otherBox->IsEnabled() && m_sphere.Intersects(otherBox->m_box))
         {
             m_vecpCollided.push_back(otherBox);
             otherBox->m_vecpCollided.push_back(this);
@@ -146,7 +147,7 @@ void SphereColliderComponent::CheckCollision(Component* other)
     auto otherSphere = dynamic_cast<SphereColliderComponent*>(other);
     if (otherSphere)
     {
-        if (otherSphere->is_enable && m_sphere.Intersects(otherSphere->m_sphere))
+        if (otherSphere->IsEnabled() && m_sphere.Intersects(otherSphere->m_sphere))
         {
             m_vecpCollided.push_back(otherSphere);
             otherSphere->m_vecpCollided.push_back(this);

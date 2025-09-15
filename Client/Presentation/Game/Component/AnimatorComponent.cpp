@@ -2,14 +2,14 @@
 #include "AnimatorComponent.h"
 
 #include "Presentation/MathHelper.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
 #include "Presentation/Renderer/Elements/Animation.h"
 #include "Presentation/Renderer/Elements/BoneMask.h"
 
 #include "Presentation/Game/Manager/AnimationManager.h"
 
-AnimatorComponent::AnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
+AnimatorComponent::AnimatorComponent(GameObject* pObject, const char* strClipNameForBoneHierarchy)
 	: Component(pObject)
 {
 	memset(m_arrToDressInv, NULL, sizeof(XMFLOAT4X4) * MAX_BONE_NUM);
@@ -80,11 +80,11 @@ void AnimatorComponent::CalcToWorld()
 	}
 }
 
-HumanoidAnimatorComponent::HumanoidAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
+HumanoidAnimatorComponent::HumanoidAnimatorComponent(GameObject* pObject, const char* strClipNameForBoneHierarchy)
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy),
 	  m_pAimingMask(new BoneMask(BoneMask::PreDefined::kUpperBody))
 {
-	l_HCC = object->GetComponent<HumanoidControllerComponent>();
+	l_HCC = GetGameObject()->GetComponent<HumanoidControllerComponent>();
 }
 
 HumanoidAnimatorComponent::~HumanoidAnimatorComponent() { delete m_pAimingMask; }
@@ -99,7 +99,7 @@ void AdjustRotationQuaternion(XMVECTOR& src, float x, float y, float z)
 
 void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 {
-	if (!is_enable) return;
+	if (!IsEnabled()) return;
 
 	memset(m_arrLocalRotation, NULL, sizeof(XMFLOAT4) * MAX_BONE_NUM);
 
@@ -228,10 +228,10 @@ void HumanoidAnimatorComponent::Update(float fTimeElapsed)
 	CalcToWorld();
 }
 
-TargetBoardAnimatorComponent::TargetBoardAnimatorComponent(Object* pObject, const char* strClipNameForBoneHierarchy)
+TargetBoardAnimatorComponent::TargetBoardAnimatorComponent(GameObject* pObject, const char* strClipNameForBoneHierarchy)
 	: AnimatorComponent(pObject, strClipNameForBoneHierarchy)
 {
-	l_TCC = object->GetComponent<TargetBoardControllerComponent>();
+	l_TCC = GetGameObject()->GetComponent<TargetBoardControllerComponent>();
 	// if (l_TCC->IsAlive()) m_fStandInterpolationValue = 1.0f;
 	// else m_fStandInterpolationValue                  = 0.0f;
 
@@ -242,7 +242,7 @@ TargetBoardAnimatorComponent::~TargetBoardAnimatorComponent() {}
 
 void TargetBoardAnimatorComponent::Update(float fTimeElapsed)
 {
-	if (!is_enable) return;
+	if (!IsEnabled()) return;
 
 	if (l_TCC->IsAlive()) m_fStandInterpolationValue += fTimeElapsed;
 	else m_fStandInterpolationValue -= fTimeElapsed;

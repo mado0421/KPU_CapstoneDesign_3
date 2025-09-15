@@ -1,7 +1,9 @@
 ﻿#include "pch.h"
+
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 
-EnemyDownCounter::EnemyDownCounter(Object* pObject) : Component(pObject)
+EnemyDownCounter::EnemyDownCounter(GameObject* pObject) : Component(pObject)
 {
     TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
@@ -9,7 +11,7 @@ EnemyDownCounter::EnemyDownCounter(Object* pObject) : Component(pObject)
 
 EnemyDownCounter::~EnemyDownCounter() {}
 
-void EnemyDownCounter::AddTarget(Object* pObject)
+void EnemyDownCounter::AddTarget(GameObject* pObject)
 {
     TargetBoardControllerComponent* temp = pObject->GetComponent<TargetBoardControllerComponent>();
 
@@ -26,7 +28,7 @@ void EnemyDownCounter::SetTextRenderer(TextRendererComponent* pTRC) { m_pTRC = p
 
 void EnemyDownCounter::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     for (int i = 0; i < m_vecTargetCharacter.size(); i++)
     {

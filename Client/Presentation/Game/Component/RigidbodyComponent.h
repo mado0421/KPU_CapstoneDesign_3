@@ -5,7 +5,7 @@ class RigidbodyComponent : public Component
 {
 public:
     RigidbodyComponent() = delete;
-    RigidbodyComponent(Object* pObject);
+    RigidbodyComponent(GameObject* pObject);
     ~RigidbodyComponent() override;
 
     void SolveConstraint() override;

@@ -6,7 +6,7 @@ class MeshRendererComponent : public Component
 {
 public:
     MeshRendererComponent() = delete;
-    MeshRendererComponent(Object* pObject, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle);
+    MeshRendererComponent(GameObject* pObject, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle, D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescriptorStartHandle);
     ~MeshRendererComponent() override;
 
     void Render(ID3D12GraphicsCommandList* pd3dCommandList) override;

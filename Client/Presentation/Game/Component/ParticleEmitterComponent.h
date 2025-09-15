@@ -40,7 +40,7 @@ class ParticleEmitterComponent : public Component
 {
 public:
     ParticleEmitterComponent() = delete;
-    ParticleEmitterComponent(Object* pObject);
+    ParticleEmitterComponent(GameObject* pObject);
     ~ParticleEmitterComponent() override;
 
     void Update(float fTimeElapsed) override;
@@ -52,8 +52,8 @@ public:
 private:
     void AddParticle();
 
-    Object* GetUsableParticle();
-    void    InitializeParticle(Object* pObject);
+    GameObject* GetUsableParticle();
+    void    InitializeParticle(GameObject* pObject);
 
 public:
     float              m_fDuration;
@@ -79,8 +79,8 @@ public:
     float m_fTime;
 
 protected:
-    vector<Object*> m_vecParticle;
+    vector<GameObject*> m_vecParticle;
     string          m_strMaterialName;
 
-    vector<Object*>* m_pSceneParticlePool;
+    vector<GameObject*>* m_pSceneParticlePool;
 };

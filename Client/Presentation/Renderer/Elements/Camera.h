@@ -4,7 +4,7 @@
 #define CAM_MOVE_SPEED		3
 #define CAM_ROTATE_SPEED	3
 
-class Object;
+class GameObject;
 
 struct VS_CB_CAMERA_INFO
 {
@@ -88,7 +88,7 @@ public:
 
     virtual void SetTarget(void* target) {}
 
-    virtual Object* GetTarget() { return nullptr; }
+    virtual GameObject* GetTarget() { return nullptr; }
 
     virtual void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f)
     {
@@ -157,14 +157,14 @@ public:
 
 class FollowCamera : public Camera
 {
-    Object* m_pTarget = nullptr;
+    GameObject* m_pTarget = nullptr;
 
 public:
     FollowCamera();
     ~FollowCamera() override;
 
     void    SetTarget(void* target) override;
-    Object* GetTarget() override;
+    GameObject* GetTarget() override;
     void    Update(float fTimeElapsed) override;
     void    SetLookAt(const XMFLOAT3& xmf3LookAt) override;
 };

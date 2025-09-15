@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Presentation/Renderer/Elements/Light.h"
 
-class Object;
+class GameObject;
 class Material;
 class MeshData;
 struct AnimationClip;

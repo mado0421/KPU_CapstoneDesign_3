@@ -1,8 +1,9 @@
 ﻿#include "pch.h"
+#include "Presentation/Game/GameObject.h"
 #include "TempCharacter.h"
 
 
-TempCharacter::TempCharacter(Object* object, const int max_hit_point) : Component(object), max_hit_point(max_hit_point),
+TempCharacter::TempCharacter(GameObject* object, const int max_hit_point) : Component(object), max_hit_point(max_hit_point),
 	current_hit_point(max_hit_point)
 {
 }
@@ -40,5 +41,5 @@ bool TempCharacter::IsAlive() const
 
 void TempCharacter::Die()
 {
-	is_enable = false;
+	SetEnabled(false);
 }

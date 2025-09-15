@@ -1,12 +1,14 @@
 ﻿#include "pch.h"
+
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 
-DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->GetComponent<TransformComponent>()->GetPosition())
+DoorComponent::DoorComponent(GameObject* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->GetComponent<TransformComponent>()->GetPosition())
 {
     if (m_bOpen) m_fProgress = 1;
     else m_fProgress         = 0;
 
-    l_transform = object->GetComponent<TransformComponent>();
+    l_transform = GetGameObject()->GetComponent<TransformComponent>();
 }
 
 DoorComponent::~DoorComponent() {}
@@ -17,7 +19,7 @@ void DoorComponent::Close() { m_bOpen = false; }
 
 void DoorComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     if (m_bOpen)
     {

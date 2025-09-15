@@ -1,7 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 
-GameManagerComponent::GameManagerComponent(Object* pObject) : Component(pObject) {}
+GameManagerComponent::GameManagerComponent(GameObject* pObject) : Component(pObject) {}
 
 GameManagerComponent::~GameManagerComponent() {}
 

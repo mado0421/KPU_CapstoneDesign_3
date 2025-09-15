@@ -5,7 +5,7 @@ class TempCharacter : public Component
 {
 public:
 	TempCharacter() = delete;
-	TempCharacter(Object*, int max_hit_point);
+	TempCharacter(GameObject*, int max_hit_point);
 	virtual ~TempCharacter();
 
 	virtual void Update(float delta_time) override;

@@ -1,10 +1,11 @@
 ﻿#include "pch.h"
 #include "HumanoidControllerComponent.h"
+
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
 #include "Presentation/Game/Core/Scene.h"
 
-HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object* pWeapon) : TempCharacter(pObject, 100),
+HumanoidControllerComponent::HumanoidControllerComponent(GameObject* pObject, GameObject* pWeapon) : TempCharacter(pObject, 100),
                                                                                              // Character(100, true, false),
                                                                                              m_fTime(0),
                                                                                              m_xmf3Velocity(0, 0, 0),
@@ -14,25 +15,25 @@ HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object
                                                                                              m_fTimeForAim(0.2f),
                                                                                              m_pWeaponObject(pWeapon)
 {
-    l_pInput    = object->GetComponent<InputManagerComponent>();
-    l_transform = object->GetComponent<TransformComponent>();
+    l_pInput    = GetGameObject()->GetComponent<InputManagerComponent>();
+    l_transform = GetGameObject()->GetComponent<TransformComponent>();
 }
 
 HumanoidControllerComponent::~HumanoidControllerComponent() {}
 
-void HumanoidControllerComponent::SetLookAt(Object* pObejct) { m_pLookAt = pObejct->GetComponent<TransformComponent>(); }
+void HumanoidControllerComponent::SetLookAt(GameObject* pObejct) { m_pLookAt = pObejct->GetComponent<TransformComponent>(); }
 
 void HumanoidControllerComponent::Damage(int dmg)
 {
     TempCharacter::Damage(dmg);
 
     {
-        auto pe = new Object("particleEmitter");
+        auto pe = new GameObject("particleEmitter");
 
         auto t   = new TransformComponent(pe);
         auto pec = new ParticleEmitterComponent(pe);
 
-        t->Translate(object->GetComponent<TransformComponent>()->GetPosition(Space::world));
+        t->Translate(GetGameObject()->GetComponent<TransformComponent>()->GetPosition(Space::world));
         t->Translate(0, 1.5, 0);
         pec->m_bIsBilboard      = false;
         pec->m_fGravityModifier = 0.3f;
@@ -53,7 +54,7 @@ void HumanoidControllerComponent::Damage(int dmg)
 
 void HumanoidControllerComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     m_fTime += fTimeElapsed;
 

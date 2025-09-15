@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 #include "TransformComponent.h"
-#include "Presentation/Game/Object.h"
+#include "Presentation/Game/GameObject.h"
 
 
-TransformComponent::TransformComponent(Object* pObject) : Component(pObject), m_xmf4x4Local(matrix::Identity()) {}
+TransformComponent::TransformComponent(GameObject* pObject) : Component(pObject), m_xmf4x4Local(matrix::Identity()) {}
 
 TransformComponent::~TransformComponent() {}
 
@@ -120,9 +120,9 @@ XMMATRIX TransformComponent::GetLocalTransform() { return XMLoadFloat4x4(&m_xmf4
 
 XMMATRIX TransformComponent::GetWorldTransform()
 {
-    if (nullptr != object->GetParent())
+    if (nullptr != GetGameObject()->GetParent())
     {
-        TransformComponent* l_pParentTransform = object->GetParent()->GetComponent<TransformComponent>();
+        TransformComponent* l_pParentTransform = GetGameObject()->GetParent()->GetComponent<TransformComponent>();
         return XMMatrixMultiply(XMLoadFloat4x4(&m_xmf4x4Local), l_pParentTransform->GetWorldTransform());
     }
     return XMLoadFloat4x4(&m_xmf4x4Local);

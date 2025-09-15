@@ -9,10 +9,10 @@ class HumanoidControllerComponent : public TempCharacter
 {
 public:
     HumanoidControllerComponent() = delete;
-    HumanoidControllerComponent(Object* pObject, Object* pWeapon);
+    HumanoidControllerComponent(GameObject* pObject, GameObject* pWeapon);
     ~HumanoidControllerComponent() override;
 
-    void SetLookAt(Object* pObejct);
+    void SetLookAt(GameObject* pObejct);
 
     void Damage(int) override;
     void Update(float fTimeElapsed) override;
@@ -26,7 +26,7 @@ public:
 
     float   m_fAimProgress;
     float   m_fTimeForAim;
-    Object* m_pWeaponObject;
+    GameObject* m_pWeaponObject;
 
     TransformComponent*    m_pLookAt    = nullptr;
     float                  lookAtYAngle = 0;

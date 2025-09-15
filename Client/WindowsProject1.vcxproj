@@ -211,7 +211,7 @@
     <ClInclude Include="Presentation\Renderer\Elements\Light.h" />
     <ClInclude Include="Presentation\MathHelper.h" />
     <ClInclude Include="Presentation\Game\Component\MeshRendererComponent.h" />
-    <ClInclude Include="Presentation\Game\Object.h" />
+    <ClInclude Include="Presentation\Game\GameObject.h" />
     <ClInclude Include="Presentation\Game\Component\ParticleComponent.h" />
     <ClInclude Include="Presentation\Game\Component\ParticleEmitterComponent.h" />
     <ClInclude Include="Presentation\Renderer\PipelineStateObject.h" />
@@ -271,7 +271,7 @@
     <ClCompile Include="Presentation\ResourceLoader\Importer.cpp" />
     <ClCompile Include="Presentation\Renderer\Elements\Light.cpp" />
     <ClCompile Include="Presentation\Game\Component\MeshRendererComponent.cpp" />
-    <ClCompile Include="Presentation\Game\Object.cpp" />
+    <ClCompile Include="Presentation\Game\GameObject.cpp" />
     <ClCompile Include="Presentation\Game\Component\ParticleComponent.cpp" />
     <ClCompile Include="Presentation\Game\Component\ParticleEmitterComponent.cpp" />
     <ClCompile Include="Presentation\Renderer\PipelineStateObject.cpp" />
@@ -340,8 +340,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\Shaders\Header.hlsli" />
     <None Include="Resources\Shaders\Light.hlsli" />
   </ItemGroup>

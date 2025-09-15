@@ -5,7 +5,7 @@ class EffectComponent : public Component
 {
 public:
     EffectComponent() = delete;
-    EffectComponent(Object* pObject);
+    EffectComponent(GameObject* pObject);
     ~EffectComponent() override;
 
     void Update(float fTimeElapsed) override;

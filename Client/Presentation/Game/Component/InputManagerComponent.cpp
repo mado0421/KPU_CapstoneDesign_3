@@ -1,9 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
+#include "Presentation/Game/GameObject.h"
 #include "InputManagerComponent.h"
 
 #include "Presentation/Game/Component/Components.h"
 
-InputManagerComponent::InputManagerComponent(Object* pObject) : Component(pObject), m_xmf2MouseMovement(0, 0) {}
+InputManagerComponent::InputManagerComponent(GameObject* pObject) : Component(pObject), m_xmf2MouseMovement(0, 0) {}
 
 InputManagerComponent::~InputManagerComponent() {}
 

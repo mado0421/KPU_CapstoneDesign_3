@@ -1,10 +1,12 @@
 ﻿#include "pch.h"
+
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 #include "Presentation/Game/Core/Scene.h"
 
 #include "Presentation/Game/Manager/MaterialManager.h"
 
-ParticleEmitterComponent::ParticleEmitterComponent(Object* pObject) : Component(pObject),
+ParticleEmitterComponent::ParticleEmitterComponent(GameObject* pObject) : Component(pObject),
 																	  m_fDuration(5.0f),
 																	  m_bLooping(true),
 																	  m_bPrewarm(false),
@@ -42,7 +44,7 @@ void ParticleEmitterComponent::Update(float fTimeElapsed)
         else ++iter;
     }
 
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     // Update Emitter
 
@@ -51,8 +53,8 @@ void ParticleEmitterComponent::Update(float fTimeElapsed)
     {
         if (m_fTime > m_fDuration + m_fStartLifetime._max)
         {
-            object->SetActive(false);
-            is_enable           = false;
+            GetGameObject()->SetActive(false);
+            SetEnabled(false);
             m_vecParticle.clear();
         }
     }
@@ -87,7 +89,7 @@ void ParticleEmitterComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList
     // meshRenderer�� �ٸ��� particle�� �������� render()�� ���߰� �־�� �Ѵ�.
     // Particle�� material�� ���� �ʴ´�. material Set�� ���⼭ �� �� �ϰ� �� �ڷ� render()�� ��.
     g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
-    for_each(m_vecParticle.begin(), m_vecParticle.end(), [&](Object* o) { o->Render(pd3dCommandList); });
+    for_each(m_vecParticle.begin(), m_vecParticle.end(), [&](GameObject* o) { o->Render(pd3dCommandList); });
 }
 
 void ParticleEmitterComponent::SetMaterialByName(const char* strMaterialName) { m_strMaterialName = strMaterialName; }
@@ -96,8 +98,8 @@ void ParticleEmitterComponent::SetBurst(ParticleBurstInfo& burstInfo) { m_emissi
 
 void ParticleEmitterComponent::AddParticle()
 {
-    // Access SceneParticlePool, Get disabled Particle Object, Init them, add to m_vecParticle;
-    Object* particle = GetUsableParticle();
+    // Access SceneParticlePool, Get disabled Particle GameObject, Init them, add to m_vecParticle;
+    GameObject* particle = GetUsableParticle();
     if (particle)
     {
         InitializeParticle(particle);
@@ -109,7 +111,7 @@ void ParticleEmitterComponent::AddParticle()
     }
 }
 
-Object* ParticleEmitterComponent::GetUsableParticle()
+GameObject* ParticleEmitterComponent::GetUsableParticle()
 {
     for (int i = 0; i < m_pSceneParticlePool->size(); i++) if (!(*m_pSceneParticlePool)[i]->IsEnabled()) return (*m_pSceneParticlePool)[i];
     return nullptr;
@@ -137,10 +139,10 @@ XMFLOAT3 GetRandomlyShakenVector(const XMFLOAT3& d, float angle)
     return result;
 }
 
-void ParticleEmitterComponent::InitializeParticle(Object* pObject)
+void ParticleEmitterComponent::InitializeParticle(GameObject* pObject)
 {
     ParticleComponent*     pc = pObject->GetComponent<ParticleComponent>();
-    TransformComponent*    t  = object->GetComponent<TransformComponent>();
+    TransformComponent*    t  = GetGameObject()->GetComponent<TransformComponent>();
     ParticlePropertiesPack ppp;
 
     ppp.currPos    = t->GetPosition();

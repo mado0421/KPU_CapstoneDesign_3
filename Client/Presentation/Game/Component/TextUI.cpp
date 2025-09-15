@@ -1,7 +1,8 @@
 ﻿#include "pch.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 
-TextUIAmmoComponent::TextUIAmmoComponent(Object* pObject, Object* pWeapon) : Component(pObject), m_pTRC(nullptr)
+TextUIAmmoComponent::TextUIAmmoComponent(GameObject* pObject, GameObject* pWeapon) : Component(pObject), m_pTRC(nullptr)
 {
     TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
@@ -29,7 +30,7 @@ void TextUIAmmoComponent::Update(float fTimeElapsed)
     m_pTRC->SetText(text.c_str());
 }
 
-TextUIScoreComponent::TextUIScoreComponent(Object* pObject) : Component(pObject), m_pTRC(nullptr)
+TextUIScoreComponent::TextUIScoreComponent(GameObject* pObject) : Component(pObject), m_pTRC(nullptr)
 {
     TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;
@@ -39,7 +40,7 @@ TextUIScoreComponent::~TextUIScoreComponent() {}
 
 void TextUIScoreComponent::Update(float fTimeElapsed) {}
 
-TextUIPlayerHPComponent::TextUIPlayerHPComponent(Object* pObject, Object* pPlayer) : Component(pObject), m_pTRC(nullptr), m_pPlayerCharacter(nullptr)
+TextUIPlayerHPComponent::TextUIPlayerHPComponent(GameObject* pObject, GameObject* pPlayer) : Component(pObject), m_pTRC(nullptr), m_pPlayerCharacter(nullptr)
 {
     TextRendererComponent* temp = pObject->GetComponent<TextRendererComponent>();
     if (temp) m_pTRC = temp;

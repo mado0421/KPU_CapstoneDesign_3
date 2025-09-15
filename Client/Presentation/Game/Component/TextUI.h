@@ -5,7 +5,7 @@ class TextUIAmmoComponent : public Component
 {
 public:
     TextUIAmmoComponent() = delete;
-    TextUIAmmoComponent(Object* pObject, Object* pWeapon);
+    TextUIAmmoComponent(GameObject* pObject, GameObject* pWeapon);
     ~TextUIAmmoComponent() override;
 
     void Update(float fTimeElapsed) override;
@@ -19,7 +19,7 @@ class TextUIScoreComponent : public Component
 {
 public:
     TextUIScoreComponent() = delete;
-    TextUIScoreComponent(Object* pObject);
+    TextUIScoreComponent(GameObject* pObject);
     ~TextUIScoreComponent() override;
 
     void Update(float fTimeElapsed) override;
@@ -32,7 +32,7 @@ class TextUIPlayerHPComponent : public Component
 {
 public:
     TextUIPlayerHPComponent() = delete;
-    TextUIPlayerHPComponent(Object* pObject, Object* pPlayer);
+    TextUIPlayerHPComponent(GameObject* pObject, GameObject* pPlayer);
     ~TextUIPlayerHPComponent() override;
 
     void Update(float fTimeElapsed) override;

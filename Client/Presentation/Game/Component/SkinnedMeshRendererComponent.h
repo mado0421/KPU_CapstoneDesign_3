@@ -10,7 +10,7 @@ class SkinnedMeshRendererComponent : public Component
 {
 public:
     SkinnedMeshRendererComponent() = delete;
-    SkinnedMeshRendererComponent(Object*                      pObject,
+    SkinnedMeshRendererComponent(GameObject*                      pObject,
                                  ID3D12Device*                pd3dDevice,
                                  ID3D12GraphicsCommandList*   pd3dCommandList,
                                  D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,

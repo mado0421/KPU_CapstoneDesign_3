@@ -7,7 +7,7 @@ class CameraComponent : public Component
 {
 public:
     CameraComponent() = delete;
-    CameraComponent(Object* pObject);
+    CameraComponent(GameObject* pObject);
     ~CameraComponent() override;
 
     void SetViewportsAndScissorRects(ID3D12GraphicsCommandList* pd3dCommandList);
@@ -15,8 +15,8 @@ public:
     void SetScissorRect(LONG xLeft, LONG yTop, LONG xRight, LONG yBottom);
     void SetLookAtWorldPos(const XMFLOAT3& xmf3LookAtWorld);
     void SetLookAtWorldPos(const float& x, const float& y, const float& z);
-    //void SetFocusObject(Object* pObject);
-    void SetHeadAndLookAt(Object* pHead, Object* pLookAt, XMFLOAT3 distance);
+    //void SetFocusObject(GameObject* pObject);
+    void SetHeadAndLookAt(GameObject* pHead, GameObject* pLookAt, XMFLOAT3 distance);
     void SetFocusDisable();
 
     const XMFLOAT4X4 GetViewMatrix();

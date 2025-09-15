@@ -24,8 +24,8 @@ class EventComponent : public Component
 {
 public:
     EventComponent() = delete;
-    EventComponent(Object* pObject);
-    EventComponent(Object* pObject, int count);
+    EventComponent(GameObject* pObject);
+    EventComponent(GameObject* pObject, int count);
     ~EventComponent() override;
 
     void AddEvent(EventInfo& info);
@@ -37,12 +37,12 @@ public:
 
 private:
     bool            isTriggerReady = false;
-    vector<Object*> vecEnemyToWatch;
+    vector<GameObject*> vecEnemyToWatch;
     bool            isWatchingEnemy = false;
 
-    vector<Object*> vecDoorToOpen;
-    vector<Object*> vecDoorToClose;
-    vector<Object*> vecEnemyToWake;
+    vector<GameObject*> vecDoorToOpen;
+    vector<GameObject*> vecDoorToClose;
+    vector<GameObject*> vecEnemyToWake;
     bool            isEventForVictory = false;
     bool            isEventForDefeat  = false;
     int             targetCount       = -1;

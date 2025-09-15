@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
+#include "Presentation/Game/GameObject.h"
 
 #include "Presentation/Game/Manager/MaterialManager.h"
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
@@ -140,7 +141,7 @@ void LetterRenderer::SetCBVGpuHandle(D3D12_GPU_DESCRIPTOR_HANDLE& d3dCbvGPUDescr
     d3dCbvGPUDescriptorStartHandle.ptr += gnCbvSrvDescriptorIncrementSize;
 }
 
-TextRendererComponent::TextRendererComponent(Object*                      pObject,
+TextRendererComponent::TextRendererComponent(GameObject*                      pObject,
                                              ID3D12Device*                pd3dDevice,
                                              ID3D12GraphicsCommandList*   pd3dCommandList,
                                              D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
@@ -161,7 +162,7 @@ void TextRendererComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
     g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
 
-    TransformComponent* transform = object->GetComponent<TransformComponent>();
+    TransformComponent* transform = GetGameObject()->GetComponent<TransformComponent>();
     XMFLOAT2            screenPos;
     screenPos.x = transform->GetPosition().x;
     screenPos.y = transform->GetPosition().y;

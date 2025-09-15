@@ -1,10 +1,12 @@
 ﻿#include "pch.h"
+
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Component/Components.h"
 
 #include "Presentation/Renderer/DirectX/DirectXMethods.h"
 #include "Presentation/Renderer/Elements/Vertex.h"
 
-ParticleComponent::ParticleComponent(Object*                      pObject,
+ParticleComponent::ParticleComponent(GameObject*                      pObject,
 									 ID3D12Device*                pd3dDevice,
 									 ID3D12GraphicsCommandList*   pd3dCommandList,
 									 D3D12_CPU_DESCRIPTOR_HANDLE& d3dCbvCPUDescriptorStartHandle,
@@ -37,12 +39,12 @@ ParticleComponent::~ParticleComponent()
 
 void ParticleComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
     m_fLifetime -= fTimeElapsed;
     if (0 >= m_fLifetime)
     {
-        object->SetActive(false);
+        GetGameObject()->SetActive(false);
         SetActive(false);
     }
     m_fGravity += 9.8f * m_fGravityModifier * fTimeElapsed;
@@ -96,7 +98,7 @@ void ParticleComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 
 void ParticleComponent::Initialize(ParticlePropertiesPack& ppp)
 {
-    transform = object->GetComponent<TransformComponent>();
+    transform = GetGameObject()->GetComponent<TransformComponent>();
     transform->SetPosition(ppp.currPos);
     m_xmf3Direction    = ppp.direction;
     m_fLifetime        = ppp.lifetime;
@@ -105,7 +107,7 @@ void ParticleComponent::Initialize(ParticlePropertiesPack& ppp)
     m_fSize            = ppp.size;
     m_fGravity         = 0;
     m_bIsBilboard      = ppp.isBilboard;
-    object->SetActive(true);
+    GetGameObject()->SetActive(true);
     SetActive(true);
 }
 

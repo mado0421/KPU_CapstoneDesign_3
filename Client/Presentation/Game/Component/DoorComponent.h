@@ -5,7 +5,7 @@ class DoorComponent : public Component
 {
 public:
     DoorComponent() = delete;
-    DoorComponent(Object* pObject, bool bOpen = false);
+    DoorComponent(GameObject* pObject, bool bOpen = false);
     ~DoorComponent() override;
 
     void Open();

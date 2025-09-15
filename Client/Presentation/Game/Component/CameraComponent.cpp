@@ -1,9 +1,10 @@
 ﻿#include "pch.h"
 #include "CameraComponent.h"
-#include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
 
-CameraComponent::CameraComponent(Object* pObject) : Component(pObject),
+#include "Presentation/Game/GameObject.h"
+#include "Presentation/Game/Component/Components.h"
+
+CameraComponent::CameraComponent(GameObject* pObject) : Component(pObject),
                                                     m_xmf4x4View(matrix::Identity()),
                                                     m_xmf4x4Projection(matrix::Identity()),
                                                     m_xmf3Right(1, 0, 0),
@@ -19,7 +20,7 @@ CameraComponent::CameraComponent(Object* pObject) : Component(pObject),
     SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 
-    t = object->GetComponent<TransformComponent>();
+    t = GetGameObject()->GetComponent<TransformComponent>();
 }
 
 CameraComponent::~CameraComponent() {}
@@ -62,12 +63,12 @@ void CameraComponent::SetLookAtWorldPos(const XMFLOAT3& xmf3LookAt)
 
 void CameraComponent::SetLookAtWorldPos(const float& x, const float& y, const float& z) { SetLookAtWorldPos(XMFLOAT3(x, y, z)); }
 
-//void CameraComponent::SetFocusObject(Object* pObject)
+//void CameraComponent::SetFocusObject(GameObject* pObject)
 //{
 //	m_pLookAtTransform = pObject->GetComponent<TransformComponent>();
 //}
 
-void CameraComponent::SetHeadAndLookAt(Object* pHead, Object* pLookAt, XMFLOAT3 distance)
+void CameraComponent::SetHeadAndLookAt(GameObject* pHead, GameObject* pLookAt, XMFLOAT3 distance)
 {
     m_pHeadTransform   = pHead->GetComponent<TransformComponent>();
     m_pLookAtTransform = pLookAt->GetComponent<TransformComponent>();
@@ -140,7 +141,7 @@ void CameraComponent::SolveConstraint()
 
 void CameraComponent::Update(float fTimeElapsed)
 {
-    if (!is_enable) return;
+    if (!IsEnabled()) return;
 
 
     if (m_pLookAtTransform) SetLookAtWorldPos(m_pLookAtTransform->GetPosition(Space::world));

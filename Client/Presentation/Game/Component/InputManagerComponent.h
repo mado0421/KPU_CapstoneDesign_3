@@ -8,7 +8,7 @@ class InputManagerComponent : public Component
 {
 public:
     InputManagerComponent() = delete;
-    InputManagerComponent(Object* pObject);
+    InputManagerComponent(GameObject* pObject);
     ~InputManagerComponent() override;
 
     virtual void InputEvent(UCHAR* pKeyBuffer, XMFLOAT2& xmf2MouseMovement);

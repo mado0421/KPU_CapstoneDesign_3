@@ -1,9 +1,9 @@
 ﻿#include "pch.h"
 #include "Presentation/Game/Component/Components.h"
-#include "Presentation/Game/Object.h"
+#include "Presentation/Game/GameObject.h"
 #include "Presentation/Game/Core/Scene.h"
 
-TargetBoardControllerComponent::TargetBoardControllerComponent(Object* object) : TempCharacter(object, 10)
+TargetBoardControllerComponent::TargetBoardControllerComponent(GameObject* object) : TempCharacter(object, 10)
 {
 }
 
@@ -12,7 +12,7 @@ TargetBoardControllerComponent::~TargetBoardControllerComponent()
 
 void TargetBoardControllerComponent::Update(const float delta_time)
 {
-	if (!is_enable) return;
+	if (!IsEnabled()) return;
 	if (!IsAlive()) return;
 
 	float temp = floor(total_elapsed_time_);
@@ -39,15 +39,15 @@ void TargetBoardControllerComponent::Awake()
 {
 	total_elapsed_time_ = 0;
 
-	is_enable = true;
+	SetEnabled(true);
 
-	particle_emitter_object_ = new Object("particleEmitter");
+	particle_emitter_object_ = new GameObject("particleEmitter");
 
 	TransformComponent*       transform           = new TransformComponent(particle_emitter_object_);
 	ParticleEmitterComponent* particle_emitter    = new ParticleEmitterComponent(particle_emitter_object_);
 	ParticleBurstInfo         particle_burst_info = {};
 
-	transform->Translate(object->GetComponent<TransformComponent>()->GetPosition(Space::world));
+	transform->Translate(GetGameObject()->GetComponent<TransformComponent>()->GetPosition(Space::world));
 	transform->Translate(0, 2.5, 0);
 
 	particle_emitter->m_bIsBilboard      = true;
@@ -74,14 +74,14 @@ void TargetBoardControllerComponent::Die()
 
 	if (particle_emitter_object_)
 	{
-		particle_emitter_component_->is_enable = false;
+		particle_emitter_component_->SetEnabled(false);
 
 		particle_emitter_object_    = nullptr;
 		particle_emitter_component_ = nullptr;
 	}
 }
 
-void TargetBoardControllerComponent::SetPlayer(Object* object)
+void TargetBoardControllerComponent::SetPlayer(GameObject* object)
 {
 	player_character_ = object->GetComponent<HumanoidControllerComponent>();
 }
