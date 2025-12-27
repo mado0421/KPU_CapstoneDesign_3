@@ -6,7 +6,12 @@ TextureManager::TextureManager() = default;
 
 TextureManager::~TextureManager()
 {
+	for (auto& pair : unordered_texture_map_)
+	{
+		if (pair.second) delete pair.second;
+	}
 	unordered_texture_map_.clear();
+
 	if (dsv_descriptor_heap_) dsv_descriptor_heap_->Release();
 	if (rtv_descriptor_heap_) rtv_descriptor_heap_->Release();
 	if (uav_descriptor_heap_) uav_descriptor_heap_->Release();
@@ -14,7 +19,12 @@ TextureManager::~TextureManager()
 
 void TextureManager::Initialize(ID3D12Device* device)
 {
+	for (auto& pair : unordered_texture_map_)
+	{
+		if (pair.second) delete pair.second;
+	}
 	unordered_texture_map_.clear();
+	
 	if (dsv_descriptor_heap_) dsv_descriptor_heap_->Release();
 	if (rtv_descriptor_heap_) rtv_descriptor_heap_->Release();
 	if (uav_descriptor_heap_) uav_descriptor_heap_->Release();
@@ -95,7 +105,15 @@ void TextureManager::LoadFromFile(const char* name, ID3D12Device* device, ID3D12
 	unordered_texture_map_[name] = texture;
 }
 
-void TextureManager::DeleteTexture(const char* name) { unordered_texture_map_.erase(name); }
+void TextureManager::DeleteTexture(const char* name)
+{
+	auto it = unordered_texture_map_.find(name);
+	if (it != unordered_texture_map_.end())
+	{
+		delete it->second;
+		unordered_texture_map_.erase(it);
+	}
+}
 
 bool TextureManager::IsExist(const char* name) const { return unordered_texture_map_.contains(name); }
 

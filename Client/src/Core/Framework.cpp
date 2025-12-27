@@ -76,7 +76,37 @@ void Framework::Input()
     if (GetKeyboardState(pKeysBuffer) && m_pCurrentScene) m_pCurrentScene->Input(pKeysBuffer);
 }
 
-void Framework::OnDestroy() {}
+void Framework::OnDestroy()
+{
+    WaitForGpuComplete();
+
+    if (m_ppScenes)
+    {
+        delete m_ppScenes[0]; // Assuming only one scene is active/created as per BuildScenes
+        delete[] m_ppScenes;
+        m_ppScenes = nullptr;
+    }
+
+    if (m_pd3dCommandList) m_pd3dCommandList->Release();
+    if (m_pd3dCommandAllocator) m_pd3dCommandAllocator->Release();
+    if (m_pd3dCommandQueue) m_pd3dCommandQueue->Release();
+
+    if (m_pd3dFence) m_pd3dFence->Release();
+    if (m_hFenceEvent) CloseHandle(m_hFenceEvent);
+
+    for (int i = 0; i < m_nSwapChainBuffers; i++)
+    {
+        if (m_ppd3dSwapChainBackBuffers[i]) m_ppd3dSwapChainBackBuffers[i]->Release();
+    }
+    if (m_pd3dRtvDescriptorHeap) m_pd3dRtvDescriptorHeap->Release();
+
+    if (m_pd3dDepthStencilBuffer) m_pd3dDepthStencilBuffer->Release();
+    if (m_pd3dDsvDescriptorHeap) m_pd3dDsvDescriptorHeap->Release();
+
+    if (m_pdxgiSwapChain) m_pdxgiSwapChain->Release();
+    if (m_pd3dDevice) m_pd3dDevice->Release();
+    if (m_pdxgiFactory) m_pdxgiFactory->Release();
+}
 
 void Framework::OnCreate(HINSTANCE hInstance, HWND hWnd)
 {
