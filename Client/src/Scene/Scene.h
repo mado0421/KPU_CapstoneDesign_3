@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "../../pch.h"
 
-class Object;
+#include "../Engine/ECS/Object.h"
+#include "../Engine/ECS/Component.h"
+
 class Screen;
 class Camera;
 class RenderToTextureClass;

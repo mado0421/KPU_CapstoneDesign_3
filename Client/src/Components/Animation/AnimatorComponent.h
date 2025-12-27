@@ -1,5 +1,5 @@
-#pragma once
-#include "../../Core/Component.h"
+﻿#pragma once
+#include "../../Engine/ECS/Component.h"
 
 class BoneMask;
 
@@ -24,6 +24,7 @@ protected:
 
     XMFLOAT4X4 m_arrToWorld[MAX_BONE_NUM];
     XMFLOAT4   m_arrLocalRotation[MAX_BONE_NUM];
+    XMFLOAT4X4 m_arrFinalResult[MAX_BONE_NUM];
 };
 
 

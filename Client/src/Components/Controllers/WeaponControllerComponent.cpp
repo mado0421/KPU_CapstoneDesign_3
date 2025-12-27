@@ -1,8 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "WeaponControllerComponent.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
-#include "../../Core/Scene.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
+#include "../../Scene/Scene.h"
 
 WeaponControllerComponent::WeaponControllerComponent(Object* pObject, Object* pMuzzle, Object* pBullet) : Component(pObject),
                                                                                                           m_maxAmmo(10),

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Texture.h"
 
 #include "src/Renderer/DirectX/DirectXMethods.h"
@@ -14,7 +14,7 @@ void Texture::SetByDepthBuffer(ID3D12Device* device, UINT width, UINT height, D3
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ���̹��� �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙占싱뱄옙占쏙옙 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kDsvSrv;
@@ -80,7 +80,7 @@ void Texture::SetByDepthBuffer(ID3D12Device* device, UINT width, UINT height, D3
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ���̹��� �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙占싱뱄옙占쏙옙 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kDsvSrv;
@@ -150,7 +150,7 @@ void Texture::SetByCubeDepthBuffer(ID3D12Device* device, UINT width, UINT height
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ���̹��� �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙占싱뱄옙占쏙옙 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kDsvSrv;
@@ -220,7 +220,7 @@ void Texture::SetByRenderTarget(ID3D12Device* device, UINT width, UINT height, D
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ����Ÿ�� �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙占쏙옙타占쏙옙 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kRtvSrv;
@@ -271,7 +271,7 @@ void Texture::SetByUnorderedAccessTexture(ID3D12Device*                device,
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ��ó�� �ؽ�ó �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙처占쏙옙 占쌔쏙옙처 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kUavSrv;
@@ -279,7 +279,7 @@ void Texture::SetByUnorderedAccessTexture(ID3D12Device*                device,
 	HRESULT hr = E_FAIL;
 
 
-	//	��ó�� �ؽ�ó�� SRV�� UAV �� �� �������� ��.
+	//	占쏙옙처占쏙옙 占쌔쏙옙처占쏙옙 SRV占쏙옙 UAV 占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙.
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Width               = width;
 	desc.Height              = height;
@@ -302,7 +302,7 @@ void Texture::SetByUnorderedAccessTexture(ID3D12Device*                device,
 
 	hr = device->CreateCommittedResource(&hp, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&texture_));
 
-	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {}; // = {}; �� �޾��ִϱ� ���ڱ� ��
+	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {}; // = {}; 占쏙옙 占쌨억옙占쌍니깍옙 占쏙옙占쌘깍옙 占쏙옙
 	uavDesc.Format                           = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	uavDesc.ViewDimension                    = D3D12_UAV_DIMENSION_TEXTURE2D;
 	uavDesc.Texture2D.MipSlice               = 0;
@@ -329,7 +329,7 @@ void Texture::LoadFromFile(const wchar_t* file_name, ID3D12Device* device, ID3D1
 {
 	if (IsInitialized())
 	{
-		assert(!"�̹� �ٸ� �뵵�� ���� �ؽ�ó�� ���̴� ���ҽ� ���� �뵵�� �缳�� �Ϸ� �Ͽ����ϴ�.\n");
+		assert(!"占싱뱄옙 占쌕몌옙 占쎈도占쏙옙 占쏙옙占쏙옙 占쌔쏙옙처占쏙옙 占쏙옙占싱댐옙 占쏙옙占쌀쏙옙 占쏙옙占쏙옙 占쎈도占쏙옙 占썹설占쏙옙 占싹뤄옙 占싹울옙占쏙옙占싹댐옙.\n");
 		return;
 	}
 	texture_type_ = TextureType::kOnlySrv;

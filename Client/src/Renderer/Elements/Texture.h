@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define MAXNUMSHADOW 64
 #define MAXNUMRENDERTARGETTEXTURE 8

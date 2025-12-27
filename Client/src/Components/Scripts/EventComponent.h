@@ -1,5 +1,5 @@
-#pragma once
-#include "Component.h"
+﻿#pragma once
+#include "../../Engine/ECS/Component.h"
 
 enum class EVENT
 {
@@ -29,7 +29,7 @@ public:
     ~EventComponent() override;
 
     void AddEvent(EventInfo& info);
-    // trigger�� ����Ǹ�, event�� �����Ѵ�.
+    // trigger占쏙옙 占쏙옙占쏙옙퓔占? event占쏙옙 占쏙옙占쏙옙占싼댐옙.
     void SetEvent();
 
     void SolveConstraint() override;

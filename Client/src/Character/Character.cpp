@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Character.h"
 
 Character::Character(int maxHp, bool bAutoRevive, bool bDead) : m_maxHp(maxHp), m_currHp(maxHp), m_fReviveTime(3.0f), m_fCurrReviveTime(0.0f), m_bDead(bDead), m_bAutoRevive(bAutoRevive) {}

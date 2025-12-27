@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "FontReader.h"
 
 FontReader::FontReader() : isKerning(false) {}
@@ -175,6 +175,7 @@ string FontReader::Find(ifstream& ifs, string target, char delimiter = '=')
             return sp[1];
         }
     }
+    return "";
 }
 
 void FontReader::FindPadding(ifstream& ifs)

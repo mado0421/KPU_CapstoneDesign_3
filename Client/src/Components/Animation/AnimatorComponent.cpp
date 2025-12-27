@@ -1,7 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AnimatorComponent.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
 #include "../../Renderer/Elements/Animation.h"
 #include "../../Renderer/Elements/BoneMask.h"
 
@@ -18,14 +18,14 @@ AnimatorComponent::AnimatorComponent(Object* pObject, const char* strClipNameFor
 	m_numBone = 0;
 
 
-	// toDressInv, toParent, parentIdx, nBone�� �޾ƾ� ��.
+	// toDressInv, toParent, parentIdx, nBone占쏙옙 占쌨아억옙 占쏙옙.
 	AnimationClip* clip = g_AnimMng.GetAnimClip(strClipNameForBoneHierarchy);
 
 	assert(("Clip is nullptr", clip != nullptr));
 
-	m_numBone = clip->bones.size();
+	m_numBone = static_cast<int>(clip->bones.size());
 
-	// clip�� ���� ������ memcpy�� �� ���� �ܾ�� ���� ����.
+	// clip占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 memcpy占쏙옙 占쏙옙 占쏙옙占쏙옙 占쌤억옙占?占쏙옙占쏙옙 占쏙옙占쏙옙.
 	for (int i = 0; i < clip->bones.size(); i++)
 	{
 		m_arrToDressInv[i] = clip->bones[i].to_dressed_pose_inv;
@@ -38,15 +38,13 @@ AnimatorComponent::~AnimatorComponent() {}
 
 XMFLOAT4X4* AnimatorComponent::GetFinalResultAnimationTransform()
 {
-	XMFLOAT4X4 result[MAX_BONE_NUM];
-
 	for (int i = 0; i < MAX_BONE_NUM; i++)
 	{
-		XMStoreFloat4x4(&result[i], XMMatrixTranspose(XMMatrixMultiply(XMLoadFloat4x4(&m_arrToDressInv[i]),
+		XMStoreFloat4x4(&m_arrFinalResult[i], XMMatrixTranspose(XMMatrixMultiply(XMLoadFloat4x4(&m_arrToDressInv[i]),
 																	   XMLoadFloat4x4(&m_arrToWorld[i]))));
 	}
 
-	return result;
+	return m_arrFinalResult;
 }
 
 XMMATRIX AnimatorComponent::GetToWorldTransform(int boneIdx) { return XMLoadFloat4x4(&m_arrToWorld[boneIdx]); }

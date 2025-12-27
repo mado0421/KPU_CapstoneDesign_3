@@ -1,7 +1,7 @@
-#pragma once
-#include "../Core/Component.h"
+﻿#pragma once
+#include "../../Engine/ECS/Component.h"
 
-//Text�� ���̴� 80�ڷ� ����.
+//Text占쏙옙 占쏙옙占싱댐옙 80占쌘뤄옙 占쏙옙占쏙옙.
 
 struct FontCharData
 {

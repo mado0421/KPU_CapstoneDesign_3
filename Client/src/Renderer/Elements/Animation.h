@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 using ClipPair = vector<pair<string, float>>;
 

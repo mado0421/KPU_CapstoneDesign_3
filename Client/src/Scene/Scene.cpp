@@ -1,16 +1,17 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Scene.h"
-#include "Object.h"
-#include "PipelineStateObject.h"
+#include <set>
+#include "../Engine/ECS/Object.h"
+#include "../Renderer/Pipeline/PipelineStateObject.h"
 #include "../Graphics/Light.h"
 #include "../IO/Importer.h"
 #include "../Renderer/Elements/Model.h"
 #include "../Renderer/Elements/Texture.h"
 
-#include "Components.h"
+#include "../Engine/ECS/Components.h"
 
-#include "src/Renderer/DirectX/DirectXMethods.h"
-#include "src/Renderer/DirectX/d3dx12.h"
+#include "../Renderer/DirectX/DirectXMethods.h"
+#include "../Renderer/DirectX/d3dx12.h"
 
 bool TEST_MOUSE_USABLE = true;
 
@@ -214,11 +215,16 @@ void Scene::Release()
         m_pd3dcbPassInfo->Release();
     }
     
-    // Cleanup GameObjects
-    for (Object* obj : m_vecObject) delete obj;
-    m_vecObject.clear();
+    // Cleanup GameObjects safely to avoid double deletion
+    std::set<Object*> objectsToDelete;
+    for (Object* obj : m_vecObject) objectsToDelete.insert(obj);
+    for (Object* obj : m_vecParticlePool) objectsToDelete.insert(obj);
 
-    for (Object* obj : m_vecParticlePool) delete obj;
+    for (Object* obj : objectsToDelete)
+    {
+        if (obj) delete obj;
+    }
+    m_vecObject.clear();
     m_vecParticlePool.clear();
 
     // Cleanup Screen Objects

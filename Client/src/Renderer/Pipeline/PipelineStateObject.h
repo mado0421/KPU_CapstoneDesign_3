@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 class PipelineStateObject
 {
 public:
@@ -305,9 +305,9 @@ protected:
 *
 * - 1 RTV
 * - 1 DSV
-* - DepthTest True(MASK ZERO, �׽�Ʈ�� �ϰ� ���� ����)
+* - DepthTest True(MASK ZERO, 占쌓쏙옙트占쏙옙 占싹곤옙 占쏙옙占쏙옙 占쏙옙占쏙옙)
 * - FrontCounterClockwise False
-* ����� �׸���, ���İ��� ���� ó���Ѵٴ� �� �ܿ� �� �Ȱ��� ó��
+* 占쏙옙占쏙옙占?占쌓몌옙占쏙옙, 占쏙옙占식곤옙占쏙옙 占쏙옙占쏙옙 처占쏙옙占싼다댐옙 占쏙옙 占쌤울옙 占쏙옙 占싫곤옙占쏙옙 처占쏙옙
 *=======================================================================*/
 class EffectPSO : public PipelineStateObject
 {
@@ -330,7 +330,7 @@ protected:
 *
 * - 1 RTV
 * - 1 DSV
-* - DepthTest True(MASK ZERO, �׽�Ʈ�� �ϰ� ���� ����)
+* - DepthTest True(MASK ZERO, 占쌓쏙옙트占쏙옙 占싹곤옙 占쏙옙占쏙옙 占쏙옙占쏙옙)
 * - FrontCounterClockwise TRUE
 * - VS_Particle
 * - GS_Partile
@@ -357,7 +357,7 @@ protected:
 * TextPSO
 *
 * - 1 RTV
-* - DepthTest False(������ ���� �׸�)
+* - DepthTest False(占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쌓몌옙)
 * - FrontCounterClockwise TRUE
 * - VS_Text
 * - GS_Text

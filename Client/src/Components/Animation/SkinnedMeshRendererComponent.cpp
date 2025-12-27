@@ -1,7 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "SkinnedMeshRendererComponent.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
 #include "../../Renderer/Elements/Model.h"
 
 #include "src/Renderer/MaterialManager.h"

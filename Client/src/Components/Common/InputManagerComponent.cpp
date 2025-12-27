@@ -1,7 +1,7 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "InputManagerComponent.h"
 
-#include "../Core/Components.h"
+#include "../../Engine/ECS/Components.h"
 
 InputManagerComponent::InputManagerComponent(Object* pObject) : Component(pObject), m_xmf2MouseMovement(0, 0) {}
 

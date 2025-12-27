@@ -1,6 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TransformComponent.h"
-#include "../Core/Object.h"
+#include "../../Engine/ECS/Object.h"
 
 
 TransformComponent::TransformComponent(Object* pObject) : Component(pObject), m_xmf4x4Local(Matrix4x4::Identity()) {}
@@ -137,6 +137,7 @@ const XMFLOAT3 TransformComponent::GetLookVector(Space space)
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
         return Vector3::Normalize(XMFLOAT3(worldTransform._31, worldTransform._32, worldTransform._33));
     }
+    return XMFLOAT3(0.0f, 0.0f, 1.0f);
 }
 
 const XMFLOAT3 TransformComponent::GetUpVector(Space space)
@@ -148,6 +149,7 @@ const XMFLOAT3 TransformComponent::GetUpVector(Space space)
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
         return Vector3::Normalize(XMFLOAT3(worldTransform._21, worldTransform._22, worldTransform._23));
     }
+    return XMFLOAT3(0.0f, 1.0f, 0.0f);
 }
 
 const XMFLOAT3 TransformComponent::GetRightVector(Space space)
@@ -159,6 +161,7 @@ const XMFLOAT3 TransformComponent::GetRightVector(Space space)
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
         return Vector3::Normalize(XMFLOAT3(worldTransform._11, worldTransform._12, worldTransform._13));
     }
+    return XMFLOAT3(1.0f, 0.0f, 0.0f);
 }
 
 const XMFLOAT3 TransformComponent::GetPosition(Space space)
@@ -170,6 +173,7 @@ const XMFLOAT3 TransformComponent::GetPosition(Space space)
         XMStoreFloat4x4(&worldTransform, GetWorldTransform());
         return XMFLOAT3(worldTransform._41, worldTransform._42, worldTransform._43);
     }
+    return XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 const XMFLOAT4 TransformComponent::GetRotationQuaternion(Space space)
@@ -183,4 +187,5 @@ const XMFLOAT4 TransformComponent::GetRotationQuaternion(Space space)
     case Space::world: XMStoreFloat4(&result, XMQuaternionRotationMatrix(GetWorldTransform()));
         return result;
     }
+    return XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 }

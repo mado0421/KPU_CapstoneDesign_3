@@ -1,6 +1,6 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Framework.h"
-#include "Scene.h"
+#include "../Scene/Scene.h"
 
 void Framework::Update()
 {
@@ -13,7 +13,7 @@ void Framework::Update()
     HRESULT hResult = m_pd3dCommandAllocator->Reset();
     hResult         = m_pd3dCommandList->Reset(m_pd3dCommandAllocator, nullptr);
 
-    //�踮��� �� ����� �𸣰ڴ� å �����ϱ�
+    //占썼리占쏙옙占?占쏙옙 占쏙옙占쏙옙占?占쏜르겠댐옙 책 占쏙옙占쏙옙占싹깍옙
     D3D12_RESOURCE_BARRIER d3dResourceBarrier;
     ::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
     d3dResourceBarrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -27,7 +27,7 @@ void Framework::Update()
     D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
     d3dRtvCPUDescriptorHandle.ptr += m_nSwapChainBufferIndex * m_nRtvDescriptorIncrementSize;
 
-    //���� ���� �����
+    //占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占?
     float pfClearColor[4] = {0.2f, 0.2f, 0.2f, 1.0f};
     m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, pfClearColor, 0, nullptr);
 
@@ -40,7 +40,7 @@ void Framework::Update()
     //m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
     ////======================================
 
-    ////�ƿ�ǲ���� �ܰ迡 � RT�� ������ ���ϴ°ǰ���
+    ////占싣울옙풋占쏙옙占쏙옙 占쌤계에 占쏘떤 RT占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占싹는건곤옙占쏙옙
     //m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle);
     ////m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, NULL);
 
@@ -118,7 +118,7 @@ void Framework::OnCreate(HINSTANCE hInstance, HWND hWnd)
     CreateRtvAndDsvDescriptorHeaps();
     CreateSwapChain();
 
-    m_hFenceEvent = ::CreateEvent(nullptr, FALSE, FALSE, nullptr); // �� �߰�����.
+    m_hFenceEvent = ::CreateEvent(nullptr, FALSE, FALSE, nullptr); // 占쏙옙 占쌩곤옙占쏙옙占쏙옙.
     BuildScenes();
 }
 
@@ -172,7 +172,7 @@ void Framework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM w
         case VK_ESCAPE: PostQuitMessage(0);
             break;
 
-        // ��ü ȭ�� �׽�Ʈ �뵵
+        // 占쏙옙체 화占쏙옙 占쌓쏙옙트 占쎈도
         //case VK_F9:
         //{
         //	BOOL bFullScreenState = FALSE;
@@ -249,7 +249,7 @@ void Framework::CreateSwapChain()
     m_nWndClientWidth  = rcClient.right - rcClient.left;
     m_nWndClientHeight = rcClient.bottom - rcClient.top;
 
-    //Swapchain Descriptor �ۼ��ϱ�
+    //Swapchain Descriptor 占쌜쇽옙占싹깍옙
     DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
     ::ZeroMemory(&dxgiSwapChainDesc, sizeof(dxgiSwapChainDesc));
     dxgiSwapChainDesc.BufferCount                        = m_nSwapChainBuffers;
@@ -270,10 +270,10 @@ void Framework::CreateSwapChain()
     dxgiSwapChainDesc.Windowed = TRUE;
     dxgiSwapChainDesc.Flags    = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    //�ۼ��� �����ڴ�� ���丮�� ������ֱ�
+    //占쌜쇽옙占쏙옙 占쏙옙占쏙옙占쌘댐옙占?占쏙옙占썰리占쏙옙 占쏙옙占쏙옙占쏙옙殮占?
     HRESULT hResult = m_pdxgiFactory->CreateSwapChain(m_pd3dCommandQueue, &dxgiSwapChainDesc, (IDXGISwapChain**)&m_pdxgiSwapChain);
 
-    //�� ����������� ���� ����!
+    //占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙占?占쏙옙占쏙옙 占쏙옙占쏙옙!
     if (!m_pdxgiSwapChain)
     {
         MessageBox(nullptr, L"Swap Chain Cannot be Created.", L"Error", MB_OK);
@@ -281,10 +281,10 @@ void Framework::CreateSwapChain()
         return;
     }
 
-    //��üȭ�� ��ȯ ����?
+    //占쏙옙체화占쏙옙 占쏙옙환 占쏙옙占쏙옙?
     hResult = m_pdxgiFactory->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER);
 
-    //���� �ĸ���� �ε����� �޾ƿͼ� ������ ����
+    //占쏙옙占쏙옙 占식몌옙占쏙옙占?占싸듸옙占쏙옙占쏙옙 占쌨아와쇽옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
     m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
 
     //m_pdxgiSwapChain->SetFullscreenState(true, NULL);

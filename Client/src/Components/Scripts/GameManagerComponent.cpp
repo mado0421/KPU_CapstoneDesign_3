@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../../Core/Components.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
 
 GameManagerComponent::GameManagerComponent(Object* pObject) : Component(pObject) {}
 

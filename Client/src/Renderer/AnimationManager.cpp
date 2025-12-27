@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AnimationManager.h"
 
 #include "Elements/Animation.h"

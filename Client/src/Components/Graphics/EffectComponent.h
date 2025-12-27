@@ -1,5 +1,5 @@
-#pragma once
-#include "Component.h"
+﻿#pragma once
+#include "../../Engine/ECS/Component.h"
 
 class EffectComponent : public Component
 {

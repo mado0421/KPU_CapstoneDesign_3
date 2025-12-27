@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Light.h"
 
 #include "src/Renderer/DirectX/DirectXMethods.h"
@@ -48,7 +48,7 @@ void Light::SetShaderResource(ID3D12GraphicsCommandList* pd3dCommandList)
 
 void Light::UpdateDirectionalLightOrthographicLH(XMFLOAT4X4 xmf4x4CameraView)
 {
-    //���� ���
+    //占쏙옙占쏙옙 占쏙옙占?
     XMFLOAT4X4 xmf4x4CameraViewInv = Matrix4x4::Inverse(xmf4x4CameraView);
     for (int i = 0; i < m_nCascade; i++)
     {
@@ -307,14 +307,14 @@ UINT LightManager::AddDirectionalLight(LIGHT_DESC desc, ID3D12Device* pd3dDevice
     temp->m_bIsEnable     = true;
 
     /*
-	* �ʿ��� ��: m_pCamera�� m_xmf4x4ViewInv, light�� ViewMatrix, Cascade�� Zn, Zf, FOV, Cascade�� ����� ���� array
-	* �����غ��ϱ� Z�� (0~1)�� ����ȭ�Ǵ°� NDC ��Ȳ��������. Z[] = { 0.0f, 0.2f, 0.5f, 1.0f } �� ��,
+	* 占십울옙占쏙옙 占쏙옙: m_pCamera占쏙옙 m_xmf4x4ViewInv, light占쏙옙 ViewMatrix, Cascade占쏙옙 Zn, Zf, FOV, Cascade占쏙옙 占쏙옙占쏙옙占?占쏙옙占쏙옙 array
+	* 占쏙옙占쏙옙占쌔븝옙占싹깍옙 Z占쏙옙 (0~1)占쏙옙 占쏙옙占쏙옙화占실는곤옙 NDC 占쏙옙황占쏙옙占쏙옙占쏙옙占쏙옙. Z[] = { 0.0f, 0.2f, 0.5f, 1.0f } 占쏙옙 占쏙옙,
 	* Zni = 0.1f + Z[i] * ( 1000.0f - 0.1f );
 	* Zfi = 0.1f + Z[i + 1] * ( 1000.0f - 0.1f );
-	* (���� ���� Zn�̶� Zf�� 0.1f �� 1000.0f���� �ְ� �����ϱ�)
+	* (占쏙옙占쏙옙 占쏙옙占쏙옙 Zn占싱띰옙 Zf占쏙옙 0.1f 占쏙옙 1000.0f占쏙옙占쏙옙 占쌍곤옙 占쏙옙占쏙옙占싹깍옙)
 	* 
 	* 
-	* ���� ������ nCascade �� ���� ������ 3���� �Ұ��� �� ����
+	* 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 nCascade 占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 3占쏙옙占쏙옙 占쌀곤옙占쏙옙 占쏙옙 占쏙옙占쏙옙
 	*/
 
     temp->m_nCascade           = nCascade;

@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
-#include "../../Core/Scene.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
+#include "../../Scene/Scene.h"
 
 EventComponent::EventComponent(Object* pObject) : Component(pObject), targetCount(-1) {}
 
@@ -52,7 +52,7 @@ void EventComponent::SetEvent()
     if (isEventForVictory) g_pCurrScene->Victory();
     if (isEventForDefeat) g_pCurrScene->Defeat();
 
-    // ���������� ���� ����
+    // 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
     m_pObject->SetActive(false);
     m_bEnabled = false;
 }
@@ -83,7 +83,7 @@ void EventComponent::SolveConstraint()
 void EventComponent::Update(float fTimeElapsed)
 {
     /*
-    �� �ݶ��̴�(Ʈ����)�� �����ų�, ���� �� �װų�, �ٸ� �̺�Ʈ�� �Ѱų�
+    占쏙옙 占쌥띰옙占싱댐옙(트占쏙옙占쏙옙)占쏙옙 占쏙옙占쏙옙占신놂옙, 占쏙옙占쏙옙 占쏙옙 占쌓거놂옙, 占쌕몌옙 占싱븝옙트占쏙옙 占싼거놂옙
     */
 
     if (!m_bEnabled) return;

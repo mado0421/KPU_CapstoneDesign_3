@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "../../Core/Components.h"
-#include "../../Core/Scene.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Scene/Scene.h"
 
 #include "src/Renderer/MaterialManager.h"
 
@@ -35,7 +35,7 @@ ParticleEmitterComponent::~ParticleEmitterComponent() {}
 void ParticleEmitterComponent::Update(float fTimeElapsed)
 {
     // Update Particle
-    // ���⼭ erase() �Ѵٰ� �ؼ� ���� �ּҰ� �������ų� ���� �����Ƿ� �Ƚ��ϰ� erase() �ص� �ȴ�.
+    // 占쏙옙占썩서 erase() 占싼다곤옙 占쌔쇽옙 占쏙옙占쏙옙 占쌍소곤옙 占쏙옙占쏙옙占쏙옙占신놂옙 占쏙옙占쏙옙 占쏙옙占쏙옙占실뤄옙 占싫쏙옙占싹곤옙 erase() 占쌔듸옙 占싫댐옙.
     for (auto iter = m_vecParticle.begin(); iter != m_vecParticle.end();)
     {
         (*iter)->Update(fTimeElapsed);
@@ -84,9 +84,9 @@ void ParticleEmitterComponent::Update(float fTimeElapsed)
 
 void ParticleEmitterComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-    // m_strMaterialName�� ""�� ���� ���� ��~ ������.
-    // meshRenderer�� �ٸ��� particle�� �������� render()�� ���߰� �־�� �Ѵ�.
-    // Particle�� material�� ���� �ʴ´�. material Set�� ���⼭ �� �� �ϰ� �� �ڷ� render()�� ��.
+    // m_strMaterialName占쏙옙 ""占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙~ 占쏙옙占쏙옙占쏙옙.
+    // meshRenderer占쏙옙 占쌕몌옙占쏙옙 particle占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 render()占쏙옙 占쏙옙占쌩곤옙 占쌍억옙占?占싼댐옙.
+    // Particle占쏙옙 material占쏙옙 占쏙옙占쏙옙 占십는댐옙. material Set占쏙옙 占쏙옙占썩서 占쏙옙 占쏙옙 占싹곤옙 占쏙옙 占쌘뤄옙 render()占쏙옙 占쏙옙.
     g_MaterialMng.SetMaterial(m_strMaterialName.c_str(), pd3dCommandList);
     for_each(m_vecParticle.begin(), m_vecParticle.end(), [&](Object* o) { o->Render(pd3dCommandList); });
 }
@@ -106,7 +106,7 @@ void ParticleEmitterComponent::AddParticle()
     }
     else
     {
-        // ���� �� ��~
+        // 占쏙옙占쏙옙 占쏙옙 占쏙옙~
     }
 }
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "d3dx12.h"
 
 class DirectXMethods
@@ -136,7 +136,7 @@ inline ID3D12Resource* CreateTextureResourceFromFile(ID3D12Device*              
 
     D3D12_RESOURCE_DESC d3dBufferResourceDesc;
     ::ZeroMemory(&d3dBufferResourceDesc, sizeof(D3D12_RESOURCE_DESC));
-    d3dBufferResourceDesc.Dimension          = D3D12_RESOURCE_DIMENSION_BUFFER; //Upload Heap���� �ؽ��ĸ� ������ �� ����
+    d3dBufferResourceDesc.Dimension          = D3D12_RESOURCE_DIMENSION_BUFFER; //Upload Heap占쏙옙占쏙옙 占쌔쏙옙占식몌옙 占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙占쏙옙
     d3dBufferResourceDesc.Alignment          = 0;
     d3dBufferResourceDesc.Width              = nBytes;
     d3dBufferResourceDesc.Height             = 1;

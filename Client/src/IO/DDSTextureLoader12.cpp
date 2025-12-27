@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 //--------------------------------------------------------------------------------------
 // File: DDSTextureLoader12.cpp
 //
@@ -670,7 +670,7 @@ namespace
             {
                 // Plane 1
                 res.pData      = static_cast<const uint8_t*>(res.pData) + res.RowPitch * height;
-                res.SlicePitch = res.RowPitch * (height + 1 >> 1);
+                res.SlicePitch = res.RowPitch * ((height + 1) >> 1);
             }
             break;
 

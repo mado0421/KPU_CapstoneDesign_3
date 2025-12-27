@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../../Core/Components.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
 
 #include "src/Renderer/DirectX/DirectXMethods.h"
 #include "src/Renderer/Elements/Vertex.h"
@@ -61,16 +61,16 @@ void ParticleComponent::Render(ID3D12GraphicsCommandList* pd3dCommandList)
     UINT ncbElementBytes = sizeof(XMFLOAT4X4) + 255 & ~255;
     memset(m_pCBMappedWorldTransform, NULL, ncbElementBytes);
 
-    // ��¥�� ���庯ȯ �ʿ� ���� ���� ��ġ�� ������ �Ǵµ�
-    // ������ ��Ʈ�ñ״�ó �� �ٲٰ� �ϱ�� �ȴ�!
-    // �״ϱ� ������ȯ��Ŀ� _44�� size�� �ٲ㼭 ������
-    // VS���� input.positionW = float(_41, _42, _43) �ϰ�
-    // GS���� size�� _44�� ����~ �Ϻ�~
+    // 占쏙옙짜占쏙옙 占쏙옙占썲변환 占십울옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙치占쏙옙 占쏙옙占쏙옙占쏙옙 占실는듸옙
+    // 占쏙옙占쏙옙占쏙옙 占쏙옙트占시그댐옙처 占쏙옙 占쌕꾸곤옙 占싹깍옙占?占싫댐옙!
+    // 占쌓니깍옙 占쏙옙占쏙옙占쏙옙환占쏙옙커占?_44占쏙옙 size占쏙옙 占쌕꿔서 占쏙옙占쏙옙占쏙옙
+    // VS占쏙옙占쏙옙 input.positionW = float(_41, _42, _43) 占싹곤옙
+    // GS占쏙옙占쏙옙 size占쏙옙 _44占쏙옙 占쏙옙占쏙옙~ 占싹븝옙~
     // 
-    // ��ƼŬ�� �����尡 �ƴ� ��Ȳ�� ����ؾ� ��
+    // 占쏙옙티클占쏙옙 占쏙옙占쏙옙占썲가 占싣댐옙 占쏙옙황占쏙옙 占쏙옙占쏙옙瞞占?占쏙옙
     // input.direction = float(_11, _12, _13)
     // isBilboard = bool(_14)
-    // �� ����
+    // 占쏙옙 占쏙옙占쏙옙
     // 
     // 
     // 

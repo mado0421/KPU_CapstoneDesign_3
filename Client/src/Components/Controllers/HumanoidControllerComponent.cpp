@@ -1,8 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "HumanoidControllerComponent.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
-#include "../../Core/Scene.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
+#include "../../Scene/Scene.h"
 
 HumanoidControllerComponent::HumanoidControllerComponent(Object* pObject, Object* pWeapon) : Component(pObject),
                                                                                              Character(100, true, false),

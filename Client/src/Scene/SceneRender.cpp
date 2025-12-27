@@ -1,13 +1,13 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Scene.h"
-#include "Object.h"
-#include "Components.h"
-#include "PipelineStateObject.h"
+#include "../Engine/ECS/Object.h"
+#include "../Engine/ECS/Components.h"
+#include "../Renderer/Pipeline/PipelineStateObject.h"
 #include "../Graphics/Light.h"
 #include "../Renderer/Elements/Texture.h"
 
-#include "src/Renderer/DirectX/DirectXMethods.h"
-#include "src/Renderer/DirectX/d3dx12.h"
+#include "../Renderer/DirectX/DirectXMethods.h"
+#include "../Renderer/DirectX/d3dx12.h"
 
 void Scene::Render(D3D12_CPU_DESCRIPTOR_HANDLE hBckBufRtv, D3D12_CPU_DESCRIPTOR_HANDLE hBckBufDsv)
 {

@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "../../Core/Components.h"
+#include "../../Engine/ECS/Components.h"
 
 #include "src/Renderer/MaterialManager.h"
 #include "src/Renderer/DirectX/DirectXMethods.h"

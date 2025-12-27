@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 constexpr UINT SpotLightShadowIdxIncrement        = 1;
 constexpr UINT PointLightShadowIdxIncrement       = 6;

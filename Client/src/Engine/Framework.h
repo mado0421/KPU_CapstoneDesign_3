@@ -6,7 +6,7 @@
 #define NUMSWAPCHAINBUFFER 2
 #define NUMDEFAULTSTRINGCHAR 64
 
-class Scene;
+#include "../Scene/Scene.h"
 
 class Framework
 {

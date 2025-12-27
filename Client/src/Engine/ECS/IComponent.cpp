@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "IComponent.h"
 
 ITransform::ITransform() : m_xmf4x4world(Matrix4x4::Identity()) {}

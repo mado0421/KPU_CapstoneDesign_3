@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 #include "../../Character/Character.h"
-#include "../../Core/Component.h"
+#include "../../Engine/ECS/Component.h"
 
 class Object;
 class ParticleEmitterComponent;

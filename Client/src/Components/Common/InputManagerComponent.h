@@ -1,6 +1,6 @@
-#pragma once
-#include "../../pch.h"
-#include "../Core/Component.h"
+﻿#pragma once
+#include "pch.h"
+#include "../../Engine/ECS/Component.h"
 
 #include "src/Game/Input/KeyCode.h"
 

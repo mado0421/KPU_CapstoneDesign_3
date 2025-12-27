@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Model.h"
 
 #include "Mesh.h"
@@ -39,6 +39,6 @@ void ModelManager::AddFBXModel(const char* fileName, ID3D12Device* pd3dDevice, I
 
 void ModelManager::Render(const char* modelName, ID3D12GraphicsCommandList* pd3dCommandList)
 {
-    assert(m_uomModel.contains(modelName) && "modelName�� Ʋ�Ȱų�, ���� model�Դϴ�\n");
+    assert(m_uomModel.contains(modelName) && "modelName占쏙옙 틀占싫거놂옙, 占쏙옙占쏙옙 model占쌉니댐옙\n");
     for_each(m_uomModel[modelName].begin(), m_uomModel[modelName].end(), [&](Mesh* mesh) { mesh->Render(pd3dCommandList); });
 }

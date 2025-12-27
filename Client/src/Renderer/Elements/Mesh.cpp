@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Mesh.h"
 
 #include "src/Renderer/DirectX/DirectXMethods.h"
@@ -6,7 +6,7 @@
 Mesh::Mesh(ID3D12Device* device, ID3D12GraphicsCommandList* command_list, const MeshData& mesh_data)
 {
 	stride_       = sizeof(Vertex);
-	vertex_count_ = mesh_data.vertices.size();
+	vertex_count_ = static_cast<UINT>(mesh_data.vertices.size());
 
 	name_ = mesh_data.name;
 

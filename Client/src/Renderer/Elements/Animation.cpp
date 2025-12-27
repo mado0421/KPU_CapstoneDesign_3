@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Animation.h"
 
 void animation::GetFrameIdxAndNormalizedTime(const AnimationClip* clip, const double       elapsed_time,

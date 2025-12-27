@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Object.h"
 #include "Components.h"
 
@@ -24,7 +24,7 @@ void Object::SolveConstraint() { for_each(m_vecComponents.begin(), m_vecComponen
 
 void Object::Input(UCHAR* pKeyBuffer, XMFLOAT2& xmf2MouseMovement)
 {
-    // Input ���� �ָ� ó���ϰڴ�.
+    // Input 占쏙옙占쏙옙 占쌍몌옙 처占쏙옙占싹겠댐옙.
     InputManagerComponent* l_pInputMng = FindComponent<InputManagerComponent>();
     if (nullptr != l_pInputMng) l_pInputMng->InputEvent(pKeyBuffer, xmf2MouseMovement);
 }
@@ -79,7 +79,6 @@ Screen::~Screen()
         m_pd3dCBResource->Unmap(0, nullptr);
         m_pd3dCBResource->Release();
     }
-    if (m_pCBMappedTransform) delete m_pCBMappedTransform;
 }
 
 void Screen::Render(ID3D12GraphicsCommandList* pd3dCommandList)

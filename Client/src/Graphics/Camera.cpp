@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera.h"
 
 
@@ -92,10 +92,10 @@ BoardCamera::BoardCamera() : Camera()
     SetTimeLag(0.0f);
     SetOffset(XMFLOAT3(0.0f, 0.0f, 0.0f));
     GenerateProjectionMatrix(1.01f, 5000.0f);
-    //���� �� �ϸ� ���� �������� �� �� ���� �ʾ�?
-    //�ƴ�..
-    //���� �ϰ� �⺻����̶� �־���� �� �� ������?
-    //����..
+    //占쏙옙占쏙옙 占쏙옙 占싹몌옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙 占쏙옙 占쏙옙占쏙옙 占십억옙?
+    //占싣댐옙..
+    //占쏙옙占쏙옙 占싹곤옙 占썩본占쏙옙占쏙옙繭占?占쌍억옙占쏙옙占?占쏙옙 占쏙옙 占쏙옙占쏙옙占쏙옙?
+    //占쏙옙占쏙옙..
     SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
     SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 }
@@ -112,8 +112,8 @@ void BoardCamera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarP
 FollowCamera::FollowCamera() : Camera()
 {
     SetTimeLag(0.1f);
-    SetOffset(XMFLOAT3(0.0f, 30.0f, -80.0f)); // �÷��̾� ���� ���̿� ���� ���� �ʿ� ����
-    // �� �κ��� ���߿� ���ߵǴϱ� �������
+    SetOffset(XMFLOAT3(0.0f, 30.0f, -80.0f)); // 占시뤄옙占싱억옙 占쏙옙占쏙옙 占쏙옙占싱울옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占십울옙 占쏙옙占쏙옙
+    // 占쏙옙 占싸븝옙占쏙옙 占쏙옙占쌩울옙 占쏙옙占쌩되니깍옙 占쏙옙占쏙옙占쏙옙占?
     GenerateProjectionMatrix(0.1f, 1000.0f, ASPECT_RATIO, 60.0f);
 
     SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
@@ -126,9 +126,9 @@ void FollowCamera::SetTarget(void* target)
 {
     //m_pTarget = static_cast<CObject*>(target);
     //XMFLOAT3 pos = m_pTarget->GetCameraTargetPos();
-    ///*�������� ���ϰ� �������� �־� �������� ���� ��Ų �ڿ� LookAt�� ���� ������
-    //���� ��ġ�� �ٶ󺸷��� ���� ��ġ�鼭 �ٶ󺸴� ���� ���Ͱ� (0, 0, 0)�� �Ǳ� ������
-    //������ ����*/
+    ///*占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占싹곤옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쌍억옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙킨 占쌘울옙 LookAt占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙
+    //占쏙옙占쏙옙 占쏙옙치占쏙옙 占쌕라보뤄옙占쏙옙 占쏙옙占쏙옙 占쏙옙치占썽서 占쌕라보댐옙 占쏙옙占쏙옙 占쏙옙占싶곤옙 (0, 0, 0)占쏙옙 占실깍옙 占쏙옙占쏙옙占쏙옙
+    //占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙*/
     //SetLookAt(pos);
 }
 
@@ -147,7 +147,7 @@ void FollowCamera::Update(float fTimeElapsed)
 void FollowCamera::SetLookAt(const XMFLOAT3& xmf3LookAt)
 {
     //XMFLOAT3 up = m_pTarget->GetUp();
-    ////���⼭ �������̶� LookAt�̶� ������ EyeDir�� 0, 0, 0�̶�� ���� ��
+    ////占쏙옙占썩서 占쏙옙占쏙옙占쏙옙占싱띰옙 LookAt占싱띰옙 占쏙옙占쏙옙占쏙옙 EyeDir占쏙옙 0, 0, 0占싱띰옙占?占쏙옙占쏙옙 占쏙옙
 
     XMFLOAT4X4 mtxLookAt = Matrix4x4::LookAtLH(m_xmf3Position, xmf3LookAt, XMFLOAT3(0, 1, 0));
     m_xmf3Right          = XMFLOAT3(mtxLookAt._11, mtxLookAt._21, mtxLookAt._31);

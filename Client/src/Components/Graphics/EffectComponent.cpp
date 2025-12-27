@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
 
 EffectComponent::EffectComponent(Object* pObject) : Component(pObject), m_fDuration(0.0f), m_fLifetime(0.0f) { SetActive(false); }
 

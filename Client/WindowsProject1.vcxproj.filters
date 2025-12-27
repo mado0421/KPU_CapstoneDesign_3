@@ -63,34 +63,34 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="src\Core\Framework.h">
+    <ClInclude Include="src\Engine\Framework.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\PipelineStateObject.h">
+    <ClInclude Include="src\Renderer\Pipeline\PipelineStateObject.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Object.h">
+    <ClInclude Include="src\Engine\ECS\Object.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Component.h">
+    <ClInclude Include="src\Engine\ECS\Component.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Components.h">
+    <ClInclude Include="src\Engine\ECS\Components.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Scene.h">
+    <ClInclude Include="src\Scene\Scene.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Client.h">
+    <ClInclude Include="src\Engine\Client.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Character\Character.h">
       <Filter>Source Files\Character</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\TransformComponent.h">
+    <ClInclude Include="src\Components\Common\TransformComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\InputManagerComponent.h">
+    <ClInclude Include="src\Components\Common\InputManagerComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\Animation\AnimatorComponent.h">
@@ -165,7 +165,7 @@
     <ClInclude Include="src\IO\Importer.h">
       <Filter>Source Files\IO</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\IComponent.h">
+    <ClInclude Include="src\Engine\ECS\IComponent.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
@@ -186,37 +186,37 @@
     <ClInclude Include="Resources\fontReader\FontReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Framework.cpp">
+    
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\PipelineStateObject.cpp">
+    <ClCompile Include="src\Renderer\Pipeline\PipelineStateObject.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Object.cpp">
+    <ClCompile Include="src\Engine\ECS\Object.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Component.cpp">
+    <ClCompile Include="src\Engine\ECS\Component.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Scene.cpp">
+    <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\SceneBuild.cpp">
+    <ClCompile Include="src\Scene\SceneBuild.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\SceneRender.cpp">
+    <ClCompile Include="src\Scene\SceneRender.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Client.cpp">
+    
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Character\Character.cpp">
       <Filter>Source Files\Character</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\TransformComponent.cpp">
+    <ClCompile Include="src\Components\Common\TransformComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\InputManagerComponent.cpp">
+    <ClCompile Include="src\Components\Common\InputManagerComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Components\Animation\AnimatorComponent.cpp">
@@ -288,7 +288,7 @@
     <ClCompile Include="src\IO\Importer.cpp">
       <Filter>Source Files\IO</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\IComponent.cpp">
+    <ClCompile Include="src\Engine\ECS\IComponent.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Resources\fontReader\FontReader.cpp">

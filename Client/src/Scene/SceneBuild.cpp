@@ -1,10 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Scene.h"
-#include "Object.h"
-#include "Components.h"
+#include "../Engine/ECS/Object.h"
+#include "../Engine/ECS/Components.h"
 #include "../IO/Importer.h"
-#include "src/Renderer/Elements/Model.h"
-#include "src/Renderer/Elements/Texture.h"
+#include "../Renderer/Elements/Model.h"
+#include "../Renderer/Elements/Texture.h"
 
 #include <fstream>
 #include <sstream>

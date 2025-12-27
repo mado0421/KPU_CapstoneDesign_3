@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../../Core/Components.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
 
 DoorComponent::DoorComponent(Object* pObject, bool bOpen) : Component(pObject), m_bOpen(bOpen), m_fProgress(0), m_xmf3OrigPosition(pObject->FindComponent<TransformComponent>()->GetPosition())
 {

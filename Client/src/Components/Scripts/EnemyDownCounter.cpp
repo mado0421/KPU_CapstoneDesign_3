@@ -1,5 +1,5 @@
-#include "pch.h"
-#include "../../Core/Components.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
 
 EnemyDownCounter::EnemyDownCounter(Object* pObject) : Component(pObject)
 {

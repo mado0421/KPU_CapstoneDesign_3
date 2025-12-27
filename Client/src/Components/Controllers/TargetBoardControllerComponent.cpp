@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
-#include "../../Core/Scene.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
+#include "../../Scene/Scene.h"
 
 TargetBoardControllerComponent::TargetBoardControllerComponent(Object* pObject, bool bAutoRevive) : Component(pObject), Character(10, bAutoRevive) {}
 
@@ -73,7 +73,7 @@ void TargetBoardControllerComponent::Die()
 
     if (pe)
     {
-        //pe->m_bEnable = false;	// �̰� ���� ��ƼŬ�� ��� ����
+        //pe->m_bEnable = false;	// 占싱곤옙 占쏙옙占쏙옙 占쏙옙티클占쏙옙 占쏙옙占?占쏙옙占쏙옙
         lpec->m_bEnabled = false;
 
         pe   = nullptr;

@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "../../Core/Components.h"
-#include "../../Core/Object.h"
+﻿#include "pch.h"
+#include "../../Engine/ECS/Components.h"
+#include "../../Engine/ECS/Object.h"
 
 ColliderComponent::ColliderComponent(Object* pObject, AnimatorComponent* pAnimator, bool bTrigger, int boneIdx) : Component(pObject), m_xmf4x4Local(Matrix4x4::Identity()), m_pAnimator(pAnimator), m_boneIdx(boneIdx), m_bTrigger(bTrigger) {}
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Elements/Material.h"
 
 class MaterialManager
