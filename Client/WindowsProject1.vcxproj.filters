@@ -153,34 +153,10 @@
     <ClInclude Include="src\Graphics\Light.h">
       <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Material.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Mesh.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Vertex.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Texture.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Model.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Animation.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\Mask.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utils\Timer.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\MathHelper.h">
-      <Filter>Source Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\d3dUtil.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\IO\DDSTextureLoader12.h">
@@ -189,17 +165,27 @@
     <ClInclude Include="src\IO\Importer.h">
       <Filter>Source Files\IO</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\d3dx12.h">
-      <Filter>Source Files\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\IComponent.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="fontReader\FontReader.h" />
+    <ClInclude Include="src\Game\Input\KeyCode.h" />
+    <ClInclude Include="src\Renderer\AnimationManager.h" />
+    <ClInclude Include="src\Renderer\DirectX\d3dUtil.h" />
+    <ClInclude Include="src\Renderer\DirectX\d3dx12.h" />
+    <ClInclude Include="src\Renderer\DirectX\DirectXMethods.h" />
+    <ClInclude Include="src\Renderer\Elements\Animation.h" />
+    <ClInclude Include="src\Renderer\Elements\BoneMask.h" />
+    <ClInclude Include="src\Renderer\Elements\Material.h" />
+    <ClInclude Include="src\Renderer\Elements\Mesh.h" />
+    <ClInclude Include="src\Renderer\Elements\Model.h" />
+    <ClInclude Include="src\Renderer\Elements\Texture.h" />
+    <ClInclude Include="src\Renderer\Elements\Vertex.h" />
+    <ClInclude Include="src\Renderer\MaterialManager.h" />
+    <ClInclude Include="src\Renderer\TextureManager.h" />
+    <ClInclude Include="Resources\fontReader\FontReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.pch" />
     <ClCompile Include="src\Core\Framework.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -213,6 +199,12 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Scene.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\SceneBuild.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\SceneRender.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Client.cpp">
@@ -287,31 +279,7 @@
     <ClCompile Include="src\Graphics\Light.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Material.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Mesh.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Vertex.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resources\Texture.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resources\Model.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resources\Animation.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resources\Mask.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\Timer.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\d3dUtil.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\IO\DDSTextureLoader12.cpp">
@@ -323,7 +291,46 @@
     <ClCompile Include="src\Core\IComponent.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="fontReader\FontReader.cpp">
+    <ClCompile Include="Resources\fontReader\FontReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\AnimationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\DirectX\d3dUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\DirectX\DirectXMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\BoneMask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Elements\Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\MaterialManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -341,39 +348,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\VertexShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\PixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\GeometryShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="shaders\ComputeShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ComputeShader.hlsl" />
+    <FxCompile Include="Resources\Shaders\GeometryShader.hlsl" />
+    <FxCompile Include="Resources\Shaders\PixelShader.hlsl" />
+    <FxCompile Include="Resources\Shaders\VertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\Header.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="shaders\Light.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Data\AssetsData.txt">
-      <Filter>Data</Filter>
-    </Text>
-    <Text Include="Data\LightData.txt">
-      <Filter>Data</Filter>
-    </Text>
-    <Text Include="Data\MaterialData.txt">
-      <Filter>Data</Filter>
-    </Text>
-    <Text Include="Data\ObjectData.txt">
-      <Filter>Data</Filter>
-    </Text>
+    <None Include="Resources\Shaders\Header.hlsli" />
+    <None Include="Resources\Shaders\Light.hlsli" />
   </ItemGroup>
 </Project>

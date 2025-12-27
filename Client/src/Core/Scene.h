@@ -100,6 +100,9 @@ public:
     int          eventCount    = 0; //enemyDown
     bool         test          = false;
     int          startEndState = 0; // 0: main, 1: start, 2: end
+    
+    virtual ~Scene();
+
     virtual void Init(Framework* framework, ID3D12Device* device, ID3D12GraphicsCommandList* command_list);
 
     virtual void CheckCollsion();
@@ -132,6 +135,14 @@ protected:
     void UpdatePassInfoAboutCamera();
 
     void BuildObject();
+
+    // Helper functions for BuildObject
+    void BuildPlayer();
+    void BuildWeapons(Object* player);
+    void BuildEnemies();
+    void BuildProps();
+    void BuildTriggers();
+    void BuildUI();
 
     /*==============================================================================
         * For Test!!
